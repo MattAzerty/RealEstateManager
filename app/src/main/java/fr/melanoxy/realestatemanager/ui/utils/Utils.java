@@ -19,13 +19,15 @@ public class Utils {
         return (int) Math.round(dollars * 0.812);
     }
 
+    //TODO: [1] create convertEuroToDollar()
+
     /**
      * Conversion de la date d'aujourd'hui en un format plus approprié
      * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
      * @return
      */
     public static String getTodayDate(){
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");//TODO: [2] new format: "dd/MM/yyyy"
         return dateFormat.format(new Date());
     }
 
@@ -35,6 +37,9 @@ public class Utils {
      * @param context
      * @return
      */
+
+    //TODO: [3] modify isInternetAvailable() to check if phone as access to internet (wifi and cellular)
+
     public static Boolean isInternetAvailable(Context context){
         WifiManager wifi = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
         return wifi.isWifiEnabled();
