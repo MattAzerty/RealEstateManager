@@ -19,7 +19,7 @@ public class Utils {
         return (int) Math.round(dollars * 0.812);
     }
 
-    //TODO: [1] create convertEuroToDollar()
+    //TODO: [1] create convertEuroToDollar() https://exchangeratesapi.io/
 
     /**
      * Conversion de la date d'aujourd'hui en un format plus approprié

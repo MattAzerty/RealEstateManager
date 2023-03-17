@@ -4,7 +4,70 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ui.mainActivity.MainActivity">
+
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/frag_real_estate_list_fab_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:elevation="0dp"
+        app:borderWidth="0dp"
+        android:backgroundTint="@color/colorAccent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="@dimen/fab_margin"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/vc_add_white_24dp"
+        android:contentDescription="@string/add_a_real_estate_property" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/frag_real_estate_list_fab_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:elevation="0dp"
+        app:borderWidth="0dp"
+        android:backgroundTint="@color/colorAccent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/frag_real_estate_list_fab_add"
+        android:layout_margin="@dimen/fab_margin"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/vc_edit_white_24dp"
+        android:contentDescription="@string/add_a_real_estate_property" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/frag_real_estate_list_fab_map"
+        android:backgroundTint="@color/colorAccent"
+        app:elevation="0dp"
+        app:borderWidth="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/frag_real_estate_list_fab_edit"
+        android:layout_margin="@dimen/fab_margin"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/vc_map_white_24dp"
+        android:contentDescription="@string/add_a_real_estate_property" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/frag_real_estate_list_fab_search"
+        android:backgroundTint="@color/colorAccent"
+        app:elevation="0dp"
+        app:shapeAppearanceOverlay="@style/SearchShapeOverlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_margin="@dimen/fab_margin"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/vc_search_white_24dp"
+        android:contentDescription="@string/add_a_real_estate_property" />
 
     <TextView
         android:layout_width="wrap_content"

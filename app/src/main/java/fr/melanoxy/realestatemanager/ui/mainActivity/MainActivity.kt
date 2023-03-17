@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import fr.melanoxy.realestatemanager.databinding.ActivityMainBinding
-import fr.melanoxy.realestatemanager.ui.mainActivity.realEstateListFrag.RealEstateListFrag
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.RealEstateListFrag
 import fr.melanoxy.realestatemanager.ui.utils.viewBinding
 
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="SearchShapeOverlay" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+    </style>
+
+    <style name="CornerShapeOverlay" parent="">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">30%</item>
+    </style>
+
+</resources>
