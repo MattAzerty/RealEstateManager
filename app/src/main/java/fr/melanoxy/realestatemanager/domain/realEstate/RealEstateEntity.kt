@@ -1,6 +1,8 @@
 package fr.melanoxy.realestatemanager.domain.realEstate
 
 import androidx.room.*
+import fr.melanoxy.realestatemanager.domain.Address
+import fr.melanoxy.realestatemanager.data.utils.converters.ByteArrayPngConverter
 import fr.melanoxy.realestatemanager.data.utils.converters.DateConverter
 import fr.melanoxy.realestatemanager.data.utils.converters.IntegerArrayListConverter
 import fr.melanoxy.realestatemanager.data.utils.converters.StringArrayListConverter
@@ -19,7 +21,7 @@ import kotlin.collections.ArrayList
     ],
 )
 
-@TypeConverters(DateConverter::class, IntegerArrayListConverter::class, StringArrayListConverter::class )
+@TypeConverters(DateConverter::class, IntegerArrayListConverter::class, StringArrayListConverter::class, ByteArrayPngConverter::class )
 data class RealEstateEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
@@ -34,7 +36,8 @@ data class RealEstateEntity(
     val description: String,
     val thumbnail: ByteArray,
     val photosList: ArrayList<String>,
-    val address: String,
+    @Embedded//https://developer.android.com/reference/android/arch/persistence/room/Embedded
+    val address: Address,
     val pointsOfInterest:ArrayList<Int>,
     val status: Boolean,
     val marketEntryDate: Date,

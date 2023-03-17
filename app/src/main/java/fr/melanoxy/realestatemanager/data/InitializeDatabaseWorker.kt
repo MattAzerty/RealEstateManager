@@ -8,8 +8,8 @@ import androidx.work.WorkerParameters
 import com.google.gson.Gson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import fr.melanoxy.realestatemanager.data.utils.CoroutineDispatcherProvider
 import fr.melanoxy.realestatemanager.data.utils.fromJson
-import fr.melanoxy.realestatemanager.domain.CoroutineDispatcherProvider
 import fr.melanoxy.realestatemanager.domain.estateAgent.EstateAgentEntity
 import fr.melanoxy.realestatemanager.domain.estateAgent.InsertAgentUseCase
 import fr.melanoxy.realestatemanager.ui.utils.KEY_INPUT_DATA_WORK_MANAGER

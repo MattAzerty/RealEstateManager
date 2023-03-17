@@ -1,4 +1,4 @@
-package fr.melanoxy.realestatemanager.data
+package fr.melanoxy.realestatemanager.data.utils
 
 import fr.melanoxy.realestatemanager.BuildConfig
 import javax.inject.Inject

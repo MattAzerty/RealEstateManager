@@ -22,4 +22,5 @@
     <dimen name="button_bottom_margin">20dp</dimen>
     <dimen name="textView_margin">16dp</dimen>
     <dimen name="height_min">48dp</dimen>
+    <dimen name="corner_radius_rounded">28dp</dimen>
 </resources>

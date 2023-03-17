@@ -12,7 +12,7 @@ import fr.melanoxy.realestatemanager.ui.utils.viewBinding
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val binding by viewBinding { ActivityMainBinding.inflate(it) }//TODO understand this
+    private val binding by viewBinding { ActivityMainBinding.inflate(it) }//TODO viewBinding
     private val viewModel by viewModels<MainActivityViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {

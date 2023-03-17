@@ -1,4 +1,4 @@
-package fr.melanoxy.realestatemanager.domain
+package fr.melanoxy.realestatemanager.data.utils
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
