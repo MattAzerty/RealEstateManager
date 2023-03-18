@@ -1,18 +1,391 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
+    android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.mainActivity.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add form"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-43dp">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_corner_background">
+
+
+            <TextView
+                android:id="@+id/create_new_real_estate_tv_title"
+                style="?attr/textAppearanceHeadline6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/fab_margin"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="@dimen/fab_margin"
+                android:gravity="left"
+                android:importantForAccessibility="no"
+                android:text="@string/create_new_real_estate"
+                android:textColor="@color/black"
+                android:textSize="@dimen/title_textSize"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/create_new_real_estate_TextInputLayout_agents"
+                style="@style/Widget.RealEstateManager.Spinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:textColorHint="@color/black"
+                app:boxStrokeColor="@color/black"
+                app:endIconTint="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_tv_title"
+                app:startIconDrawable="@drawable/vc_person_white_24dp"
+                app:startIconTint="@color/black"
+                tools:endIconMode="dropdown_menu">
+
+                <AutoCompleteTextView
+                    android:id="@+id/create_new_real_estate_AutoCompleteTextView_projects"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/agentName"
+                    android:inputType="none" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/create_new_real_estate_TextInputLayout_type"
+                style="@style/Widget.RealEstateManager.Spinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:textColorHint="@color/black"
+                app:boxStrokeColor="@color/black"
+                app:endIconTint="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_TextInputLayout_agents"
+                app:startIconDrawable="@drawable/vc_apartment_white_24dp"
+                app:startIconTint="@color/black"
+                tools:endIconMode="dropdown_menu">
+
+                <AutoCompleteTextView
+                    android:id="@+id/create_new_real_estate_AutoCompleteTextView_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/typeOfProperty"
+                    android:inputType="none" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/create_new_real_estate_tv_point_of_interest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/fab_margin"
+                android:layout_marginTop="@dimen/title_top_margin"
+                android:drawableTint="@color/black"
+                android:drawableLeft="@drawable/vc_add_location_white_24dp"
+                android:gravity="center"
+                android:text="@string/pointOfInterest"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@id/create_new_real_estate_TextInputLayout_type"
+                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_TextInputLayout_type" />
+
+            <HorizontalScrollView
+                android:id="@+id/create_new_real_estate_chip_group_hv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/textview_8dp"
+                android:padding="4dp"
+                android:scrollbars="none"
+                app:layout_constraintTop_toBottomOf="@+id/create_new_real_estate_tv_point_of_interest">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="@dimen/fab_margin"
+                    android:paddingRight="@dimen/fab_margin">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/create_new_real_estate_chip_park"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/parkChip"
+                        app:checkedIconTint="@color/white" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/create_new_real_estate_chip_school"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/schoolChip"
+                        app:checkedIconTint="@color/white" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/create_new_real_estate_chip_grocery_store"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/grocery_store_chip"
+                        app:checkedIconTint="@color/white" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/create_new_real_estate_chip_shopping_mall"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/shopping_mall_chip"
+                        app:checkedIconTint="@color/white" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/create_new_real_estate_chip_hospital"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/hospitalChip"
+                        app:checkedIconTint="@color/white" />
+
+                </com.google.android.material.chip.ChipGroup>
+
+            </HorizontalScrollView>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/create_new_real_estate_til_surface"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/fab_margin"
+                android:layout_marginTop="@dimen/title_top_margin"
+                android:textColorHint="@color/black"
+                app:boxStrokeColor="@color/black"
+                app:layout_constraintEnd_toStartOf="@id/create_new_real_estate_tv_m2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_chip_group_hv">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/surface"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/create_new_real_estate_tv_m2"
+                style="?attr/textAppearanceHeadline6"
+                android:layout_width="@dimen/textview_100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/textview_8dp"
+                android:gravity="center"
+                android:paddingStart="@dimen/textview_8dp"
+                android:paddingEnd="@dimen/depth"
+                android:text="@string/surfaceUnit"
+                android:textColor="@color/black"
+                android:textSize="@dimen/title_textSize"
+                app:layout_constraintBottom_toBottomOf="@id/create_new_real_estate_til_surface"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/create_new_real_estate_til_surface" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/create_new_real_estate_til_room"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/fab_margin"
+                android:textColorHint="@color/black"
+                app:boxStrokeColor="@color/black"
+                app:layout_constraintEnd_toStartOf="@id/create_new_real_estate_tv_room"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_til_surface">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/room"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/create_new_real_estate_tv_room"
+                style="?attr/textAppearanceHeadline6"
+                android:layout_width="@dimen/textview_100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/textview_8dp"
+                android:gravity="center"
+                android:paddingStart="@dimen/textview_8dp"
+                android:paddingEnd="@dimen/depth"
+                android:text="@string/numberOfRoom"
+                android:textColor="@color/black"
+                android:textSize="@dimen/title_textSize"
+                app:layout_constraintBottom_toBottomOf="@id/create_new_real_estate_til_room"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/create_new_real_estate_til_room" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/create_new_real_estate_til_bathroom"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/fab_margin"
+                android:textColorHint="@color/black"
+                app:boxStrokeColor="@color/black"
+                app:layout_constraintEnd_toStartOf="@id/create_new_real_estate_tv_bathroom"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_til_room">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/bathroom"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/create_new_real_estate_tv_bathroom"
+                style="?attr/textAppearanceHeadline6"
+                android:layout_width="@dimen/textview_100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/textview_8dp"
+                android:gravity="center"
+                android:paddingStart="@dimen/textview_8dp"
+                android:paddingEnd="@dimen/depth"
+                android:text="@string/numberOfRoom"
+                android:textColor="@color/black"
+                android:textSize="@dimen/title_textSize"
+                app:layout_constraintBottom_toBottomOf="@id/create_new_real_estate_til_bathroom"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/create_new_real_estate_til_bathroom" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/create_new_real_estate_til_bedroom"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/fab_margin"
+                android:textColorHint="@color/black"
+                app:boxStrokeColor="@color/black"
+                app:layout_constraintEnd_toStartOf="@id/create_new_real_estate_tv_bedroom"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_til_bathroom">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/bedroom"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/create_new_real_estate_tv_bedroom"
+                style="?attr/textAppearanceHeadline6"
+                android:layout_width="@dimen/textview_100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/textview_8dp"
+                android:gravity="center"
+                android:paddingStart="@dimen/textview_8dp"
+                android:paddingEnd="@dimen/depth"
+                android:text="@string/numberOfRoom"
+                android:textColor="@color/black"
+                android:textSize="@dimen/title_textSize"
+                app:layout_constraintBottom_toBottomOf="@id/create_new_real_estate_til_bedroom"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/create_new_real_estate_til_bedroom" />
+
+            <TextView
+                android:id="@+id/create_new_real_estate_tv_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTint="@color/black"
+                android:drawableLeft="@drawable/ic_assignment_white_24dp"
+                android:layout_marginLeft="@dimen/fab_margin"
+                android:layout_marginTop="@dimen/title_top_margin"
+                android:gravity="center"
+                android:text="@string/description"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@id/create_new_real_estate_til_bedroom"
+                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_til_bedroom" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/create_new_real_estate_til_description"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/fab_margin"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="@dimen/fab_margin"
+                android:textColorHint="@color/black"
+                app:boxStrokeColor="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_tv_description">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:gravity="start"
+                    android:hint="@string/descriptionHint"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/create_new_real_estate_tv_add_picture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/fab_margin"
+                android:layout_marginTop="@dimen/title_top_margin"
+                android:drawableTint="@color/black"
+                android:drawableLeft="@drawable/vc_image_white_24dp"
+                android:gravity="center"
+                android:text="@string/add_pictures"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@id/create_new_real_estate_til_description"
+                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_til_description" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/create_new_real_estate_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_tv_add_picture"
+                tools:listitem="@layout/picture_item"
+                android:orientation="horizontal" >
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <Button
+                android:id="@+id/create_new_real_estate_button_market_entry_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/create_new_real_estate_til_description"
+                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_recyclerView"
+                android:text="SELECT MARKET ENTRY DATE" />
+
+            <Button
+                android:id="@+id/create_new_real_estate_button_sale_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/create_new_real_estate_button_market_entry_date"
+                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_button_market_entry_date"
+                android:text="SELECT SALE DATE" />
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

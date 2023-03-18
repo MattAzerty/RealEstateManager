@@ -3,6 +3,7 @@ package fr.melanoxy.realestatemanager.ui.mainActivity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import fr.melanoxy.realestatemanager.databinding.ActivityMainBinding
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.RealEstateListFrag
@@ -24,6 +25,14 @@ class MainActivity : AppCompatActivity() {
                 .replace(binding.activityMainFrameLayoutContainerRealEstateList.id, RealEstateListFrag())
                 .commitNow()
         }
+
+        /*//Event(s) observer
+        viewModel.mainEventLiveData.observe(this) { event ->
+            when (event) {
+                is MainEvent.ShowSnackBarMessage -> Snackbar.make(binding.mainCl, event.message, Snackbar.LENGTH_SHORT).show()
+
+            }
+        }*/
 
 
     }

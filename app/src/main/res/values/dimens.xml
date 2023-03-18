@@ -13,12 +13,15 @@
     <dimen name="icon_top_margin">24dp</dimen>
     <dimen name="animation_margin">42dp</dimen>
     <dimen name="icon_bottom_margin">24dp</dimen>
+    <dimen name="title_top_margin">20dp</dimen>
     <dimen name="title_bottom_margin">16dp</dimen>
     <dimen name="field_width_standard">160dp</dimen>
 
     <dimen name="button_horizontal_margin">8dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="depth">2dp</dimen>
+    <dimen name="textview_8dp">8dp</dimen>
+    <dimen name="textview_100dp">100dp</dimen>
     <dimen name="button_bottom_margin">20dp</dimen>
     <dimen name="textView_margin">16dp</dimen>
     <dimen name="height_min">48dp</dimen>

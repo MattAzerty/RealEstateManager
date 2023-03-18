@@ -1,24 +1,21 @@
 package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag
 
 import android.content.Context
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.transition.ChangeBounds
 import android.transition.Transition
 import android.transition.TransitionManager
-import android.view.KeyEvent
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.databinding.FragmentRealEstateListBinding
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddFrag.RealEstateAddFrag
 import fr.melanoxy.realestatemanager.ui.utils.viewBinding
 
 @AndroidEntryPoint
@@ -35,6 +32,28 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
         bindSearchBar()
         bindRecyclerView()
 
+        viewModel.singleLiveRealEstateListEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is RealEstateListEvent.ReplaceCurrentFragment -> switchFragment(event.fragmentId)
+                else -> {//TODO: something went wrong
+                }
+            }
+        }
+
+
+    }
+
+    private fun switchFragment(fragmentId: Int) {
+
+        val transaction = parentFragmentManager.beginTransaction()
+
+        when(fragmentId){
+            R.id.frag_real_estate_list_fab_add -> transaction.replace(R.id.activity_main_FrameLayout_container_real_estate_list, RealEstateAddFrag())
+
+        }
+        transaction.addToBackStack(null)
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        transaction.commit()
     }
 
 

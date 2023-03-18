@@ -13,9 +13,6 @@
         android:theme="@style/Theme.RealEstateManager"
         tools:targetApi="31">
         <activity
-            android:name=".ui.detailActivity.DetailActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.mainActivity.MainActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:exported="true">

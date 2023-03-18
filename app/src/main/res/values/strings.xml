@@ -2,4 +2,22 @@
     <string name="app_name">RealEstateManager</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_a_real_estate_property">Add a realEstateProperty</string>
+    <string name="agentName">Select agent</string>
+    <string name="create_new_real_estate">ADD A REAL ESTATE:</string>
+    <string name="typeOfProperty">Select type</string>
+    <string name="parkChip">Park</string>
+    <string name="schoolChip">School</string>
+    <string name="grocery_store_chip">Grocery Store</string>
+    <string name="shopping_mall_chip">Shopping mall</string>
+    <string name="hospitalChip">Hospital</string>
+    <string name="surface">Surface</string>
+    <string name="numberOfRoom">room(s)</string>
+    <string name="bathroom">Number of Bathroom</string>
+    <string name="room">Number of Room</string>
+    <string name="bedroom">Number of Bedroom</string>
+    <string name="description">\u0020  Description:</string>
+    <string name="descriptionHint">Add a description here…</string>
+    <string name="pointOfInterest">\u0020 Point of interest nearby:</string>
+    <string name="surfaceUnit">m²</string>
+    <string name="add_pictures">Add pictures</string>
 </resources>

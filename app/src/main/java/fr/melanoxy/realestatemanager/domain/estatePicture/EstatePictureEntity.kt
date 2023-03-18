@@ -21,5 +21,6 @@ data class EstatePictureEntity(
     val id: Long = 0,
     @ColumnInfo(index = true)
     val realEstateId: Long,
+    val name: String,
     val path: String
 )
