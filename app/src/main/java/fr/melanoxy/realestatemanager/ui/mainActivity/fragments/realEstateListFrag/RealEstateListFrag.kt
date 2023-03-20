@@ -142,7 +142,6 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
 
             // Unused functions.
             override fun onTransitionResume(transition: Transition?) = Unit
-
             override fun onTransitionPause(transition: Transition?) = Unit
             override fun onTransitionCancel(transition: Transition?) = Unit
             override fun onTransitionStart(transition: Transition?) = Unit

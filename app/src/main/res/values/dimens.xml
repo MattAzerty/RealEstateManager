@@ -26,4 +26,7 @@
     <dimen name="textView_margin">16dp</dimen>
     <dimen name="height_min">48dp</dimen>
     <dimen name="corner_radius_rounded">28dp</dimen>
+    <dimen name="stroke">3dp</dimen>
+    <dimen name="stroke2">1dp</dimen>
+    <dimen name="cl_margin">20dp</dimen>
 </resources>

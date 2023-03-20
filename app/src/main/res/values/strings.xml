@@ -19,5 +19,16 @@
     <string name="descriptionHint">Add a description here…</string>
     <string name="pointOfInterest">\u0020 Point of interest nearby:</string>
     <string name="surfaceUnit">m²</string>
-    <string name="add_pictures">Add pictures</string>
+    <string name="add_pictures">\u0020 Pictures:</string>
+    <string name="street">Street</string>
+    <string name="city">City</string>
+    <string name="state">State</string>
+    <string name="zipCode">Zip code</string>
+    <string name="select_sale_date"><![CDATA[ SELECT SALE DATE ]]></string>
+    <string name="select_market_entry_date"><![CDATA[ SELECT MARKET ENTRY DATE ]]></string>
+    <string name="dialog_fragment_add_pictures">ADD PICTURES\nFROM GALLERY</string>
+    <string name="dialog_fragment_take_photo">TAKE PHOTO\nWITH PHONE</string>
+    <string name="select_methode">SELECT METHODE</string>
+    <string name="price">Price</string>
+    <string name="priceUnit">$</string>
 </resources>

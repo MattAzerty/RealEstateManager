@@ -28,18 +28,16 @@ data class RealEstateEntity(
     @ColumnInfo(index = true)//TODO for foreign key?
     val estateAgentId: Long,
     val propertyType: String,
-    val price: Double,
+    val price: Double,//todo
     val surfaceArea: Double,
     val numberOfRooms: Int,
-    val numberOfBathrooms: Int,
     val numberOfBedrooms: Int,
     val description: String,
     val thumbnail: ByteArray,
     val photosList: ArrayList<String>,
-    @Embedded//https://developer.android.com/reference/android/arch/persistence/room/Embedded
+    @Embedded
     val address: Address,
     val pointsOfInterest:ArrayList<Int>,
-    val status: Boolean,
     val marketEntryDate: Date,
     val saleDate: Date,
 )

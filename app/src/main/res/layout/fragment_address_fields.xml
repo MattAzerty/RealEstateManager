@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/frag_address_field_cl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/frag_address_field_til_surface"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/fab_margin"
+                android:layout_marginTop="@dimen/textview_8dp"
+                android:textColorHint="@color/black"
+                app:boxStrokeWidth="@dimen/stroke2"
+                app:boxStrokeWidthFocused="@dimen/stroke2"
+                app:boxStrokeColor="@color/textinputlayout_tint_selector"
+                app:hintTextColor="@color/textinputlayout_tint_selector"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/fab_margin"
+                app:layout_constraintStart_toStartOf="@id/frag_address_field_cl"
+                app:layout_constraintTop_toTopOf="@id/frag_address_field_cl">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textCursorDrawable="@drawable/cursor"
+                    android:hint="@string/street"
+                    android:gravity="center"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/frag_address_field_til_room"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/fab_margin"
+                android:textColorHint="@color/black"
+                app:boxStrokeWidth="@dimen/stroke2"
+                app:boxStrokeWidthFocused="@dimen/stroke2"
+                app:boxStrokeColor="@color/textinputlayout_tint_selector"
+                app:hintTextColor="@color/textinputlayout_tint_selector"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/fab_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/frag_address_field_til_surface">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textCursorDrawable="@drawable/cursor"
+                    android:hint="@string/city"
+                    android:gravity="center"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/frag_address_field_til_bathroom"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/fab_margin"
+                android:textColorHint="@color/black"
+                app:boxStrokeWidth="@dimen/stroke2"
+                app:boxStrokeWidthFocused="@dimen/stroke2"
+                app:boxStrokeColor="@color/textinputlayout_tint_selector"
+                app:hintTextColor="@color/textinputlayout_tint_selector"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/fab_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/frag_address_field_til_room">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textCursorDrawable="@drawable/cursor"
+                    android:hint="@string/state"
+                    android:gravity="center"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/frag_address_field_til_bedroom"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/fab_margin"
+                android:textColorHint="@color/black"
+                app:boxStrokeWidth="@dimen/stroke2"
+                app:boxStrokeWidthFocused="@dimen/stroke2"
+                app:boxStrokeColor="@color/textinputlayout_tint_selector"
+                app:hintTextColor="@color/textinputlayout_tint_selector"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/fab_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/frag_address_field_til_bathroom">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textCursorDrawable="@drawable/cursor"
+                    android:hint="@string/zipCode"
+                    android:gravity="center"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
