@@ -1,6 +1,7 @@
 package fr.melanoxy.realestatemanager.data
 
 import android.app.Application
+import android.content.Context
 import androidx.work.WorkManager
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -15,6 +16,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Singleton
+    @Provides
+    fun provideContext(application: Application): Context = application.applicationContext
 
     @Singleton
     @Provides

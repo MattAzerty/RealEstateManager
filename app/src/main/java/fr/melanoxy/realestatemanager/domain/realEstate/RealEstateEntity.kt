@@ -25,10 +25,10 @@ import kotlin.collections.ArrayList
 data class RealEstateEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    @ColumnInfo(index = true)//TODO for foreign key?
+    @ColumnInfo(index = true)
     val estateAgentId: Long,
     val propertyType: String,
-    val price: Double,//todo
+    val price: Double,
     val surfaceArea: Double,
     val numberOfRooms: Int,
     val numberOfBedrooms: Int,

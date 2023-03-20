@@ -1,6 +1,10 @@
 package fr.melanoxy.realestatemanager.ui.utils
 
+import android.Manifest
 import fr.melanoxy.realestatemanager.domain.estateAgent.EstateAgentEntity
+
+//PERMISSIONS
+const val CAMERA_PERMISSION = Manifest.permission.CAMERA
 
 //ROOM
 const val KEY_INPUT_DATA_WORK_MANAGER = "KEY_INPUT_DATA_WORK_MANAGER"

@@ -11,7 +11,7 @@ import fr.melanoxy.realestatemanager.ui.utils.viewBinding
 
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MainEventListener {//END of MainActivity
 
     private val binding by viewBinding { ActivityMainBinding.inflate(it) }//TODO viewBinding
     private val viewModel by viewModels<MainActivityViewModel>()
@@ -37,4 +37,8 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-}//END of MainActivity
+    override fun displaySnackBarMessage(message: CharSequence) {
+        Snackbar.make(binding.mainCl, message, Snackbar.LENGTH_SHORT).show()
+    }
+
+}
