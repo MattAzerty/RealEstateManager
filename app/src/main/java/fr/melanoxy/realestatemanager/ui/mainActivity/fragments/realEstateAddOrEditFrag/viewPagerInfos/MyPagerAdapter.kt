@@ -1,4 +1,4 @@
-package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddFrag.viewPagerInfos
+package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.viewPagerInfos
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter

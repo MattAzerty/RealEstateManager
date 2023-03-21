@@ -16,5 +16,9 @@ interface EstatePictureDao {
 
     @Query("SELECT * FROM realEstate")
     @Transaction
-    fun getPicturesFromRealEstate(): Flow<List<RealEstateWithPictureEntity>>
+    fun getAllRealEstateWithPicture(): Flow<List<RealEstateWithPictureEntity>>
+
+    @Query("SELECT * FROM estatePicture WHERE realEstateId=:selectedId")
+    @Transaction
+    fun getPictureOfRealEstate(selectedId: Long): Flow<List<EstatePictureEntity>>
 }

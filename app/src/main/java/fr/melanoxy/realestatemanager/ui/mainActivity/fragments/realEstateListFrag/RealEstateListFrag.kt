@@ -15,7 +15,7 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.databinding.FragmentRealEstateListBinding
-import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddFrag.RealEstateAddFrag
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.RealEstateAddOrEditFrag
 import fr.melanoxy.realestatemanager.ui.utils.viewBinding
 
 @AndroidEntryPoint
@@ -48,7 +48,7 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
         val transaction = parentFragmentManager.beginTransaction()
 
         when(fragmentId){
-            R.id.frag_real_estate_list_fab_add -> transaction.replace(R.id.activity_main_FrameLayout_container_real_estate_list, RealEstateAddFrag())
+            R.id.frag_real_estate_list_fab_add -> transaction.replace(R.id.activity_main_FrameLayout_container_real_estate_list, RealEstateAddOrEditFrag())
 
         }
         transaction.addToBackStack(null)
@@ -65,8 +65,6 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
             .setOnClickListener {viewModel.onFabButtonClicked(R.id.frag_real_estate_list_fab_edit)}//1000002
         binding.fragRealEstateListFabMap
             .setOnClickListener {viewModel.onFabButtonClicked(R.id.frag_real_estate_list_fab_map)}//1000003
-        //binding.fragRealEstateListFabSearch
-            //.setOnClickListener {viewModel.onFabButtonClicked(R.id.frag_real_estate_list_fab_search)}//1000001
 
     }
 

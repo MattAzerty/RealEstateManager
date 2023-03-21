@@ -1,4 +1,4 @@
-package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddFrag.viewPagerInfos
+package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.viewPagerInfos
 
 import android.os.Bundle
 import android.view.View

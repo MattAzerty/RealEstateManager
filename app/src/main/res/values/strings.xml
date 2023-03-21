@@ -32,8 +32,5 @@
     <string name="price">Price</string>
     <string name="priceUnit">$</string>
     <string name="error_camera_permission">Camera permission was denied. Unable to take a picture.</string>
-    <string name="take_picture">Take picture</string>
-    <string name="take_picture_description">oui</string>
-    <string name="picture_acquired">YES!</string>
-    <string name="picture_not_acquired">NO!</string>
+    <string name="no_picture_selected">No picture selected</string>
 </resources>

@@ -11,7 +11,7 @@ import fr.melanoxy.realestatemanager.ui.utils.viewBinding
 
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), MainEventListener {//END of MainActivity
+class MainActivity : AppCompatActivity(), MainEventListener {
 
     private val binding by viewBinding { ActivityMainBinding.inflate(it) }//TODO viewBinding
     private val viewModel by viewModels<MainActivityViewModel>()
@@ -25,15 +25,6 @@ class MainActivity : AppCompatActivity(), MainEventListener {//END of MainActivi
                 .replace(binding.activityMainFrameLayoutContainerRealEstateList.id, RealEstateListFrag())
                 .commitNow()
         }
-
-        /*//Event(s) observer
-        viewModel.mainEventLiveData.observe(this) { event ->
-            when (event) {
-                is MainEvent.ShowSnackBarMessage -> Snackbar.make(binding.mainCl, event.message, Snackbar.LENGTH_SHORT).show()
-
-            }
-        }*/
-
 
     }
 

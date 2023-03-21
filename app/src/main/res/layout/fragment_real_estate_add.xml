@@ -292,9 +292,13 @@
                 android:id="@+id/create_new_real_estate_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_tv_add_picture"
-                tools:listitem="@layout/picture_item"></androidx.recyclerview.widget.RecyclerView>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/create_new_real_estate_button_market_entry_date"
+                />
 
             <Button
                 android:id="@+id/create_new_real_estate_button_market_entry_date"

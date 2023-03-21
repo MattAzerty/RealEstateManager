@@ -17,21 +17,32 @@
         <ImageView
             android:contentDescription="@string/app_name"
             android:background="@color/black"
-            android:id="@+id/module_item_image"
+            android:id="@+id/real_estate_picture_item_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:scaleType="fitXY" />
+
+        <ImageView
+            android:id="@+id/real_estate_picture_item_stored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:visibility="invisible"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/vc_save_white_24dp"
+            />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="#CD000000"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="@id/module_item_text" />
+            app:layout_constraintTop_toTopOf="@id/real_estate_picture_item_name" />
 
         <TextView
-            android:id="@+id/module_item_text"
+            android:id="@+id/real_estate_picture_item_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"

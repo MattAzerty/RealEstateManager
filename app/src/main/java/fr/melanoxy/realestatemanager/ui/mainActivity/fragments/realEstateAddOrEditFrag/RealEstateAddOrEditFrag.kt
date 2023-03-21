@@ -1,4 +1,4 @@
-package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddFrag
+package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag
 
 import android.content.ContentValues
 import android.content.Context
@@ -25,7 +25,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.databinding.FragmentRealEstateAddBinding
 import fr.melanoxy.realestatemanager.ui.mainActivity.MainEventListener
-import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddFrag.viewPagerInfos.MyPagerAdapter
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.viewPagerInfos.MyPagerAdapter
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateRv.RealEstatePictureAdapter
 import fr.melanoxy.realestatemanager.ui.utils.CAMERA_PERMISSION
 import fr.melanoxy.realestatemanager.ui.utils.exhaustive
 import fr.melanoxy.realestatemanager.ui.utils.viewBinding
@@ -34,10 +35,10 @@ import java.util.*
 
 
 @AndroidEntryPoint
-class RealEstateAddFrag : Fragment(R.layout.fragment_real_estate_add) {
+class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
 
     private val binding by viewBinding { FragmentRealEstateAddBinding.bind(it) }
-    private val viewModel by viewModels<RealEstateAddViewModel>()
+    private val viewModel by viewModels<RealEstateAddOrEditViewModel>()
     private lateinit var eventListener: MainEventListener
     private lateinit var fabOpen: Animation
     private lateinit var fabClose: Animation
@@ -78,15 +79,16 @@ class RealEstateAddFrag : Fragment(R.layout.fragment_real_estate_add) {
         setupViewPager()
         setupDatePickers()
         bindFab()
+        bindRv()
 
         viewModel.realEstateAddFragSingleLiveEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
-                RealEstateAddEvent.CloseFragment -> requireActivity().supportFragmentManager.popBackStack()
-                RealEstateAddEvent.RequestCameraPermission -> activityResultForCameraPermissions.launch(
+                RealEstateAddOrEditEvent.CloseFragment -> requireActivity().supportFragmentManager.popBackStack()
+                RealEstateAddOrEditEvent.RequestCameraPermission -> activityResultForCameraPermissions.launch(
                     CAMERA_PERMISSION
                 )
-                RealEstateAddEvent.LaunchActivityPhotoCapture -> openCameraInterface()
-                is RealEstateAddEvent.DisplaySnackBarMessage -> eventListener.displaySnackBarMessage(
+                RealEstateAddOrEditEvent.LaunchActivityPhotoCapture -> openCameraInterface()
+                is RealEstateAddOrEditEvent.DisplaySnackBarMessage -> eventListener.displaySnackBarMessage(
                     event.message.toCharSequence(requireContext())
                 )
             }.exhaustive
@@ -97,20 +99,23 @@ class RealEstateAddFrag : Fragment(R.layout.fragment_real_estate_add) {
              */
         }
 
-/*val adapter = MailsAdapter()
-binding.mailsRecyclerView.adapter = adapter
-viewModel.mailsLiveData.observe(viewLifecycleOwner) {
-    adapter.submitList(it)
-}*/
+    }
+
+    private fun bindRv() {
+        val adapter = RealEstatePictureAdapter()
+        binding.createNewRealEstateRecyclerView.adapter = adapter
+        viewModel.realEstatePicturesLiveData.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
+        }
     }
 
 
     private fun openCameraInterface() {
-//val IMAGE_CAPTURE_CODE = 1001
+
         val values = ContentValues()
-        values.put(MediaStore.Images.Media.TITLE, R.string.take_picture)
-        values.put(MediaStore.Images.Media.DESCRIPTION, R.string.take_picture_description)
-        imageUri = activity?.contentResolver?.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+
+        imageUri =
+            activity?.contentResolver?.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
 // Create camera intent
         val cameraInterfaceIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         cameraInterfaceIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)

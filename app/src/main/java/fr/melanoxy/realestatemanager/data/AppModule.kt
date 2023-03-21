@@ -10,6 +10,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import fr.melanoxy.realestatemanager.data.dao.EstateAgentDao
+import fr.melanoxy.realestatemanager.data.dao.EstatePictureDao
 import fr.melanoxy.realestatemanager.data.dao.RealEstateDao
 import javax.inject.Singleton
 
@@ -44,4 +45,8 @@ object AppModule {
     @Singleton
     @Provides
     fun provideEstateAgentDao(appDatabase: AppDatabase): EstateAgentDao = appDatabase.getEstateAgentDao()
+
+    @Singleton
+    @Provides
+    fun provideEstatePictureDao(appDatabase: AppDatabase): EstatePictureDao = appDatabase.getEstatePictureDao()
 }

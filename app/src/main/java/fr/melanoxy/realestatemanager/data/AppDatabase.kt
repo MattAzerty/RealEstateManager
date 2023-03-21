@@ -11,18 +11,21 @@ import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.google.gson.Gson
 import fr.melanoxy.realestatemanager.data.dao.EstateAgentDao
+import fr.melanoxy.realestatemanager.data.dao.EstatePictureDao
 import fr.melanoxy.realestatemanager.data.dao.RealEstateDao
 import fr.melanoxy.realestatemanager.domain.estateAgent.EstateAgentEntity
+import fr.melanoxy.realestatemanager.domain.estatePicture.EstatePictureEntity
 import fr.melanoxy.realestatemanager.domain.realEstate.RealEstateEntity
 import fr.melanoxy.realestatemanager.ui.utils.DATABASE_NAME
 import fr.melanoxy.realestatemanager.ui.utils.ESTATE_AGENTS
 import fr.melanoxy.realestatemanager.ui.utils.KEY_INPUT_DATA_WORK_MANAGER
 
-@Database(entities = [RealEstateEntity::class, EstateAgentEntity::class], version = 1, exportSchema = false)
+@Database(entities = [RealEstateEntity::class, EstateAgentEntity::class, EstatePictureEntity::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun getRealEstateDao(): RealEstateDao
     abstract fun getEstateAgentDao(): EstateAgentDao
+    abstract fun getEstatePictureDao(): EstatePictureDao
 
     companion object {
 
