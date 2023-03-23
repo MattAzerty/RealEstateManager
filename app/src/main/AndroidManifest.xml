@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- FOR INTERNET -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".MainApplication"
@@ -25,6 +27,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- See https://developer.android.com/training/dependency-injection/hilt-jetpack#workmanager -->
+        <!-- See https://developer.android.com/jetpack/androidx/releases/work#2.6.0-alpha01 -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="fr.melanoxy.realestatemanager.androidx-startup"
+            tools:node="remove"
+            />
     </application>
 
 </manifest>

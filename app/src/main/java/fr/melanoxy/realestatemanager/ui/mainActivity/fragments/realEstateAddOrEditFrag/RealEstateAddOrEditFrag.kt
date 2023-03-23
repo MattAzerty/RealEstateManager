@@ -17,6 +17,7 @@ import android.view.ViewParent
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
@@ -32,9 +33,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.databinding.FragmentRealEstateAddBinding
 import fr.melanoxy.realestatemanager.ui.mainActivity.MainEventListener
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.realEstateSpinners.AddAgentSpinnerAdapter
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.viewPagerInfos.MyPagerAdapter
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateRv.RealEstatePictureAdapter
 import fr.melanoxy.realestatemanager.ui.utils.CAMERA_PERMISSION
+import fr.melanoxy.realestatemanager.ui.utils.REAL_ESTATE_TYPES
 import fr.melanoxy.realestatemanager.ui.utils.exhaustive
 import fr.melanoxy.realestatemanager.ui.utils.viewBinding
 import java.text.SimpleDateFormat
@@ -93,6 +96,7 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
 
         setupViewPager()
         setupDatePickers()
+        bindAutoCompleteText()
         bindFab()
         bindRv()
         bindTv()
@@ -119,6 +123,24 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
              */
         }
 
+    }
+
+    private fun bindAutoCompleteText() {
+        //Agent
+        val adapterForAgent = AddAgentSpinnerAdapter()
+        binding.createNewRealEstateAutoCompleteTextViewAgents.setAdapter(adapterForAgent)
+        binding.createNewRealEstateAutoCompleteTextViewAgents.setOnItemClickListener { _, _, position, _ ->
+            adapterForAgent.getItem(position)?.let {
+                viewModel.onAgentSelected(it.agentId)
+            }
+        }
+        viewModel.agentViewStateLiveData.observe(viewLifecycleOwner) { agentViewState ->
+            adapterForAgent.setData(agentViewState)
+            //Type
+            val adapterForType =
+                ArrayAdapter(requireContext(), R.layout.item_drop_down, REAL_ESTATE_TYPES)
+            binding.createNewRealEstateAutoCompleteTextViewType.setAdapter(adapterForType)
+        }
     }
 
     private fun bindTv() {

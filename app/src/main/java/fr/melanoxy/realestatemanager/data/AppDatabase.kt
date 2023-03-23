@@ -20,6 +20,7 @@ import fr.melanoxy.realestatemanager.ui.utils.DATABASE_NAME
 import fr.melanoxy.realestatemanager.ui.utils.ESTATE_AGENTS
 import fr.melanoxy.realestatemanager.ui.utils.KEY_INPUT_DATA_WORK_MANAGER
 
+
 @Database(entities = [RealEstateEntity::class, EstateAgentEntity::class, EstatePictureEntity::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 

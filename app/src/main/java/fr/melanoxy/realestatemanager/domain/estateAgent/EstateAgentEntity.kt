@@ -8,5 +8,6 @@ data class EstateAgentEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val firstName: String,
-    val lastName: String
+    val lastName: String,
+    val picUrl: String,
 )

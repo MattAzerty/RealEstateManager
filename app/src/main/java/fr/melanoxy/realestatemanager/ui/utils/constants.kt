@@ -12,15 +12,18 @@ const val DATABASE_NAME = "RealEstateManager_DATABASE"
 val ESTATE_AGENTS = listOf(
     EstateAgentEntity(
         firstName = "Jean",
-        lastName = "BINOT"
+        lastName = "BINOT",
+        picUrl = "https://i.pravatar.cc/200?u=JeanBINOT5"
     ),
     EstateAgentEntity(
         firstName = "Jeanne",
-        lastName = "BINOTE"
+        lastName = "BINOTE",
+        picUrl = "https://i.pravatar.cc/200?u=JeanneBINOTE6"
     ),
     EstateAgentEntity(
         firstName = "GUEST",
-        lastName = "GUEST"
+        lastName = "GUEST",
+        picUrl = "https://www.pngitem.com/pimgs/m/504-5040528_empty-profile-picture-png-transparent-png.png"
     ),
 )
 
@@ -54,11 +57,11 @@ val REAL_ESTATE_TYPES = listOf(
     "Vacation home"
 )
 
-val POINTS_OF_INTEREST = listOf(
+/*val POINTS_OF_INTEREST = listOf(
     "Park",
     "School",
     "Grocery store",
     "Shopping mall",
     "Hospital"
-)
+)*/
 

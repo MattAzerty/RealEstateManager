@@ -59,7 +59,7 @@
                 tools:endIconMode="dropdown_menu">
 
                 <AutoCompleteTextView
-                    android:id="@+id/create_new_real_estate_AutoCompleteTextView_projects"
+                    android:id="@+id/create_new_real_estate_AutoCompleteTextView_agents"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/agentName"
@@ -86,7 +86,7 @@
                 app:startIconTint="@color/black"
                 tools:endIconMode="dropdown_menu">
 
-                <AutoCompleteTextView
+                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                     android:id="@+id/create_new_real_estate_AutoCompleteTextView_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

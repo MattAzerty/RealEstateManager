@@ -14,8 +14,10 @@ import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.data.PermissionChecker
 import fr.melanoxy.realestatemanager.data.RealEstateRepository
 import fr.melanoxy.realestatemanager.data.utils.CoroutineDispatcherProvider
+import fr.melanoxy.realestatemanager.domain.estateAgent.GetEstateAgentUseCase
 import fr.melanoxy.realestatemanager.domain.estatePicture.EstatePictureEntity
 import fr.melanoxy.realestatemanager.domain.estatePicture.GetPictureOfRealEstateUseCase
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.realEstateSpinners.AddAgentViewStateItem
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateRv.RealEstatePictureViewStateItem
 import fr.melanoxy.realestatemanager.ui.utils.NativeText
 import fr.melanoxy.realestatemanager.ui.utils.SingleLiveEvent
@@ -27,7 +29,8 @@ class RealEstateAddOrEditViewModel @Inject constructor(
     private val permissionChecker: PermissionChecker,
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
     realEstateRepository: RealEstateRepository,
-    private val getPictureOfRealEstateUseCase: GetPictureOfRealEstateUseCase
+    private val getPictureOfRealEstateUseCase: GetPictureOfRealEstateUseCase,
+    private val getEstateAgentUseCase: GetEstateAgentUseCase
 ) : ViewModel() {
 
     private var itemIndex = 1
@@ -36,6 +39,24 @@ class RealEstateAddOrEditViewModel @Inject constructor(
 
     private val selectedRealEstateId =realEstateRepository.selectedRealEstateIdMutableSharedFlow.value
     private val tempPictureListItemLiveData = MutableLiveData<List<RealEstatePictureViewStateItem>>()
+
+    //TODO Change this to globalViewState
+    val agentViewStateLiveData: LiveData<List<AddAgentViewStateItem>> = liveData(coroutineDispatcherProvider.io){
+        if(selectedRealEstateId==null){
+            getEstateAgentUseCase.invoke().collect { agents ->
+                emit(
+                    agents.map {
+                        AddAgentViewStateItem(
+                            agentId = it.id,
+                            agentName = "${it.firstName} ${it.lastName}",
+                            agentPfpUrl = it.picUrl
+                        )
+                    }
+                )
+            }
+        }
+
+        }
 
     private val pictureEntityListLiveData: LiveData<List<EstatePictureEntity>> = liveData(coroutineDispatcherProvider.io){
         if(selectedRealEstateId!=null){
@@ -373,6 +394,10 @@ class RealEstateAddOrEditViewModel @Inject constructor(
 
             tempPictureListItemLiveData.value = picList
         }
+    }
+
+    fun onAgentSelected(agentId: Long) {
+        Log.e("MyViewModel", "agentId$agentId")
     }
 
 
