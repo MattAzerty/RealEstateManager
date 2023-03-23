@@ -1,9 +1,14 @@
 package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag
 
 import android.app.Activity
+import android.content.Context
 import android.net.Uri
+import android.util.Log
+import android.view.View
 import androidx.activity.result.ActivityResult
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.lifecycle.*
+import dagger.assisted.Assisted
 import dagger.hilt.android.lifecycle.HiltViewModel
 import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.data.PermissionChecker
@@ -14,6 +19,7 @@ import fr.melanoxy.realestatemanager.domain.estatePicture.GetPictureOfRealEstate
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateRv.RealEstatePictureViewStateItem
 import fr.melanoxy.realestatemanager.ui.utils.NativeText
 import fr.melanoxy.realestatemanager.ui.utils.SingleLiveEvent
+import fr.melanoxy.realestatemanager.ui.utils.intToBitmap
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,12 +30,16 @@ class RealEstateAddOrEditViewModel @Inject constructor(
     private val getPictureOfRealEstateUseCase: GetPictureOfRealEstateUseCase
 ) : ViewModel() {
 
-    private val selectedId =realEstateRepository.selectedRealEstateIdMutableSharedFlow.value
+    private var itemIndex = 1
+    private var deletedItemIndices: MutableList<Int> = mutableListOf()
+    private var selectedPicture: Uri?=null
+
+    private val selectedRealEstateId =realEstateRepository.selectedRealEstateIdMutableSharedFlow.value
     private val tempPictureListItemLiveData = MutableLiveData<List<RealEstatePictureViewStateItem>>()
 
     private val pictureEntityListLiveData: LiveData<List<EstatePictureEntity>> = liveData(coroutineDispatcherProvider.io){
-        if(selectedId!=null){
-            getPictureOfRealEstateUseCase.invoke(selectedId).collect {
+        if(selectedRealEstateId!=null){
+            getPictureOfRealEstateUseCase.invoke(selectedRealEstateId).collect {
                 emit(it)
             }
         }
@@ -51,22 +61,118 @@ class RealEstateAddOrEditViewModel @Inject constructor(
             listFromRealEstate = pictureListFromRealEstate.map {
 
             RealEstatePictureViewStateItem(
-                realEstateId = selectedId!!,
+                realEstateId = selectedRealEstateId!!,
                 pictureUri = Uri.parse(it.path),
                 realEstatePictureName = it.name,
-                isStored = true
-            ) { joke() }//TODO change this
-
-
+                isStored = true,
+                isEdited = false,
+                toDelete = false,
+                onRealEstatePictureClicked = {
+                    Log.e("MyViewModel", "Error occurred while doing something")
+                                             },
+                onRealEstatePictureLongPress = {
+                    selectedPicture = Uri.parse(it.path)
+                    notifyPictureToDelete()
+                },
+                onRealEstatePictureDeleteClicked = {
+                    deletePictureSelected()
+                },
+                onRealEstatePictureDeleteLongPress = {
+                    selectedPicture = Uri.parse(it.path)
+                    notifyPictureToDelete()
+                },
+                onRealEstatePictureNameClicked = {
+                    selectedPicture = Uri.parse(it.path)
+                    notifyPictureIsEdited()
+                }
+            )
+            }
+        }
+//Update behavior of AddPictureBar
+        if(listOfLoadedPicture.isEmpty()) {realEstateAddFragSingleLiveEvent.value =
+            RealEstateAddOrEditEvent.UpdateBarMessage(
+                RealEstateAddPictureBarViewState(
+                    noPictureTextViewVisibility = View.VISIBLE,
+                    barText = NativeText.Resource(R.string.select_methode),
+                    barIconTip = null
+                )
+            )
+        }else{realEstateAddFragSingleLiveEvent.value =
+            RealEstateAddOrEditEvent.UpdateBarMessage(
+                RealEstateAddPictureBarViewState(
+                    noPictureTextViewVisibility = View.GONE,
+                    barText = NativeText.Resource(R.string.x_picture_selected),
+                    barIconTip = intToBitmap(listOfLoadedPicture.size)
+                )
+            )
             }
 
-        }
-
-        mediatorLiveData.value = listOfLoadedPicture + listFromRealEstate
+        mediatorLiveData.value = (listOfLoadedPicture + listFromRealEstate).sortedBy{it.pictureUri}.reversed()
 
     }
 
-    private fun joke(){}
+    private fun deletePictureSelected() {
+
+        val picList = tempPictureListItemLiveData.value?.toMutableList() ?: mutableListOf()
+
+        repeat(picList.count { it.toDelete })
+        {
+            val index = picList.indexOfFirst { it.toDelete }
+            if (index != -1) {
+                val picture = picList[index]
+                picList.removeAt(index)
+                tempPictureListItemLiveData.value = picList
+
+            }
+        }
+
+        selectedPicture=null
+    }
+
+    private fun notifyPictureIsEdited() {
+
+        val picList = tempPictureListItemLiveData.value?.toMutableList() ?: mutableListOf()
+
+        val index = picList.indexOfFirst { it.pictureUri == selectedPicture }
+        if (index != -1) {
+           val picture = picList[index]
+           picList.removeAt(index)
+            picList.add(
+                RealEstatePictureViewStateItem(
+                    realEstateId = null,
+                    pictureUri = picture.pictureUri,
+                    realEstatePictureName = picture.realEstatePictureName,
+                    isStored = false,
+                    isEdited = !picture.isEdited,
+                    toDelete =false,
+                    onRealEstatePictureClicked = {
+                        Log.e("MyViewModel", "Error occurred while doing something")
+                    },
+                    onRealEstatePictureLongPress = {
+                        selectedPicture = picture.pictureUri
+                        notifyPictureToDelete()
+                    },
+                    onRealEstatePictureDeleteClicked = {
+                        deletePictureSelected()
+                    },
+                    onRealEstatePictureDeleteLongPress = {
+                        selectedPicture = picture.pictureUri
+                        notifyPictureToDelete()
+                    },
+                    onRealEstatePictureNameClicked = {
+                        selectedPicture = picture.pictureUri
+                        notifyPictureIsEdited()
+                    }
+                ) )
+
+            tempPictureListItemLiveData.value = picList
+
+            if(!picList.any { it.isEdited }) {
+                realEstateAddFragSingleLiveEvent.value = RealEstateAddOrEditEvent.CloseEditTextToChangePictureName
+            }else{realEstateAddFragSingleLiveEvent.value = RealEstateAddOrEditEvent.ShowEditTextToChangePictureName}
+        }
+    }
+
 
     /*private var listPictureEntityOfRealEstate: List<EstatePictureEntity> = emptyList()
     private val selectedId =realEstateRepository.selectedRealEstateIdMutableSharedFlow.value
@@ -104,28 +210,171 @@ class RealEstateAddOrEditViewModel @Inject constructor(
         else realEstateAddFragSingleLiveEvent.value = RealEstateAddOrEditEvent.RequestCameraPermission
     }
 
+    fun onPickPicturesFromGallerySelected() {
+        realEstateAddFragSingleLiveEvent.value = RealEstateAddOrEditEvent.LaunchActivityPickVisualMedia
+    }
+
     fun onLaunchCameraInterfaceResult(result: ActivityResult, imageUri: Uri?) {
         when (result.resultCode){
-            Activity.RESULT_OK -> addPictureToRv(imageUri!!)
+            Activity.RESULT_OK -> addPicturesToRv(listOf(imageUri!!))
             Activity.RESULT_CANCELED -> realEstateAddFragSingleLiveEvent.value = RealEstateAddOrEditEvent.DisplaySnackBarMessage(NativeText.Resource(
                 R.string.no_picture_selected))
         }
     }
 
-    private fun addPictureToRv(imageUri: Uri) {
-        val previousPic = tempPictureListItemLiveData.value?.toMutableList() ?: mutableListOf()
-        previousPic.add(
-            RealEstatePictureViewStateItem(
-                realEstateId = null,
-                pictureUri = imageUri,
-                realEstatePictureName = "Picture",
-                isStored = false
-            ) { joke() }//TODO change this
+    fun onPickVisualMediaResult(uris: List<Uri>?) {
+        if (uris!=null && uris.isNotEmpty()) {addPicturesToRv(uris)}
+        else {realEstateAddFragSingleLiveEvent.value = RealEstateAddOrEditEvent.DisplaySnackBarMessage(NativeText.Resource(
+            R.string.no_picture_selected))}
+    }
 
-        )
+    private fun addPicturesToRv(listOfImageUri: List<Uri>) {
+        val previousPic = tempPictureListItemLiveData.value?.toMutableList() ?: mutableListOf()
+        listOfImageUri.forEach {
+            previousPic.add(
+                RealEstatePictureViewStateItem(
+                    realEstateId = null,
+                    pictureUri = it,
+                    realEstatePictureName = getNextItemName(),
+                    isStored = false,
+                    isEdited = false,
+                    toDelete =false,
+                    onRealEstatePictureClicked = {
+                        Log.e("MyViewModel", "Error occurred while doing something")
+                                                 },
+                    onRealEstatePictureLongPress = {
+                        selectedPicture = it
+                        notifyPictureToDelete()
+                    },
+                    onRealEstatePictureDeleteClicked = {
+                        deletePictureSelected()
+                    },
+                    onRealEstatePictureDeleteLongPress = {
+                        selectedPicture = it
+                        notifyPictureToDelete()
+                    },
+                    onRealEstatePictureNameClicked = {
+                        selectedPicture = it
+                        notifyPictureIsEdited()
+                    }
+                ) )
+        }
+
 
         tempPictureListItemLiveData.value = previousPic
     }
+
+    private fun getNextItemName(): String {
+        val pictureName:String
+        if(deletedItemIndices.isEmpty()) {
+            pictureName = "PIC$itemIndex"
+            itemIndex++
+        }else{
+            pictureName ="PIC${deletedItemIndices[0]}"
+        }
+
+        return pictureName
+
+    }
+
+    fun onCloseAddPictureClicked() {
+        itemIndex = 1
+        deletedItemIndices.clear()
+        tempPictureListItemLiveData.value = emptyList()
+    }
+
+    fun onNewNameForPicProvided(nameForPic: String) {
+
+    if(nameForPic.length>1){
+
+        val picList = tempPictureListItemLiveData.value?.toMutableList() ?: mutableListOf()
+
+        repeat(picList.count { it.isEdited })
+        {
+        val index = picList.indexOfFirst { it.isEdited }
+        if (index != -1) {
+            val picture = picList[index]
+            picList.removeAt(index)
+            picList.add(
+                RealEstatePictureViewStateItem(
+                    realEstateId = null,
+                    pictureUri = picture.pictureUri,
+                    realEstatePictureName = nameForPic,
+                    isStored = false,
+                    isEdited = false,
+                    toDelete =false,
+                    onRealEstatePictureClicked = {
+                        Log.e("MyViewModel", "Error occurred while doing something")
+                    },
+                    onRealEstatePictureLongPress = {
+                        selectedPicture = picture.pictureUri
+                        notifyPictureToDelete()
+                    },
+                    onRealEstatePictureDeleteClicked = {
+                        deletePictureSelected()
+                    },
+                    onRealEstatePictureDeleteLongPress = {
+                        selectedPicture = picture.pictureUri
+                        notifyPictureToDelete()
+                    },
+                    onRealEstatePictureNameClicked = {
+                        selectedPicture = picture.pictureUri
+                        notifyPictureIsEdited()
+                    }
+                ) )
+            tempPictureListItemLiveData.value = picList
+            selectedPicture=null
+        }
+        }
+
+    }else {
+        notifyPictureIsEdited()
+        realEstateAddFragSingleLiveEvent.value = RealEstateAddOrEditEvent.DisplaySnackBarMessage(NativeText.Resource(
+        R.string.name_too_short))
+
+    }
+    }
+
+    private fun notifyPictureToDelete() {
+
+        val picList = tempPictureListItemLiveData.value?.toMutableList() ?: mutableListOf()
+
+        val index = picList.indexOfFirst { it.pictureUri == selectedPicture }
+        if (index != -1) {
+            val picture = picList[index]
+            picList.removeAt(index)
+            picList.add(
+                RealEstatePictureViewStateItem(
+                    realEstateId = null,
+                    pictureUri = picture.pictureUri,
+                    realEstatePictureName = picture.realEstatePictureName,
+                    isStored = false,
+                    isEdited = false,
+                    toDelete =!picture.toDelete,
+                    onRealEstatePictureClicked = {
+                        Log.e("MyViewModel", "Error occurred while doing something")
+                    },
+                    onRealEstatePictureLongPress = {
+                        selectedPicture = picture.pictureUri
+                        notifyPictureToDelete()
+                    },
+                    onRealEstatePictureDeleteClicked = {
+                        deletePictureSelected()
+                    },
+                    onRealEstatePictureDeleteLongPress = {
+                        selectedPicture = picture.pictureUri
+                        notifyPictureToDelete()
+                    },
+                    onRealEstatePictureNameClicked = {
+                        selectedPicture = picture.pictureUri
+                        notifyPictureIsEdited()
+                    }
+                ) )
+
+            tempPictureListItemLiveData.value = picList
+        }
+    }
+
 
     val realEstateAddFragSingleLiveEvent = SingleLiveEvent<RealEstateAddOrEditEvent>()
 

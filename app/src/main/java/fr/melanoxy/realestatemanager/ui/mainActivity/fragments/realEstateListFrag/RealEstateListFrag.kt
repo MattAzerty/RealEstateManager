@@ -52,7 +52,8 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
 
         }
         transaction.addToBackStack(null)
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        //ENTER - EXIST - POP ENTER - POP EXIT
+        transaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out)
         transaction.commit()
     }
 

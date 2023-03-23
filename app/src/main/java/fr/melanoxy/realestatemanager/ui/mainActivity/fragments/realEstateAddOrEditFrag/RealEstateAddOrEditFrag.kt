@@ -1,5 +1,6 @@
 package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -11,12 +12,18 @@ import android.transition.Transition
 import android.transition.TransitionManager
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroupOverlay
+import android.view.ViewParent
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -45,6 +52,7 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
     private lateinit var arrowRotationForward: Animation
     private lateinit var arrowRotationBackward: Animation
     private lateinit var activityResultForCamera: ActivityResultLauncher<Intent>
+    private lateinit var activityResultPickMultipleMediaFromGallery: ActivityResultLauncher<PickVisualMediaRequest>
     private lateinit var activityResultForCameraPermissions: ActivityResultLauncher<String>
     private var imageUri: Uri? = null
     private var isOpen = false
@@ -53,7 +61,7 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
         super.onAttach(context)
 
         eventListener = context as MainEventListener
-// Initialize the permission launcher for photo selected
+// Initialize the permission launcher for picture from Camera selected
         activityResultForCamera =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
                 viewModel.onLaunchCameraInterfaceResult(result, imageUri)
@@ -63,6 +71,13 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
         activityResultForCameraPermissions =
             registerForActivityResult(ActivityResultContracts.RequestPermission()) { permission ->
                 viewModel.onCameraPermissionResult(permission)
+            }
+
+// Registers a photo picker activity launcher (PickMultipleVisualMedia(5) -> you can restrict number pic to pick
+// https://developer.android.com/training/data-storage/shared/photopicker?hl=fr#kotlin
+        activityResultPickMultipleMediaFromGallery =
+            registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia()) { uris ->
+                viewModel.onPickVisualMediaResult(uris)
             }
     }
 
@@ -80,18 +95,23 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
         setupDatePickers()
         bindFab()
         bindRv()
+        bindTv()
 
         viewModel.realEstateAddFragSingleLiveEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
-                RealEstateAddOrEditEvent.CloseFragment -> requireActivity().supportFragmentManager.popBackStack()
+                RealEstateAddOrEditEvent.CloseFragment -> closeFragment()
                 RealEstateAddOrEditEvent.RequestCameraPermission -> activityResultForCameraPermissions.launch(
                     CAMERA_PERMISSION
                 )
                 RealEstateAddOrEditEvent.LaunchActivityPhotoCapture -> openCameraInterface()
+                RealEstateAddOrEditEvent.LaunchActivityPickVisualMedia -> pickMedia()
+                RealEstateAddOrEditEvent.ShowEditTextToChangePictureName -> changePictureName()
+                RealEstateAddOrEditEvent.CloseEditTextToChangePictureName -> closeEditPictureName()
+                is RealEstateAddOrEditEvent.UpdateBarMessage -> updateBarView(event.barState)
                 is RealEstateAddOrEditEvent.DisplaySnackBarMessage -> eventListener.displaySnackBarMessage(
                     event.message.toCharSequence(requireContext())
                 )
-            }.exhaustive
+            }//.exhaustive//TODO inline?
             /*
             Any? type. It is used to ensure that when using a when expression in Kotlin, all possible cases are handled, so that the code can be considered "exhaustive".
             In this case, calling .exhaustive after the when expression is not strictly necessary. However, in cases where there are more than two cases in the enum, or if more cases are added in the future, using exhaustive after the when expression can help catch potential bugs caused by missing cases.
@@ -101,6 +121,44 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
 
     }
 
+    private fun bindTv() {
+        binding.createNewRealEstateTlChangePictureName.setEndIconOnClickListener {
+            viewModel.onNewNameForPicProvided(binding.createNewRealEstateTvChangePictureName.text.toString().trim())
+            closeEditPictureName()
+        }
+    }
+
+    private fun changePictureName() {
+        binding.createNewRealEstateTlChangePictureName.visibility= View.VISIBLE
+    }
+
+    private fun closeEditPictureName() {
+        binding.createNewRealEstateTvChangePictureName.hideKeyboard()
+        binding.createNewRealEstateTvChangePictureName.text?.clear()
+        binding.createNewRealEstateTlChangePictureName.visibility = View.GONE
+    }
+
+    private fun View.hideKeyboard() {
+        val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputManager.hideSoftInputFromWindow(windowToken, 0)
+    }
+
+    private fun updateBarView(barState: RealEstateAddPictureBarViewState) {
+        val bitmap = barState.barIconTip ?: AppCompatResources.getDrawable(requireContext(), R.drawable.vc_keyboard_arrow_left_white_24dp)
+            ?.toBitmap()
+        binding.createNewRealEstateNoImage.visibility = barState.noPictureTextViewVisibility
+        binding.createNewRealEstateBarArrowIcon.setImageBitmap(bitmap)
+        binding.createNewRealEstateBarInputText.text = barState.barText.toCharSequence(requireContext())
+    }
+
+    private fun closeFragment() {
+        requireActivity().supportFragmentManager.popBackStack()
+    }
+
+    private fun pickMedia() {
+        activityResultPickMultipleMediaFromGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }
+
     private fun bindRv() {
         val adapter = RealEstatePictureAdapter()
         binding.createNewRealEstateRecyclerView.adapter = adapter
@@ -108,7 +166,6 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
             adapter.submitList(it)
         }
     }
-
 
     private fun openCameraInterface() {
 
@@ -123,12 +180,13 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
         activityResultForCamera.launch(cameraInterfaceIntent)
     }
 
-
     private fun bindFab() {
 //Close addFrag
         binding.createNewRealEstateClose.setOnClickListener { viewModel.onCloseFragmentClicked() }
 //Camera selected
         binding.createNewRealEstateFabPhotoSelection.setOnClickListener { viewModel.onAddPictureFromCameraSelected() }
+//Gallery selected
+        binding.createNewRealEstateFabGallerySelection.setOnClickListener { viewModel.onPickPicturesFromGallerySelected() }
 //Add new picture(s)
         binding.createNewRealEstateBarPictureAddPictureIcon.setOnClickListener {
             //viewModel.onAddPictureClicked()
@@ -137,6 +195,8 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
         }
 //Close new picture(s)
         binding.createNewRealEstateBarCloseIcon.setOnClickListener {
+            viewModel.onCloseAddPictureClicked()
+            closeEditPictureName()
             collapse()
             animateFab()
         }
@@ -184,18 +244,18 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
 
     private fun animateFab() {
         if (isOpen) {//Case collapse
-            binding.createNewRealEstateBarArrowIcon.startAnimation(arrowRotationBackward)
-            binding.createNewRealEstateFabPictureSelection.startAnimation(fabClose)
+            //binding.createNewRealEstateBarArrowIcon.startAnimation(arrowRotationBackward)
+            binding.createNewRealEstateFabGallerySelection.startAnimation(fabClose)
             binding.createNewRealEstateFabPhotoSelection.startAnimation(fabClose)
-            binding.createNewRealEstateFabPictureSelection.isClickable = false
+            binding.createNewRealEstateFabGallerySelection.isClickable = false
             binding.createNewRealEstateFabPhotoSelection.isClickable = false
 
             isOpen = false
         } else {//Case expand
-            binding.createNewRealEstateBarArrowIcon.startAnimation(arrowRotationForward)
-            binding.createNewRealEstateFabPictureSelection.startAnimation(fabOpen)
+            //binding.createNewRealEstateBarArrowIcon.startAnimation(arrowRotationForward)
+            binding.createNewRealEstateFabGallerySelection.startAnimation(fabOpen)
             binding.createNewRealEstateFabPhotoSelection.startAnimation(fabOpen)
-            binding.createNewRealEstateFabPictureSelection.isClickable = true
+            binding.createNewRealEstateFabGallerySelection.isClickable = true
             binding.createNewRealEstateFabPhotoSelection.isClickable = true
 
             isOpen = true

@@ -278,7 +278,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/fab_margin"
-                android:layout_marginTop="34dp"
+                android:layout_marginTop="24dp"
                 android:drawableLeft="@drawable/vc_image_white_24dp"
                 android:drawableTint="@color/black"
                 android:gravity="center"
@@ -297,8 +297,59 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_tv_add_picture"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/create_new_real_estate_button_market_entry_date"
+                app:layout_constraintBottom_toTopOf="@id/create_new_real_estate_no_image"
                 />
+
+            <TextView
+                android:id="@+id/create_new_real_estate_no_image"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:paddingBottom="24dp"
+                android:layout_margin="16dp"
+                android:gravity="center"
+                android:text="@string/empty_picture"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@id/create_new_real_estate_tl_change_picture_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_recyclerView"
+                />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/create_new_real_estate_tl_change_picture_name"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                app:counterEnabled="true"
+                android:textColorHint="@color/black"
+                app:boxStrokeColor="@color/textinputlayout_tint_selector"
+                app:boxStrokeWidth="@dimen/stroke"
+                app:boxStrokeWidthFocused="@dimen/stroke"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_no_image"
+                app:endIconDrawable="@drawable/vc_send_white_24dp"
+                app:endIconTint="@color/black"
+                app:endIconMode="custom"
+                app:endIconCheckable="true"
+                app:startIconDrawable="@drawable/vc_edit_white_24dp"
+                app:startIconTint="@color/black">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/create_new_real_estate_tv_change_picture_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/enterNewName"
+                    android:maxLength="8"
+                    android:inputType="textCapCharacters" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/create_new_real_estate_button_market_entry_date"
@@ -311,7 +362,7 @@
                 android:text="@string/select_market_entry_date"
                 android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="@id/create_new_real_estate_til_description"
-                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_recyclerView" />
+                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_tl_change_picture_name" />
 
             <Button
                 android:id="@+id/create_new_real_estate_button_sale_date"
@@ -409,7 +460,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="16dp"
-                                android:src="@drawable/ic_keyboard_arrow_right_white_24dp"
+                                android:src="@drawable/vc_keyboard_arrow_left_white_24dp"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
@@ -421,7 +472,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="0dp"
                                 android:background="@null"
-                                android:gravity="center_vertical"
+                                android:gravity="center"
                                 android:maxLines="1"
                                 android:text="@string/select_methode"
                                 android:textColor="@color/white"
@@ -495,7 +546,7 @@
                 app:tint="@color/white" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/create_new_real_estate_fab_picture_selection"
+                android:id="@+id/create_new_real_estate_fab_gallery_selection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/fab_margin"
@@ -528,7 +579,7 @@
                 app:layout_anchor="@+id/create_new_real_estate_header_l2"
                 app:layout_anchorGravity="center"
                 app:layout_constraintBottom_toBottomOf="@id/create_new_real_estate_header_l2"
-                app:layout_constraintStart_toEndOf="@id/create_new_real_estate_fab_picture_selection"
+                app:layout_constraintStart_toEndOf="@id/create_new_real_estate_fab_gallery_selection"
                 app:layout_constraintTop_toTopOf="@id/create_new_real_estate_header_l2"
                 app:maxImageSize="34dp"
                 app:rippleColor="@color/black"

@@ -6,6 +6,10 @@ sealed class RealEstateAddOrEditEvent {
     object CloseFragment : RealEstateAddOrEditEvent()
     object RequestCameraPermission : RealEstateAddOrEditEvent()
     object LaunchActivityPhotoCapture : RealEstateAddOrEditEvent()
+    object LaunchActivityPickVisualMedia : RealEstateAddOrEditEvent()
+    object ShowEditTextToChangePictureName : RealEstateAddOrEditEvent()
+    object CloseEditTextToChangePictureName : RealEstateAddOrEditEvent()
+    data class UpdateBarMessage(val barState: RealEstateAddPictureBarViewState) : RealEstateAddOrEditEvent()
     data class DisplaySnackBarMessage(val message: NativeText) : RealEstateAddOrEditEvent()
 
 }

@@ -33,4 +33,8 @@
     <string name="priceUnit">$</string>
     <string name="error_camera_permission">Camera permission was denied. Unable to take a picture.</string>
     <string name="no_picture_selected">No picture selected</string>
+    <string name="empty_picture">NO IMAGE</string>
+    <string name="x_picture_selected">NEW PICTURE(S)</string>
+    <string name="enterNewName">Rename picture here…</string>
+    <string name="name_too_short">Name is too short</string>
 </resources>

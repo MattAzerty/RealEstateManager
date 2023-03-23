@@ -34,6 +34,36 @@
             android:src="@drawable/vc_save_white_24dp"
             />
 
+        <ImageView
+            android:id="@+id/real_estate_picture_item_edited"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:paddingBottom="8dp"
+            android:background="#4D000000"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/real_estate_picture_item_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:src="@drawable/vc_border_color_white_24dp"
+            app:tint="@color/colorAccent" />
+
+        <ImageView
+            android:id="@+id/real_estate_picture_item_delete"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:background="#E6000000"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/real_estate_picture_item_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:src="@drawable/vc_close_white_24dp"
+            app:tint="@color/white" />
+
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
