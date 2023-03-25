@@ -61,7 +61,7 @@ class AddAgentSpinnerAdapter : ListAdapter, Filterable {
 
     override fun getFilter() = object : Filter() {
         override fun performFiltering(constraint: CharSequence) = FilterResults()
-        override fun publishResults(constraint: CharSequence, results: FilterResults) {}
+        override fun publishResults(constraint: CharSequence?, results: FilterResults?) {}
         override fun convertResultToString(resultValue: Any): CharSequence {
             return (resultValue as AddAgentViewStateItem).agentName
         }
@@ -71,5 +71,6 @@ class AddAgentSpinnerAdapter : ListAdapter, Filterable {
         this.items = items
         dataSetObservable.notifyChanged()
     }
+
 
 }

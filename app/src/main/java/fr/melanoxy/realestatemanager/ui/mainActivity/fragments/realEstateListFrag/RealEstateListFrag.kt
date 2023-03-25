@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.transition.ChangeBounds
 import android.transition.Transition
+import android.transition.TransitionInflater
 import android.transition.TransitionManager
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -24,6 +25,7 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
     private val binding by viewBinding { FragmentRealEstateListBinding.bind(it) }
     private val viewModel by viewModels<RealEstateListViewModel>()
     private var isExpanded=false
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,9 +53,8 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
             R.id.frag_real_estate_list_fab_add -> transaction.replace(R.id.activity_main_FrameLayout_container_real_estate_list, RealEstateAddOrEditFrag())
 
         }
-        transaction.addToBackStack(null)
-        //ENTER - EXIST - POP ENTER - POP EXIT
-        transaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out)
+        //transaction.addToBackStack(null)
+        //transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
         transaction.commit()
     }
 

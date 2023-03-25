@@ -1,6 +1,5 @@
 package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag
 
-import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -9,11 +8,10 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.transition.ChangeBounds
 import android.transition.Transition
+import android.transition.TransitionInflater
 import android.transition.TransitionManager
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroupOverlay
-import android.view.ViewParent
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
@@ -35,6 +33,7 @@ import fr.melanoxy.realestatemanager.databinding.FragmentRealEstateAddBinding
 import fr.melanoxy.realestatemanager.ui.mainActivity.MainEventListener
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.realEstateSpinners.AddAgentSpinnerAdapter
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.viewPagerInfos.MyPagerAdapter
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.RealEstateListFrag
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateRv.RealEstatePictureAdapter
 import fr.melanoxy.realestatemanager.ui.utils.CAMERA_PERMISSION
 import fr.melanoxy.realestatemanager.ui.utils.REAL_ESTATE_TYPES
@@ -59,6 +58,14 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
     private lateinit var activityResultForCameraPermissions: ActivityResultLauncher<String>
     private var imageUri: Uri? = null
     private var isOpen = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val inflater = TransitionInflater.from(requireContext())
+        enterTransition = inflater.inflateTransition(R.transition.slide_bottom)
+        exitTransition = inflater.inflateTransition(R.transition.fade)
+
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -115,7 +122,7 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
                 is RealEstateAddOrEditEvent.DisplaySnackBarMessage -> eventListener.displaySnackBarMessage(
                     event.message.toCharSequence(requireContext())
                 )
-            }//.exhaustive//TODO inline?
+            }.exhaustive//TODO inline?
             /*
             Any? type. It is used to ensure that when using a when expression in Kotlin, all possible cases are handled, so that the code can be considered "exhaustive".
             In this case, calling .exhaustive after the when expression is not strictly necessary. However, in cases where there are more than two cases in the enum, or if more cases are added in the future, using exhaustive after the when expression can help catch potential bugs caused by missing cases.
@@ -174,7 +181,10 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
     }
 
     private fun closeFragment() {
-        requireActivity().supportFragmentManager.popBackStack()
+        //requireActivity().supportFragmentManager.popBackStackImmediate()
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.activity_main_FrameLayout_container_real_estate_list, RealEstateListFrag())
+        transaction.commit()
     }
 
     private fun pickMedia() {

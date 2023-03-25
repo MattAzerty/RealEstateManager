@@ -37,4 +37,6 @@
     <string name="x_picture_selected">NEW PICTURE(S)</string>
     <string name="enterNewName">Rename picture here…</string>
     <string name="name_too_short">Name is too short</string>
+    <string name="cancel">CANCEL</string>
+    <string name="save">SAVE</string>
 </resources>

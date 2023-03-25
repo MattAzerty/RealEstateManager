@@ -29,7 +29,7 @@
                 android:layout_marginLeft="@dimen/fab_margin"
                 android:layout_marginTop="40dp"
                 android:layout_marginRight="@dimen/fab_margin"
-                android:gravity="left"
+                android:gravity="start"
                 android:importantForAccessibility="no"
                 android:text="@string/create_new_real_estate"
                 android:textColor="@color/black"
@@ -101,14 +101,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/fab_margin"
                 android:layout_marginTop="@dimen/title_top_margin"
-                android:drawableLeft="@drawable/vc_add_location_white_24dp"
-                android:drawableTint="@color/black"
                 android:gravity="center"
                 android:text="@string/pointOfInterest"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="@id/create_new_real_estate_TextInputLayout_type"
-                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_TextInputLayout_type" />
+                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_TextInputLayout_type"
+                app:drawableLeftCompat="@drawable/vc_add_location_white_24dp"
+                app:drawableTint="@color/black" />
 
             <HorizontalScrollView
                 android:id="@+id/create_new_real_estate_chip_group_hv"
@@ -221,22 +221,23 @@
                 android:layout_height="20dp"
                 android:layout_marginTop="20dp"
                 android:background="@color/black"
-                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_view_pager" />
+                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_view_pager"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/create_new_real_estate_tv_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/fab_margin"
-                android:layout_marginTop="@dimen/title_top_margin"
-                android:drawableLeft="@drawable/ic_assignment_white_24dp"
-                android:drawableTint="@color/black"
+                android:layout_marginStart="@dimen/fab_margin"
+                android:layout_marginTop="30dp"
                 android:gravity="center"
                 android:text="@string/description"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="@id/create_new_real_estate_TextInputLayout_type"
-                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_header_l1" />
+                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_header_l1"
+                app:drawableLeftCompat="@drawable/ic_assignment_white_24dp"
+                app:drawableTint="@color/black" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/create_new_real_estate_til_description"
@@ -244,7 +245,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/fab_margin"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="@dimen/fab_margin"
                 android:textColorHint="@color/black"
                 app:boxStrokeColor="@color/black"
@@ -262,8 +263,6 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-
-
             <ImageView
                 android:id="@+id/create_new_real_estate_header_l2"
                 android:layout_width="match_parent"
@@ -277,28 +276,31 @@
                 android:id="@+id/create_new_real_estate_tv_add_picture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/fab_margin"
-                android:layout_marginTop="24dp"
-                android:drawableLeft="@drawable/vc_image_white_24dp"
-                android:drawableTint="@color/black"
+                android:layout_marginStart="@dimen/fab_margin"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="8dp"
                 android:gravity="center"
                 android:text="@string/add_pictures"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="@id/create_new_real_estate_til_description"
-                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_header_l2" />
+                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_header_l2"
+                app:drawableLeftCompat="@drawable/vc_image_white_24dp"
+                app:drawableTint="@color/black" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/create_new_real_estate_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:paddingEnd="8dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_tv_add_picture"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/create_new_real_estate_no_image"
-                />
+                tools:ignore="RtlSymmetry" />
 
             <TextView
                 android:id="@+id/create_new_real_estate_no_image"
@@ -327,6 +329,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 app:counterEnabled="true"
                 android:textColorHint="@color/black"
                 app:boxStrokeColor="@color/textinputlayout_tint_selector"
@@ -357,8 +360,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/fab_margin"
                 android:backgroundTint="@color/black"
-                android:drawableLeft="@drawable/vc_calendar_month_white_24dp"
-                android:drawableRight="@drawable/vc_calendar_month_white_24dp"
+                android:drawableStart="@drawable/vc_calendar_month_white_24dp"
+                android:drawableEnd="@drawable/vc_calendar_month_white_24dp"
                 android:text="@string/select_market_entry_date"
                 android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="@id/create_new_real_estate_til_description"
@@ -370,8 +373,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/fab_margin"
                 android:backgroundTint="@color/black"
-                android:drawableLeft="@drawable/vc_calendar_month_white_24dp"
-                android:drawableRight="@drawable/vc_calendar_month_white_24dp"
+                android:drawableStart="@drawable/vc_calendar_month_white_24dp"
+                android:drawableEnd="@drawable/vc_calendar_month_white_24dp"
                 android:text="@string/select_sale_date"
                 android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="@id/create_new_real_estate_button_market_entry_date"
@@ -385,7 +388,7 @@
                 android:layout_marginTop="40dp"
                 android:layout_marginRight="@dimen/fab_margin"
                 android:backgroundTint="@color/black"
-                android:text="CANCEL"
+                android:text="@string/cancel"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toStartOf="@id/create_new_real_estate_button_add_real_estate"
                 app:layout_constraintRight_toLeftOf="@id/create_new_real_estate_button_add_real_estate"
@@ -398,7 +401,7 @@
                 android:layout_marginLeft="@dimen/fab_margin"
                 android:layout_marginRight="@dimen/fab_margin"
                 android:backgroundTint="@color/colorAccent"
-                android:text="SAVE"
+                android:text="@string/save"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="@id/create_new_real_estate_til_description"
                 app:layout_constraintTop_toTopOf="@id/create_new_real_estate_button_cancel" />
@@ -509,7 +512,8 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/black"
-                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_button_add_real_estate" />
+                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_button_add_real_estate"
+                tools:ignore="ContentDescription" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/create_new_real_estate_close"
@@ -526,7 +530,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:maxImageSize="30dp"
                 app:rippleColor="@color/black"
-                app:tint="@color/white" />
+                app:tint="@color/white"
+                tools:ignore="ContentDescription" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/create_new_real_estate_fab_today"
@@ -543,13 +548,14 @@
                 app:layout_constraintRight_toRightOf="@id/create_new_real_estate_tab_layout"
                 app:maxImageSize="34dp"
                 app:rippleColor="@color/black"
-                app:tint="@color/white" />
+                app:tint="@color/white"
+                tools:ignore="ContentDescription" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/create_new_real_estate_fab_gallery_selection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/fab_margin"
+                android:layout_marginStart="@dimen/fab_margin"
                 android:elevation="0dp"
                 android:src="@drawable/vc_folder_white_24dp"
                 android:visibility="invisible"
@@ -563,13 +569,14 @@
                 app:layout_constraintTop_toTopOf="@id/create_new_real_estate_header_l2"
                 app:maxImageSize="34dp"
                 app:rippleColor="@color/black"
-                app:tint="@color/white" />
+                app:tint="@color/white"
+                tools:ignore="ContentDescription" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/create_new_real_estate_fab_photo_selection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/fab_margin"
+                android:layout_marginStart="@dimen/fab_margin"
                 android:elevation="0dp"
                 android:src="@drawable/vc_camera_alt_white_24dp"
                 android:visibility="invisible"
@@ -583,7 +590,8 @@
                 app:layout_constraintTop_toTopOf="@id/create_new_real_estate_header_l2"
                 app:maxImageSize="34dp"
                 app:rippleColor="@color/black"
-                app:tint="@color/white" />
+                app:tint="@color/white"
+                tools:ignore="ContentDescription" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
