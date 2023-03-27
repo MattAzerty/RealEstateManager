@@ -3,7 +3,7 @@ package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrE
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class MyPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
+class ViewPagerInfosAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
     override fun getItemCount(): Int = 2
 
     override fun createFragment(position: Int): Fragment {

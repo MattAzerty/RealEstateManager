@@ -22,7 +22,7 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/frag_address_field_til_surface"
+                android:id="@+id/frag_address_field_til_street"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -39,6 +39,7 @@
                 app:layout_constraintTop_toTopOf="@id/frag_address_field_cl">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/frag_address_field_et_street"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
@@ -50,7 +51,7 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/frag_address_field_til_room"
+                android:id="@+id/frag_address_field_til_city"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -63,9 +64,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="@dimen/fab_margin"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/frag_address_field_til_surface">
+                app:layout_constraintTop_toBottomOf="@+id/frag_address_field_til_street">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/frag_address_field_et_city"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
@@ -76,7 +78,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/frag_address_field_til_bathroom"
+                android:id="@+id/frag_address_field_til_state"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -89,9 +91,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="@dimen/fab_margin"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/frag_address_field_til_room">
+                app:layout_constraintTop_toBottomOf="@+id/frag_address_field_til_city">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/frag_address_field_et_state"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
@@ -102,7 +105,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/frag_address_field_til_bedroom"
+                android:id="@+id/frag_address_field_til_zipcode"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -115,9 +118,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="@dimen/fab_margin"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/frag_address_field_til_bathroom">
+                app:layout_constraintTop_toBottomOf="@+id/frag_address_field_til_state">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/frag_address_field_et_zipcode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"

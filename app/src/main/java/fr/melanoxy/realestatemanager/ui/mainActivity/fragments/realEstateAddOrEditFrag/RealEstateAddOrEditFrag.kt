@@ -6,6 +6,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.transition.ChangeBounds
 import android.transition.Transition
 import android.transition.TransitionInflater
@@ -32,13 +34,15 @@ import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.databinding.FragmentRealEstateAddBinding
 import fr.melanoxy.realestatemanager.ui.mainActivity.MainEventListener
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.realEstateSpinners.AddAgentSpinnerAdapter
-import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.viewPagerInfos.MyPagerAdapter
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.viewPagerInfos.ViewPagerInfosAdapter
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.RealEstateListFrag
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateRv.RealEstatePictureAdapter
 import fr.melanoxy.realestatemanager.ui.utils.CAMERA_PERMISSION
 import fr.melanoxy.realestatemanager.ui.utils.REAL_ESTATE_TYPES
 import fr.melanoxy.realestatemanager.ui.utils.exhaustive
 import fr.melanoxy.realestatemanager.ui.utils.viewBinding
+import java.io.File
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -104,7 +108,8 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
         setupViewPager()
         setupDatePickers()
         bindAutoCompleteText()
-        bindFab()
+        bindChips()
+        bindButtons()
         bindRv()
         bindTv()
 
@@ -132,6 +137,12 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
 
     }
 
+    private fun bindChips() {
+        binding.createNewRealEstateChipGroup.setOnCheckedStateChangeListener { _, checkedIds ->
+        viewModel.onChipSelected(checkedIds)
+        }
+    }
+
     private fun bindAutoCompleteText() {
         //Agent
         val adapterForAgent = AddAgentSpinnerAdapter()
@@ -147,10 +158,27 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
             val adapterForType =
                 ArrayAdapter(requireContext(), R.layout.item_drop_down, REAL_ESTATE_TYPES)
             binding.createNewRealEstateAutoCompleteTextViewType.setAdapter(adapterForType)
+            binding.createNewRealEstateAutoCompleteTextViewType.setOnItemClickListener { _, _, position, _ ->
+                adapterForType.getItem(position)?.let{
+                    viewModel.onTypeOfPropertySelected(it)
+            }
+            }
         }
     }
 
     private fun bindTv() {
+
+        binding.createNewRealEstateTvDescription.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {}
+            override fun beforeTextChanged(s: CharSequence, start: Int,
+                                           count: Int, after: Int) {
+            }
+            override fun onTextChanged(s: CharSequence, start: Int,
+                                       before: Int, count: Int) {
+                viewModel.onDescriptionChanged(s.toString())
+            }
+        })
+
         binding.createNewRealEstateTlChangePictureName.setEndIconOnClickListener {
             viewModel.onNewNameForPicProvided(binding.createNewRealEstateTvChangePictureName.text.toString().trim())
             closeEditPictureName()
@@ -159,6 +187,7 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
 
     private fun changePictureName() {
         binding.createNewRealEstateTlChangePictureName.visibility= View.VISIBLE
+        binding.createNewRealEstateTlChangePictureName.requestFocus()
     }
 
     private fun closeEditPictureName() {
@@ -168,11 +197,12 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
     }
 
     private fun View.hideKeyboard() {
-        val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputManager.hideSoftInputFromWindow(windowToken, 0)
+        val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
     }
 
-    private fun updateBarView(barState: RealEstateAddPictureBarViewState) {
+
+    private fun updateBarView(barState: RealEstateAddOrEditPictureBarViewState) {
         val bitmap = barState.barIconTip ?: AppCompatResources.getDrawable(requireContext(), R.drawable.vc_keyboard_arrow_left_white_24dp)
             ?.toBitmap()
         binding.createNewRealEstateNoImage.visibility = barState.noPictureTextViewVisibility
@@ -189,6 +219,16 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
 
     private fun pickMedia() {
         activityResultPickMultipleMediaFromGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }
+
+    fun saveImageFromUri(name: String, uri: Uri): String {
+        val inputStream = requireContext().contentResolver.openInputStream(uri)
+        val file = File(requireContext().filesDir, "$name.jpg")
+        val outputStream = FileOutputStream(file)
+        inputStream?.copyTo(outputStream)
+        outputStream.close()
+        inputStream?.close()
+        return file.absolutePath
     }
 
     private fun bindRv() {
@@ -212,15 +252,19 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
         activityResultForCamera.launch(cameraInterfaceIntent)
     }
 
-    private fun bindFab() {
+    private fun bindButtons() {
 //Close addFrag
         binding.createNewRealEstateClose.setOnClickListener { viewModel.onCloseFragmentClicked() }
+        binding.createNewRealEstateButtonCancel.setOnClickListener { viewModel.onCloseFragmentClicked() }
 //Camera selected
         binding.createNewRealEstateFabPhotoSelection.setOnClickListener { viewModel.onAddPictureFromCameraSelected() }
 //Gallery selected
         binding.createNewRealEstateFabGallerySelection.setOnClickListener { viewModel.onPickPicturesFromGallerySelected() }
 //Add new picture(s)
         binding.createNewRealEstateBarPictureAddPictureIcon.setOnClickListener {
+            val view = activity?.currentFocus
+            view?.clearFocus()
+            view?.hideKeyboard()
             //viewModel.onAddPictureClicked()
             if (isOpen) collapse() else expand()
             animateFab()
@@ -232,6 +276,11 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
             collapse()
             animateFab()
         }
+
+        binding.createNewRealEstateButtonSaveRealEstate.setOnClickListener {
+            viewModel.onSaveRealEstateClicked()
+        }
+
     }
 
     private fun expand() {
@@ -310,6 +359,7 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
                 binding.createNewRealEstateButtonMarketEntryDate.text =
                     "Market entry date: $formattedDate"
                 binding.createNewRealEstateButtonMarketEntryDate.elevation = 0F
+                viewModel.onEntryDateSelected(formattedDate)
             }
 
             pickerEntryDate.show(childFragmentManager, "DATE_ENTRY_PICKER")
@@ -328,6 +378,7 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
                 val formattedDate = dateFormat.format(Date(selectedDate))
                 binding.createNewRealEstateButtonSaleDate.text = "Sale entry date: $formattedDate"
                 binding.createNewRealEstateButtonSaleDate.elevation = 0F
+                viewModel.onSaleDateSelected(formattedDate)
             }
 
             pickerSaleDate.show(childFragmentManager, "DATE_SALE_PICKER")
@@ -336,7 +387,7 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
     }
 
     private fun setupViewPager() {
-        binding.createNewRealEstateViewPager.adapter = MyPagerAdapter(this)
+        binding.createNewRealEstateViewPager.adapter = ViewPagerInfosAdapter(this)
 
         TabLayoutMediator(
             binding.createNewRealEstateTabLayout,

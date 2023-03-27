@@ -9,7 +9,7 @@ sealed class RealEstateAddOrEditEvent {
     object LaunchActivityPickVisualMedia : RealEstateAddOrEditEvent()
     object ShowEditTextToChangePictureName : RealEstateAddOrEditEvent()
     object CloseEditTextToChangePictureName : RealEstateAddOrEditEvent()
-    data class UpdateBarMessage(val barState: RealEstateAddPictureBarViewState) : RealEstateAddOrEditEvent()
+    data class UpdateBarMessage(val barState: RealEstateAddOrEditPictureBarViewState) : RealEstateAddOrEditEvent()
     data class DisplaySnackBarMessage(val message: NativeText) : RealEstateAddOrEditEvent()
 
 }

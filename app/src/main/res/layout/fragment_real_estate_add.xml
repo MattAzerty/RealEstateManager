@@ -122,6 +122,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/create_new_real_estate_tv_point_of_interest">
 
                 <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/create_new_real_estate_chip_group"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:paddingLeft="@dimen/fab_margin"
@@ -331,10 +332,13 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 app:counterEnabled="true"
+                app:counterTextColor="@color/colorAccent"
+                app:counterMaxLength="8"
+                app:counterOverflowTextColor="@color/design_default_color_error"
                 android:textColorHint="@color/black"
-                app:boxStrokeColor="@color/textinputlayout_tint_selector"
-                app:boxStrokeWidth="@dimen/stroke"
-                app:boxStrokeWidthFocused="@dimen/stroke"
+                app:boxStrokeColor="@color/textinputlayout_tint_selector_nochange"
+                app:boxStrokeWidth="4dp"
+                app:boxStrokeWidthFocused="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_no_image"
@@ -343,12 +347,13 @@
                 app:endIconMode="custom"
                 app:endIconCheckable="true"
                 app:startIconDrawable="@drawable/vc_edit_white_24dp"
-                app:startIconTint="@color/black">
+                app:startIconTint="@color/colorAccent">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/create_new_real_estate_tv_change_picture_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textStyle="bold"
                     android:hint="@string/enterNewName"
                     android:maxLength="8"
                     android:inputType="textCapCharacters" />
@@ -390,12 +395,12 @@
                 android:backgroundTint="@color/black"
                 android:text="@string/cancel"
                 android:textColor="@color/white"
-                app:layout_constraintEnd_toStartOf="@id/create_new_real_estate_button_add_real_estate"
-                app:layout_constraintRight_toLeftOf="@id/create_new_real_estate_button_add_real_estate"
+                app:layout_constraintEnd_toStartOf="@id/create_new_real_estate_button_save_real_estate"
+                app:layout_constraintRight_toLeftOf="@id/create_new_real_estate_button_save_real_estate"
                 app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_button_sale_date" />
 
             <Button
-                android:id="@+id/create_new_real_estate_button_add_real_estate"
+                android:id="@+id/create_new_real_estate_button_save_real_estate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/fab_margin"
@@ -512,7 +517,7 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/black"
-                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_button_add_real_estate"
+                app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_button_save_real_estate"
                 tools:ignore="ContentDescription" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton

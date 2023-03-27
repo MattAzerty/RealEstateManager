@@ -22,7 +22,7 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/frag_infos_field_til_surface"
+            android:id="@+id/frag_infos_field_til_price"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -38,6 +38,7 @@
             app:layout_constraintTop_toTopOf="@id/frag_infos_field_cl">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/frag_infos_field_et_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
@@ -58,9 +59,9 @@
             android:text="@string/priceUnit"
             android:textColor="@color/black"
             android:textSize="@dimen/title_textSize"
-            app:layout_constraintBottom_toBottomOf="@id/frag_infos_field_til_surface"
+            app:layout_constraintBottom_toBottomOf="@id/frag_infos_field_til_price"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/frag_infos_field_til_surface" />
+            app:layout_constraintTop_toTopOf="@id/frag_infos_field_til_price" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/frag_infos_field_til_room"
@@ -75,9 +76,10 @@
             app:hintTextColor="@color/textinputlayout_tint_selector"
             app:layout_constraintEnd_toStartOf="@id/frag_infos_field_tv_room"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frag_infos_field_til_surface">
+            app:layout_constraintTop_toBottomOf="@+id/frag_infos_field_til_price">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/frag_infos_field_et_room"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
@@ -103,7 +105,7 @@
             app:layout_constraintTop_toTopOf="@+id/frag_infos_field_til_room" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/frag_infos_field_til_bathroom"
+            android:id="@+id/frag_infos_field_til_bedroom"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -118,6 +120,7 @@
             app:layout_constraintTop_toBottomOf="@+id/frag_infos_field_til_room">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/frag_infos_field_et_bedroom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
@@ -138,12 +141,12 @@
             android:text="@string/numberOfRoom"
             android:textColor="@color/black"
             android:textSize="@dimen/title_textSize"
-            app:layout_constraintBottom_toBottomOf="@+id/frag_infos_field_til_bathroom"
+            app:layout_constraintBottom_toBottomOf="@+id/frag_infos_field_til_bedroom"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/frag_infos_field_til_bathroom" />
+            app:layout_constraintTop_toTopOf="@+id/frag_infos_field_til_bedroom" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/frag_infos_field_til_bedroom"
+            android:id="@+id/frag_infos_field_til_surface"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -153,11 +156,12 @@
             app:boxStrokeWidthFocused="@dimen/stroke2"
             app:boxStrokeColor="@color/textinputlayout_tint_selector"
             app:hintTextColor="@color/textinputlayout_tint_selector"
-            app:layout_constraintEnd_toStartOf="@+id/frag_infos_field_tv_bedroom"
+            app:layout_constraintEnd_toStartOf="@+id/frag_infos_field_tv_surface"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frag_infos_field_til_bathroom">
+            app:layout_constraintTop_toBottomOf="@+id/frag_infos_field_til_bedroom">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/frag_infos_field_et_surface"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
@@ -167,7 +171,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
-            android:id="@+id/frag_infos_field_tv_bedroom"
+            android:id="@+id/frag_infos_field_tv_surface"
             style="?attr/textAppearanceHeadline6"
             android:layout_width="@dimen/textview_100dp"
             android:layout_height="wrap_content"
@@ -178,9 +182,9 @@
             android:text="@string/surfaceUnit"
             android:textColor="@color/black"
             android:textSize="@dimen/title_textSize"
-            app:layout_constraintBottom_toBottomOf="@id/frag_infos_field_til_bedroom"
+            app:layout_constraintBottom_toBottomOf="@id/frag_infos_field_til_surface"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/frag_infos_field_til_bedroom" />
+            app:layout_constraintTop_toTopOf="@id/frag_infos_field_til_surface" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

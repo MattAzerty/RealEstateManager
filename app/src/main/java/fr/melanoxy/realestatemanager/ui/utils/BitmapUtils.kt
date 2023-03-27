@@ -1,11 +1,9 @@
 package fr.melanoxy.realestatemanager.ui.utils
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.*
 
-    fun intToBitmap(size: Int): Bitmap {
+
+fun intToBitmap(size: Int): Bitmap {
 
         val sizeInText = if (size < 10) {"[0$size]"} else "[$size]"
         val paint = Paint(Paint.ANTI_ALIAS_FLAG)
