@@ -221,15 +221,6 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
         activityResultPickMultipleMediaFromGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
 
-    fun saveImageFromUri(name: String, uri: Uri): String {
-        val inputStream = requireContext().contentResolver.openInputStream(uri)
-        val file = File(requireContext().filesDir, "$name.jpg")
-        val outputStream = FileOutputStream(file)
-        inputStream?.copyTo(outputStream)
-        outputStream.close()
-        inputStream?.close()
-        return file.absolutePath
-    }
 
     private fun bindRv() {
         val adapter = RealEstatePictureAdapter()
@@ -242,10 +233,9 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
     private fun openCameraInterface() {
 
         val values = ContentValues()
-
         imageUri =
             activity?.contentResolver?.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
-// Create camera intent
+        // Create camera intent
         val cameraInterfaceIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         cameraInterfaceIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
 
@@ -288,7 +278,7 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
             binding.createNewRealEstateBarPictureCardContainer,
             transition
         )
-        binding.createNewRealEstateBarPictureCardContainer.layoutParams.width = 670
+        binding.createNewRealEstateBarPictureCardContainer.layoutParams.width = 0
 //binding.searchBarCardContainer.setCardBackgroundColor(searchBarBackgroundColorFocused)
         binding.createNewRealEstateBarPictureAddPictureIcon.visibility = View.GONE
         binding.createNewRealEstateBarInputContainer.visibility = View.VISIBLE

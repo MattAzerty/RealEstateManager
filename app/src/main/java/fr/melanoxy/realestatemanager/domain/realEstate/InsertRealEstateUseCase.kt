@@ -10,10 +10,8 @@ class InsertRealEstateUseCase @Inject constructor(private val realEstateDao: Rea
 
     suspend fun invoke(realEstateEntity: RealEstateEntity): Long? = try {
         realEstateDao.insert(realEstateEntity)
-        //true
     } catch (e: SQLiteException) {
         e.printStackTrace()
-        //false
         null
     }
 }

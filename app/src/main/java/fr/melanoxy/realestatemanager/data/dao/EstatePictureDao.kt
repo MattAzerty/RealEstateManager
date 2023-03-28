@@ -1,9 +1,6 @@
 package fr.melanoxy.realestatemanager.data.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Transaction
+import androidx.room.*
 import fr.melanoxy.realestatemanager.domain.estatePicture.EstatePictureEntity
 import fr.melanoxy.realestatemanager.domain.realEstateWithPictureEntity.RealEstateWithPictureEntity
 import kotlinx.coroutines.flow.Flow
@@ -13,6 +10,9 @@ interface EstatePictureDao {
 
     @Insert
     suspend fun insert(estatePictureEntity: EstatePictureEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(pictureEntities: List<EstatePictureEntity>)
 
     @Query("SELECT * FROM realEstate")
     @Transaction

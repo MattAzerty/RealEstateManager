@@ -13,6 +13,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.hilt.android.AndroidEntryPoint
 import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.databinding.FragmentRealEstateListBinding
@@ -30,6 +31,7 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        isTablet()
         bindFab()
         bindSearchBar()
         bindRecyclerView()
@@ -43,6 +45,20 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
         }
 
 
+    }
+
+    private fun isTablet() {
+        viewModel.isTabletLiveData.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.searchBarRoot.visibility = View.GONE
+                //binding.fragRealEstateListFabAdd.size = FloatingActionButton.SIZE_MINI
+                binding.fragRealEstateListFabMap.size= FloatingActionButton.SIZE_MINI
+            }else{
+                binding.searchBarRoot.visibility = View.VISIBLE
+                //binding.fragRealEstateListFabAdd.size = FloatingActionButton.SIZE_NORMAL
+                binding.fragRealEstateListFabMap.size= FloatingActionButton.SIZE_NORMAL
+            }
+        }
     }
 
     private fun switchFragment(fragmentId: Int) {
@@ -63,8 +79,6 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
 
         binding.fragRealEstateListFabAdd
             .setOnClickListener {viewModel.onFabButtonClicked(R.id.frag_real_estate_list_fab_add)}//1000004
-        binding.fragRealEstateListFabEdit
-            .setOnClickListener {viewModel.onFabButtonClicked(R.id.frag_real_estate_list_fab_edit)}//1000002
         binding.fragRealEstateListFabMap
             .setOnClickListener {viewModel.onFabButtonClicked(R.id.frag_real_estate_list_fab_map)}//1000003
 
@@ -110,7 +124,6 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
         binding.searchBarInputContainer.visibility = View.VISIBLE
 
         binding.fragRealEstateListFabAdd.hide()
-        binding.fragRealEstateListFabEdit.hide()
         binding.fragRealEstateListFabMap.hide()
     }
 
@@ -123,7 +136,6 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
         binding.searchBarInputContainer.visibility = View.GONE
 
         binding.fragRealEstateListFabAdd.show()
-        binding.fragRealEstateListFabEdit.show()
         binding.fragRealEstateListFabMap.show()
     }
 

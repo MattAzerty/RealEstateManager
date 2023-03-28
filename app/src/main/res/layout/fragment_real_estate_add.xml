@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/white"
     android:theme="@style/Theme.MaterialComponents.Light.DarkActionBar"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.mainActivity.MainActivity">
@@ -18,6 +18,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:elevation="@dimen/textview_8dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/rounded_corner_background">
 
@@ -27,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/fab_margin"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="50dp"
                 android:layout_marginRight="@dimen/fab_margin"
                 android:gravity="start"
                 android:importantForAccessibility="no"
@@ -97,15 +98,16 @@
 
             <TextView
                 android:id="@+id/create_new_real_estate_tv_point_of_interest"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/fab_margin"
                 android:layout_marginTop="@dimen/title_top_margin"
-                android:gravity="center"
+                android:gravity="start"
                 android:text="@string/pointOfInterest"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="@id/create_new_real_estate_TextInputLayout_type"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_TextInputLayout_type"
                 app:drawableLeftCompat="@drawable/vc_add_location_white_24dp"
                 app:drawableTint="@color/black" />
@@ -389,34 +391,35 @@
                 android:id="@+id/create_new_real_estate_button_cancel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/fab_margin"
+                android:layout_marginStart="@dimen/fab_margin"
                 android:layout_marginTop="40dp"
-                android:layout_marginRight="@dimen/fab_margin"
                 android:backgroundTint="@color/black"
                 android:text="@string/cancel"
                 android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/create_new_real_estate_button_save_real_estate"
-                app:layout_constraintRight_toLeftOf="@id/create_new_real_estate_button_save_real_estate"
                 app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_button_sale_date" />
 
             <Button
                 android:id="@+id/create_new_real_estate_button_save_real_estate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/fab_margin"
-                android:layout_marginRight="@dimen/fab_margin"
                 android:backgroundTint="@color/colorAccent"
                 android:text="@string/save"
                 android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="@id/create_new_real_estate_til_description"
+                android:layout_marginEnd="@dimen/fab_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/create_new_real_estate_button_cancel"
                 app:layout_constraintTop_toTopOf="@id/create_new_real_estate_button_cancel" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/create_new_real_estate_bar_picture_root"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="148dp"
                 app:layout_constraintBottom_toBottomOf="@id/create_new_real_estate_header_l2"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/create_new_real_estate_fab_photo_selection"
                 app:layout_constraintTop_toTopOf="@id/create_new_real_estate_header_l2">
 
                 <com.google.android.material.card.MaterialCardView
@@ -431,11 +434,12 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/create_new_real_estate_bar_picture_root"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/create_new_real_estate_bar_picture_card_root"
+                        app:layout_constraintStart_toStartOf="@id/create_new_real_estate_bar_picture_root"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -448,7 +452,7 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="1.0"
-                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintStart_toStartOf="@+id/create_new_real_estate_bar_picture_card_root"
                             app:layout_constraintTop_toTopOf="parent"
                             app:tint="@color/white"
                             tools:ignore="ContentDescription" />
@@ -460,7 +464,7 @@
                             android:visibility="gone"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintStart_toStartOf="@+id/create_new_real_estate_bar_picture_card_root"
                             app:layout_constraintTop_toTopOf="parent">
 
                             <ImageView
@@ -470,7 +474,7 @@
                                 android:padding="16dp"
                                 android:src="@drawable/vc_keyboard_arrow_left_white_24dp"
                                 app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintStart_toStartOf="@+id/create_new_real_estate_bar_input_container"
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:tint="@color/white"
                                 tools:ignore="ContentDescription" />
@@ -592,6 +596,7 @@
                 app:layout_anchorGravity="center"
                 app:layout_constraintBottom_toBottomOf="@id/create_new_real_estate_header_l2"
                 app:layout_constraintStart_toEndOf="@id/create_new_real_estate_fab_gallery_selection"
+                app:layout_constraintRight_toLeftOf="@id/create_new_real_estate_bar_picture_root"
                 app:layout_constraintTop_toTopOf="@id/create_new_real_estate_header_l2"
                 app:maxImageSize="34dp"
                 app:rippleColor="@color/black"

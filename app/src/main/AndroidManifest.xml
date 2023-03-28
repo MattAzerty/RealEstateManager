@@ -28,6 +28,10 @@
             </intent-filter>
         </activity>
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+
         <!-- See https://developer.android.com/training/dependency-injection/hilt-jetpack#workmanager -->
         <!-- See https://developer.android.com/jetpack/androidx/releases/work#2.6.0-alpha01 -->
         <provider

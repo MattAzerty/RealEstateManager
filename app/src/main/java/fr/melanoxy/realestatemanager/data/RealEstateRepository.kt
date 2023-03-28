@@ -1,6 +1,7 @@
 package fr.melanoxy.realestatemanager.data
 
 import android.content.Context
+import fr.melanoxy.realestatemanager.domain.estatePicture.EstatePictureEntity
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.viewPagerInfos.RealEstateViewPagerInfosStateItem
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateRv.RealEstatePictureViewStateItem
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,18 +14,9 @@ import javax.inject.Singleton
 class RealEstateRepository @Inject constructor(
     private val context: Context
 ) {
-
-    /*private val currentPictureIdMutableSharedFlow = MutableStateFlow<Long?>(null)
-   val currentPictureIdChannel = Channel<Long>()
-   val currentPictureIdFlow: StateFlow<Long?> = currentPictureIdMutableSharedFlow.asStateFlow()
-
-   fun setCurrentPictureIdClicked(currentPictureId: Long) {
-       currentPictureIdMutableSharedFlow.value =currentPictureId
-       currentPictureIdChannel.trySend(currentPictureId)
-   }*/
-
-    val selectedRealEstateIdMutableSharedFlow = MutableStateFlow<Long?>(null)
-    val estatePicturesPathListMutableStateFlow = MutableStateFlow<List<String>?>(null)
+    val isTabletStateFlow = MutableStateFlow<Boolean>(false)
+    val selectedRealEstateIdMutableStateFlow = MutableStateFlow<Long?>(null)
+    val estatePicturesListEntityMutableStateFlow = MutableStateFlow<List<EstatePictureEntity>?>(null)
 
     val realEstateViewPagerInfosStateItem = RealEstateViewPagerInfosStateItem()
 
@@ -60,9 +52,13 @@ class RealEstateRepository @Inject constructor(
         realEstateViewPagerInfosStateItem.surfaceArea = surface.toDouble()
     }
 
-    suspend fun storeEstatePictureEntities(estatePictureList: List<RealEstatePictureViewStateItem>) {
+    suspend fun storeEstatePictureEntities(
+        estatePictureList: List<RealEstatePictureViewStateItem>,
+        realEstateIdCreated: Long?
+    ) {
 
-        val pathList:MutableList<String> = ArrayList()
+        val pictureEntity:MutableList<EstatePictureEntity> = ArrayList()
+        estatePicturesListEntityMutableStateFlow.value = null
 
         estatePictureList.forEach {
             val inputStream = context.contentResolver.openInputStream(it.pictureUri)
@@ -71,11 +67,21 @@ class RealEstateRepository @Inject constructor(
             inputStream?.copyTo(outputStream)
             outputStream.close()
             inputStream?.close()
-            pathList.add(file.absolutePath)
+            pictureEntity.add(
+                EstatePictureEntity(
+                    realEstateId = realEstateIdCreated!!,
+                    name = it.realEstatePictureName,
+                    path = file.absolutePath
+                )
+            )
         }
 
-        estatePicturesPathListMutableStateFlow.emit(pathList)
+        estatePicturesListEntityMutableStateFlow.emit(pictureEntity)
 
+    }
+
+    fun isTablet(isTablet: Boolean) {
+        isTabletStateFlow.value = isTablet
     }
 
 

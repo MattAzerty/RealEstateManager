@@ -1,4 +1,7 @@
 <resources>
+
+    <bool name="isTablet">false</bool>
+
     <!-- Default text size, per the Android Design guidelines. -->
     <dimen name="title_textSize">20sp</dimen>
     <dimen name="body_textSize">14sp</dimen>

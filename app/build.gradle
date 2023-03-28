@@ -5,6 +5,9 @@ plugins {
 //HILT
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
+//For secretKeyAPI
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+
 }
 
 android {

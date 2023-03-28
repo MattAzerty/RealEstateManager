@@ -11,8 +11,11 @@ class StoreEstatePicturesUseCase @Inject constructor(
     private val realEstateRepository: RealEstateRepository,
     ) {
 
-    suspend fun invoke(estatePictureList: List<RealEstatePictureViewStateItem>): Boolean? = try {
-        realEstateRepository.storeEstatePictureEntities(estatePictureList)
+    suspend fun invoke(
+        estatePictureList: List<RealEstatePictureViewStateItem>,
+        realEstateIdCreated: Long?
+    ): Boolean? = try {
+        realEstateRepository.storeEstatePictureEntities(estatePictureList, realEstateIdCreated)
         true
     } catch (e: SQLiteException) {
         e.printStackTrace()

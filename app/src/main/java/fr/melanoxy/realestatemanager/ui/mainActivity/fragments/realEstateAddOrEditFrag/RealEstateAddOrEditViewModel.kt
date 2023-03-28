@@ -15,6 +15,7 @@ import fr.melanoxy.realestatemanager.domain.Address
 import fr.melanoxy.realestatemanager.domain.estateAgent.GetEstateAgentUseCase
 import fr.melanoxy.realestatemanager.domain.estatePicture.EstatePictureEntity
 import fr.melanoxy.realestatemanager.domain.estatePicture.GetPictureOfRealEstateUseCase
+import fr.melanoxy.realestatemanager.domain.estatePicture.InsertEstatePictureUserCase
 import fr.melanoxy.realestatemanager.domain.estatePicture.StoreEstatePicturesUseCase
 import fr.melanoxy.realestatemanager.domain.realEstate.InsertRealEstateUseCase
 import fr.melanoxy.realestatemanager.domain.realEstate.RealEstateEntity
@@ -22,6 +23,7 @@ import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEd
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateRv.RealEstatePictureViewStateItem
 import fr.melanoxy.realestatemanager.ui.utils.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -35,6 +37,7 @@ class RealEstateAddOrEditViewModel @Inject constructor(
     private val getEstateAgentUseCase: GetEstateAgentUseCase,
     private val insertRealEstateUseCase: InsertRealEstateUseCase,
     private val storeEstatePicturesUseCase: StoreEstatePicturesUseCase,
+    private val insertEstatePictureUserCase: InsertEstatePictureUserCase,
 ) : ViewModel() {
 
     private val realEstateAddOrEditViewState = RealEstateAddOrEditViewState()
@@ -43,7 +46,7 @@ class RealEstateAddOrEditViewModel @Inject constructor(
     private var deletedItemIndices: MutableList<Int> = mutableListOf()
     private var selectedPicture: Uri?=null
 
-    private val selectedRealEstateId =realEstateRepository.selectedRealEstateIdMutableSharedFlow.value
+    private val selectedRealEstateId =realEstateRepository.selectedRealEstateIdMutableStateFlow.value
     private val tempPictureListItemLiveData = MutableLiveData<List<RealEstatePictureViewStateItem>>()
 
     //TODO Change this to globalViewState
@@ -113,8 +116,10 @@ class RealEstateAddOrEditViewModel @Inject constructor(
                     notifyPictureIsEdited()
                 }
             )
+
             }
         }
+
 //Update behavior of AddPictureBar
         if(listOfLoadedPicture.isEmpty()) {realEstateAddFragSingleLiveEvent.value =
             RealEstateAddOrEditEvent.UpdateBarMessage(
@@ -199,25 +204,6 @@ class RealEstateAddOrEditViewModel @Inject constructor(
             }else{realEstateAddFragSingleLiveEvent.value = RealEstateAddOrEditEvent.ShowEditTextToChangePictureName}
         }
     }
-
-
-    /*private var listPictureEntityOfRealEstate: List<EstatePictureEntity> = emptyList()
-    private val selectedId =realEstateRepository.selectedRealEstateIdMutableSharedFlow.value
-
-    init {
-        if (selectedId!=null) {
-            viewModelScope.launch(coroutineDispatcherProvider.io) {
-                listPictureEntityOfRealEstate = getPictureEntityListOfRealEstate(selectedId)
-            }
-        }
-    }
-
-
-    private suspend fun getPictureEntityListOfRealEstate(selectedId: Long): List<EstatePictureEntity> {
-        return withContext(coroutineDispatcherProvider.io) {
-            getPictureOfRealEstateUseCase.invoke(selectedId).flatMapConcat { it.asFlow() }.toList()
-        }
-    }*/
 
     val realEstatePicturesLiveData: LiveData<List<RealEstatePictureViewStateItem>>
            get() = mediatorLiveData
@@ -407,16 +393,14 @@ class RealEstateAddOrEditViewModel @Inject constructor(
     }
 
     fun onSaveRealEstateClicked() {
-        //TODO check if required field are not empty or null
+
         val viewPagerInfos = realEstateRepository.realEstateViewPagerInfosStateItem
         val picList = tempPictureListItemLiveData.value
-    if(allFieldsNonNull(viewPagerInfos) && realEstateAddOrEditViewState.estateAgentId!=null) {
-        viewModelScope.launch(coroutineDispatcherProvider.io) {
-            if (picList!=null && picList.isNotEmpty()){
-            storeEstatePicturesUseCase.invoke(picList)
-            }
 
-            val realEstateId = insertRealEstateUseCase.invoke(
+        if(allFieldsNonNull(viewPagerInfos) && realEstateAddOrEditViewState.estateAgentId!=null) {
+        viewModelScope.launch(coroutineDispatcherProvider.io) {
+
+            val realEstateIdCreated = insertRealEstateUseCase.invoke(
                 RealEstateEntity(
                     estateAgentId = realEstateAddOrEditViewState.estateAgentId!!,
                     propertyType = realEstateAddOrEditViewState.propertyType ?: "Unknown",
@@ -426,7 +410,6 @@ class RealEstateAddOrEditViewModel @Inject constructor(
                     numberOfBedrooms = viewPagerInfos.numberOfBedrooms ?: 0,
                     description = realEstateAddOrEditViewState.description ?: "No Description",
                     thumbnail = ByteArray(1),//TODO change this
-                    photosList = ArrayList(realEstateRepository.estatePicturesPathListMutableStateFlow.value!!),//TODO change this
                     address = Address(
                         street = viewPagerInfos.street!!,
                         city = viewPagerInfos.city!!,
@@ -439,7 +422,26 @@ class RealEstateAddOrEditViewModel @Inject constructor(
                 )
             )
 
+            //PictureEntities to Room
+
+            if (picList!=null && picList.isNotEmpty()){
+                storeEstatePicturesUseCase.invoke(picList, realEstateIdCreated)
+            }
+
+            val success = insertEstatePictureUserCase.invoke(
+               realEstateRepository.estatePicturesListEntityMutableStateFlow.value!!
+            )
+
+            withContext(coroutineDispatcherProvider.main) {
+                realEstateAddFragSingleLiveEvent.value = if (success) {
+                    RealEstateAddOrEditEvent.CloseFragment
+                } else {
+                    RealEstateAddOrEditEvent.DisplaySnackBarMessage(NativeText.Resource(R.string.cant_insert_real_estate))
+                }
+            }
+
         }
+
     }else{
         realEstateAddFragSingleLiveEvent.value = RealEstateAddOrEditEvent.DisplaySnackBarMessage(NativeText.Resource(
         R.string.please_provide_all_infos))}
@@ -464,7 +466,6 @@ class RealEstateAddOrEditViewModel @Inject constructor(
     fun onSaleDateSelected(saleDate: String) {
         realEstateAddOrEditViewState.saleDate = toDateFormat(saleDate)
     }
-
 
     val realEstateAddFragSingleLiveEvent = SingleLiveEvent<RealEstateAddOrEditEvent>()
 
