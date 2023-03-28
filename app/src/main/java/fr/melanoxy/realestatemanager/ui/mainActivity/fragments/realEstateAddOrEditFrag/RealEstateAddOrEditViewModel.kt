@@ -20,7 +20,7 @@ import fr.melanoxy.realestatemanager.domain.estatePicture.StoreEstatePicturesUse
 import fr.melanoxy.realestatemanager.domain.realEstate.InsertRealEstateUseCase
 import fr.melanoxy.realestatemanager.domain.realEstate.RealEstateEntity
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.realEstateSpinners.AddAgentViewStateItem
-import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateRv.RealEstatePictureViewStateItem
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstatePictureRv.RealEstatePictureViewStateItem
 import fr.melanoxy.realestatemanager.ui.utils.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

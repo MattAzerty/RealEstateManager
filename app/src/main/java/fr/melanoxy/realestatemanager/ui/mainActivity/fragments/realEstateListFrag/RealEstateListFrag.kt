@@ -18,6 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.databinding.FragmentRealEstateListBinding
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.RealEstateAddOrEditFrag
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.realEstateRv.RealEstateAdapter
 import fr.melanoxy.realestatemanager.ui.utils.viewBinding
 
 @AndroidEntryPoint
@@ -172,11 +173,11 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
 
 
     private fun bindRecyclerView() {
-        //TODO("Not yet implemented")
-        /*val adapter = MailsAdapter()
-       binding.mailsRecyclerView.adapter = adapter
-       viewModel.mailsLiveData.observe(viewLifecycleOwner) {
+
+        val adapter = RealEstateAdapter()
+       binding.fragRealEstateListRecyclerView.adapter = adapter
+       viewModel.realEstatesLiveData.observe(viewLifecycleOwner) {
            adapter.submitList(it)
-       }*/
+       }
     }
 }

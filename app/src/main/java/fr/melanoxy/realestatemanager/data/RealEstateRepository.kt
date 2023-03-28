@@ -3,7 +3,7 @@ package fr.melanoxy.realestatemanager.data
 import android.content.Context
 import fr.melanoxy.realestatemanager.domain.estatePicture.EstatePictureEntity
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.viewPagerInfos.RealEstateViewPagerInfosStateItem
-import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateRv.RealEstatePictureViewStateItem
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstatePictureRv.RealEstatePictureViewStateItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.io.File
 import java.io.FileOutputStream
@@ -60,9 +60,16 @@ class RealEstateRepository @Inject constructor(
         val pictureEntity:MutableList<EstatePictureEntity> = ArrayList()
         estatePicturesListEntityMutableStateFlow.value = null
 
+        val folderName = "$realEstateIdCreated"
+        val folder = File(context.filesDir, folderName)
+
+        if (!folder.exists()) {
+            folder.mkdir()
+        }
+
         estatePictureList.forEach {
             val inputStream = context.contentResolver.openInputStream(it.pictureUri)
-            val file = File(context.filesDir, "${it.realEstatePictureName}.jpg")
+            val file = File(folder.absolutePath, "${it.realEstatePictureName}.jpg")
             val outputStream = FileOutputStream(file)
             inputStream?.copyTo(outputStream)
             outputStream.close()

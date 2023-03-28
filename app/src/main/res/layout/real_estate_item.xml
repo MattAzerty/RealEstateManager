@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/real_estate_item_cl"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/real_estate_item_iv_pic1"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:importantForAccessibility="no"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/real_estate_item_tv_type"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="@dimen/fab_margin"
+        android:gravity="start"
+        android:singleLine="true"
+        android:textSize="24dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toEndOf="@id/real_estate_item_iv_pic1"
+        app:layout_constraintTop_toTopOf="@+id/real_estate_item_iv_pic1"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Penthouse" />
+
+    <TextView
+        android:id="@+id/real_estate_item_tv_city"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:singleLine="true"
+        android:textColor="@color/colorPrimaryDark"
+        app:layout_constraintStart_toStartOf="@id/real_estate_item_tv_type"
+        app:layout_constraintTop_toBottomOf="@+id/real_estate_item_tv_type"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Upper East Side" />
+
+    <TextView
+        android:id="@+id/real_estate_item_tv_price"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:singleLine="true"
+        android:textStyle="bold"
+        android:textSize="24dp"
+        android:textColor="@color/colorAccent"
+        app:layout_constraintStart_toStartOf="@id/real_estate_item_tv_type"
+        app:layout_constraintTop_toBottomOf="@+id/real_estate_item_tv_city"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="$29,872,000" />
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/real_estate_item_divider1"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toBottomOf="@+id/real_estate_item_iv_pic1"
+        app:dividerColor="@color/colorSecondary"
+        android:layout_height="2dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

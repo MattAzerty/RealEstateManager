@@ -1,4 +1,4 @@
-package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateRv
+package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstatePictureRv
 
 import android.net.Uri
 

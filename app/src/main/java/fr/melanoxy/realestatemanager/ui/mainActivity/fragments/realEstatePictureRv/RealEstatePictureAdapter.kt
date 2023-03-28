@@ -1,4 +1,4 @@
-package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateRv
+package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstatePictureRv
 
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import fr.melanoxy.realestatemanager.databinding.PictureItemBinding
 
-class RealEstatePictureAdapter : ListAdapter<RealEstatePictureViewStateItem, RealEstatePictureAdapter.ViewHolder>(RealEstateDiffCallback) {
+class RealEstatePictureAdapter : ListAdapter<RealEstatePictureViewStateItem, RealEstatePictureAdapter.ViewHolder>(RealEstatePictureDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
         PictureItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -44,7 +44,7 @@ class RealEstatePictureAdapter : ListAdapter<RealEstatePictureViewStateItem, Rea
         }
     }
 
-    object RealEstateDiffCallback : DiffUtil.ItemCallback<RealEstatePictureViewStateItem>() {
+    object RealEstatePictureDiffCallback : DiffUtil.ItemCallback<RealEstatePictureViewStateItem>() {
         override fun areItemsTheSame(oldItem: RealEstatePictureViewStateItem, newItem: RealEstatePictureViewStateItem): Boolean = oldItem.pictureUri == newItem.pictureUri
 
         override fun areContentsTheSame(oldItem: RealEstatePictureViewStateItem, newItem: RealEstatePictureViewStateItem): Boolean = oldItem == newItem
