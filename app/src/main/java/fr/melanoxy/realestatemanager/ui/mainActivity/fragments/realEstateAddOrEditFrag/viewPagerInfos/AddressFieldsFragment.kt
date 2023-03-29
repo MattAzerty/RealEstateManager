@@ -23,15 +23,19 @@ class AddressFieldsFragment : Fragment(R.layout.fragment_address_fields) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.fragAddressFieldEtStreet.doAfterTextChanged {
+            if(!it.isNullOrEmpty())
             viewModel.onStreetFieldChanged(it.toString())
         }
         binding.fragAddressFieldEtCity.doAfterTextChanged {
+            if(!it.isNullOrEmpty())
             viewModel.onCityFieldChanged(it.toString())
         }
         binding.fragAddressFieldEtState.doAfterTextChanged {
+            if(!it.isNullOrEmpty())
             viewModel.onStateChanged(it.toString())
         }
         binding.fragAddressFieldEtZipcode.doAfterTextChanged {
+            if(!it.isNullOrEmpty())
             viewModel.onZipcode(it.toString())
         }
     }

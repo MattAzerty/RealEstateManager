@@ -22,10 +22,14 @@ class InfosFieldsFragment : Fragment(R.layout.fragment_infos_fields) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.fragInfosFieldEtPrice.doOnTextChanged { text, _, _, _ -> viewModel.onPriceFieldChanged(text.toString()) }
-        binding.fragInfosFieldEtRoom.doOnTextChanged { text, _, _, _ -> viewModel.onNumberOfRoomChanged(text.toString()) }
-        binding.fragInfosFieldEtBedroom.doOnTextChanged { text, _, _, _ -> viewModel.onNumberOfBedroomChanged(text.toString()) }
-        binding.fragInfosFieldEtSurface.doOnTextChanged { text, _, _, _ -> viewModel.onSurfaceFieldChanged(text.toString()) }
+        binding.fragInfosFieldEtPrice.doOnTextChanged { text, _, _, _ ->
+            if(!text.isNullOrEmpty()) viewModel.onPriceFieldChanged(text.toString()) }
+        binding.fragInfosFieldEtRoom.doOnTextChanged { text, _, _, _ ->
+            if(!text.isNullOrEmpty()) viewModel.onNumberOfRoomChanged(text.toString()) }
+        binding.fragInfosFieldEtBedroom.doOnTextChanged { text, _, _, _ ->
+            if(!text.isNullOrEmpty()) viewModel.onNumberOfBedroomChanged(text.toString()) }
+        binding.fragInfosFieldEtSurface.doOnTextChanged { text, _, _, _ ->
+            if(!text.isNullOrEmpty()) viewModel.onSurfaceFieldChanged(text.toString()) }
 
     }
 }

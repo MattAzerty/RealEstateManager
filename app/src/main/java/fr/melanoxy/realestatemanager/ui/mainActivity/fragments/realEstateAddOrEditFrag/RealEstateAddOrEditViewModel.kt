@@ -9,7 +9,7 @@ import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.data.PermissionChecker
-import fr.melanoxy.realestatemanager.data.RealEstateRepository
+import fr.melanoxy.realestatemanager.data.repositories.RealEstateRepository
 import fr.melanoxy.realestatemanager.data.utils.CoroutineDispatcherProvider
 import fr.melanoxy.realestatemanager.domain.Address
 import fr.melanoxy.realestatemanager.domain.estateAgent.GetEstateAgentUseCase

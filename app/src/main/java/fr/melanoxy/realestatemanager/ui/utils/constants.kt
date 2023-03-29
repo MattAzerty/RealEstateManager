@@ -37,3 +37,21 @@ val REAL_ESTATE_TYPES = listOf(
     "Vacation home"
 )
 
+val FILTERING_CRITERIA_LIST = listOf(
+    "[A]:Filter by Agent Name.",
+    "[T]:Filter by type of property.",
+    "[C]:Filter by city.",
+    "[POI]:Include point of interest.",
+    "[#P]:Minimum number of picture.",
+    "[SD>]:After this sale date.",
+    "[SD<]:Before this sale date.",
+    "[MED>]:After this market entry date.",
+    "[MED<]:Before this market entry date.",
+    "[$>]:Price superior to.",
+    "[$<]:Price inferior to.",
+    "[S>]:Surface minimum.",
+    "[S<]:Surface maximum.",
+    "[#R]:Number of room(s).",
+    "[#B]:Number of bedroom(s)."
+)
+

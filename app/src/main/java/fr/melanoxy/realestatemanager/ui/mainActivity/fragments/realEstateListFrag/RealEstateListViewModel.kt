@@ -6,11 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.liveData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import fr.melanoxy.realestatemanager.R
-import fr.melanoxy.realestatemanager.data.RealEstateRepository
+import fr.melanoxy.realestatemanager.data.repositories.RealEstateRepository
+import fr.melanoxy.realestatemanager.data.repositories.SearchRepository
 import fr.melanoxy.realestatemanager.data.utils.CoroutineDispatcherProvider
 import fr.melanoxy.realestatemanager.domain.realEstateWithPictureEntity.GetRealEstateWithPicturesUseCase
-import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.realEstateSpinners.AddAgentViewStateItem
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.realEstateRv.RealEstateViewStateItem
 import fr.melanoxy.realestatemanager.ui.utils.SingleLiveEvent
 import javax.inject.Inject
@@ -18,6 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RealEstateListViewModel @Inject constructor(
     realEstateRepository: RealEstateRepository,
+    searchRepository: SearchRepository,
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
     getRealEstateWithPicturesUseCase: GetRealEstateWithPicturesUseCase,
 ) : ViewModel() {
@@ -40,7 +40,7 @@ class RealEstateListViewModel @Inject constructor(
             }
     }
 
-    val isTabletLiveData = realEstateRepository.isTabletStateFlow.asLiveData()
+    val isTabletLiveData = searchRepository.isTabletStateFlow.asLiveData()
     val singleLiveRealEstateListEvent = SingleLiveEvent<RealEstateListEvent>()
 
     fun onFabButtonClicked(fabButtonId: Int) {

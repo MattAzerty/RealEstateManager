@@ -1,4 +1,4 @@
-package fr.melanoxy.realestatemanager.data
+package fr.melanoxy.realestatemanager.data.repositories
 
 import android.content.Context
 import fr.melanoxy.realestatemanager.domain.estatePicture.EstatePictureEntity
@@ -14,7 +14,7 @@ import javax.inject.Singleton
 class RealEstateRepository @Inject constructor(
     private val context: Context
 ) {
-    val isTabletStateFlow = MutableStateFlow<Boolean>(false)
+
     val selectedRealEstateIdMutableStateFlow = MutableStateFlow<Long?>(null)
     val estatePicturesListEntityMutableStateFlow = MutableStateFlow<List<EstatePictureEntity>?>(null)
 
@@ -86,10 +86,5 @@ class RealEstateRepository @Inject constructor(
         estatePicturesListEntityMutableStateFlow.emit(pictureEntity)
 
     }
-
-    fun isTablet(isTablet: Boolean) {
-        isTabletStateFlow.value = isTablet
-    }
-
 
 }

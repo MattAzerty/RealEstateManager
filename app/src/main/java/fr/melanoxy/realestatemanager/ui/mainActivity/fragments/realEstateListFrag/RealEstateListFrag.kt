@@ -11,12 +11,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.hilt.android.AndroidEntryPoint
 import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.databinding.FragmentRealEstateListBinding
+import fr.melanoxy.realestatemanager.ui.mainActivity.MainEventListener
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.RealEstateAddOrEditFrag
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.realEstateRv.RealEstateAdapter
 import fr.melanoxy.realestatemanager.ui.utils.viewBinding
@@ -26,8 +29,13 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
 
     private val binding by viewBinding { FragmentRealEstateListBinding.bind(it) }
     private val viewModel by viewModels<RealEstateListViewModel>()
+    private lateinit var eventListener: MainEventListener
     private var isExpanded=false
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        eventListener = context as MainEventListener
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -147,9 +155,9 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
             override fun onTransitionEnd(transition: Transition?) {
                 if (isExpanded) {
                     binding.searchBarInputText.requestFocus()
-                    showKeyboard(binding.searchBarInputText)
+                    eventListener.showkeyboard(binding.searchBarInputText)
                 } else  {
-                    hideKeyboard(binding.searchBarInputText)
+                    eventListener.hideKeyboard(binding.searchBarInputText)
                 }
             }
 
@@ -160,17 +168,6 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
             override fun onTransitionStart(transition: Transition?) = Unit
         })
     }
-
-    private fun hideKeyboard(view: View) {
-        val inputMethodManager = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
-    }
-
-    private fun showKeyboard(view: View) {
-        val inputMethodManager = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
-    }
-
 
     private fun bindRecyclerView() {
 

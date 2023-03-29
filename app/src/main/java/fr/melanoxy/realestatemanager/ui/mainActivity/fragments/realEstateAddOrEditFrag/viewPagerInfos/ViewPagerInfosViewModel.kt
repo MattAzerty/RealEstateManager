@@ -2,7 +2,7 @@ package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrE
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import fr.melanoxy.realestatemanager.data.RealEstateRepository
+import fr.melanoxy.realestatemanager.data.repositories.RealEstateRepository
 import javax.inject.Inject
 
 @HiltViewModel

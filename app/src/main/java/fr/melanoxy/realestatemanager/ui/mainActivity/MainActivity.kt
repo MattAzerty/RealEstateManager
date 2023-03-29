@@ -1,7 +1,10 @@
 package fr.melanoxy.realestatemanager.ui.mainActivity
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,6 +42,16 @@ class MainActivity : AppCompatActivity(), MainEventListener {
 
     override fun displaySnackBarMessage(message: CharSequence) {
         Snackbar.make(binding.mainCl, message, Snackbar.LENGTH_SHORT).show()
+    }
+
+    override fun hideKeyboard(view: View) {
+        val inputMethodManager = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    override fun showkeyboard(view: View) {
+        val inputMethodManager = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
     }
 
     override fun onResume() {

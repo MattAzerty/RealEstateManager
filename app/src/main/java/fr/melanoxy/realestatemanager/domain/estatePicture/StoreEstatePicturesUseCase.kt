@@ -1,7 +1,7 @@
 package fr.melanoxy.realestatemanager.domain.estatePicture
 
 import android.database.sqlite.SQLiteException
-import fr.melanoxy.realestatemanager.data.RealEstateRepository
+import fr.melanoxy.realestatemanager.data.repositories.RealEstateRepository
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstatePictureRv.RealEstatePictureViewStateItem
 import javax.inject.Inject
 import javax.inject.Singleton

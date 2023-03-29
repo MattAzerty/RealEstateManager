@@ -3,7 +3,7 @@
     <style name="AppTheme" parent="Base.Theme.MaterialComponents.Light">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorSecondaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
         <!-- Add these -->
@@ -37,7 +37,7 @@
 
     <!--TextInputLayoutField-->
         <style name="Widget.RealEstateManager.Spinner" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu" />
-
+        <style name="Widget.RealEstateManager.AutoCompleteSearch" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu" />
         <style name="Widget.RealEstateManager.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox" />
 
 

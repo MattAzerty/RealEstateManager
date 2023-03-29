@@ -1,21 +1,21 @@
 package fr.melanoxy.realestatemanager.ui.mainActivity
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import fr.melanoxy.realestatemanager.data.RealEstateRepository
+import fr.melanoxy.realestatemanager.data.repositories.RealEstateRepository
+import fr.melanoxy.realestatemanager.data.repositories.SearchRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
-    private val realEstateRepository: RealEstateRepository,
+    private val searchRepository: SearchRepository,
 ) : ViewModel() {
 
     private var isTablet: Boolean = false
 
 
     fun onResume(isTablet: Boolean) {
-        realEstateRepository.isTablet(isTablet)
+        searchRepository.isTablet(isTablet)
         this.isTablet = isTablet
     }
 }
