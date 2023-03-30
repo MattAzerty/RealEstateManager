@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.data.PermissionChecker
 import fr.melanoxy.realestatemanager.data.repositories.RealEstateRepository
+import fr.melanoxy.realestatemanager.data.repositories.SharedRepository
 import fr.melanoxy.realestatemanager.data.utils.CoroutineDispatcherProvider
 import fr.melanoxy.realestatemanager.domain.Address
 import fr.melanoxy.realestatemanager.domain.estateAgent.GetEstateAgentUseCase
@@ -22,6 +23,7 @@ import fr.melanoxy.realestatemanager.domain.realEstate.RealEstateEntity
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.realEstateSpinners.AddAgentViewStateItem
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstatePictureRv.RealEstatePictureViewStateItem
 import fr.melanoxy.realestatemanager.ui.utils.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -33,6 +35,7 @@ class RealEstateAddOrEditViewModel @Inject constructor(
     private val permissionChecker: PermissionChecker,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
     private val realEstateRepository: RealEstateRepository,
+    sharedRepository: SharedRepository,
     private val getPictureOfRealEstateUseCase: GetPictureOfRealEstateUseCase,
     private val getEstateAgentUseCase: GetEstateAgentUseCase,
     private val insertRealEstateUseCase: InsertRealEstateUseCase,
@@ -49,6 +52,16 @@ class RealEstateAddOrEditViewModel @Inject constructor(
     private val selectedRealEstateId =realEstateRepository.selectedRealEstateIdMutableStateFlow.value
     private val tempPictureListItemLiveData = MutableLiveData<List<RealEstatePictureViewStateItem>>()
 
+    val entryDatePickedLiveData: LiveData<Event<String>> = sharedRepository.entryDatePickedChannel.asLiveDataEvent(
+        coroutineDispatcherProvider.io) {
+        emit(it)
+    }
+
+    val saleDatePickedLiveData: LiveData<Event<String>> = sharedRepository.saleDatePickedChannel.asLiveDataEvent(
+        coroutineDispatcherProvider.io) {
+        emit(it)
+    }
+
     //TODO Change this to globalViewState
     val agentViewStateLiveData: LiveData<List<AddAgentViewStateItem>> = liveData(coroutineDispatcherProvider.io){
         if(selectedRealEstateId==null){
@@ -64,7 +77,6 @@ class RealEstateAddOrEditViewModel @Inject constructor(
                 )
             }
         }
-
         }
 
     private val pictureEntityListLiveData: LiveData<List<EstatePictureEntity>> = liveData(coroutineDispatcherProvider.io){

@@ -6,6 +6,7 @@ interface MainEventListener {
 
     fun displaySnackBarMessage(message: CharSequence)
     fun hideKeyboard(view: View)
-    fun showkeyboard(view: View)
+    fun showKeyboard(view: View)
+    fun showDatePicker(type:Int)
 
 }

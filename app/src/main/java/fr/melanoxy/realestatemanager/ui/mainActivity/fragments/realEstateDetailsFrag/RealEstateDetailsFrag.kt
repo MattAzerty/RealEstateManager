@@ -12,8 +12,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.databinding.FragmentRealEstateDetailsBinding
 import fr.melanoxy.realestatemanager.ui.mainActivity.MainEventListener
-import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.RealEstateAddOrEditEvent
-import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.RealEstateListEvent
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateSearchBar.RealEstateSearchBarSpinnerAdapter
 import fr.melanoxy.realestatemanager.ui.utils.exhaustive
 import fr.melanoxy.realestatemanager.ui.utils.viewBinding
@@ -41,6 +39,8 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
                 is RealEstateDetailsEvent.DisplaySnackBarMessage -> eventListener.displaySnackBarMessage(
                     event.message.toCharSequence(requireContext())
                 )
+                RealEstateDetailsEvent.ShowSaleDatePicker -> eventListener.showDatePicker(R.string.saleDate)
+                RealEstateDetailsEvent.ShowMarketEntryDatePicker -> eventListener.showDatePicker(R.string.entryDate)
             }.exhaustive
         }
 
@@ -50,13 +50,15 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
 
         //Dropdown menu
         val adapterForTags = RealEstateSearchBarSpinnerAdapter()
-        adapterForTags.setData(viewModel.getTags())
         binding.searchBarInputText.setAdapter(adapterForTags)
+        viewModel.filterListLiveData.observe(viewLifecycleOwner) {
+            adapterForTags.setData(it)
+        }
         binding.searchBarInputText.setOnItemClickListener { _, v, position, _ ->
             binding.searchBarInputText.requestFocus()
-            eventListener.showkeyboard(binding.searchBarInputText)
+            eventListener.showKeyboard(binding.searchBarInputText)
             adapterForTags.getItem(position)?.let {
-                    viewModel.onTagSelected(it.id)
+                    viewModel.onTagSelected(it.tag)
                 }
             }
 
@@ -77,30 +79,18 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
                     false
                 }
             }
-        binding.searchBarInputText.setOnFocusChangeListener { v, hasFocus ->
+        binding.searchBarInputText.setOnFocusChangeListener { _, hasFocus ->
             if(hasFocus && binding.searchBarInputText.text.isEmpty()){
                 binding.searchBarInputText.clearFocus()
                 binding.searchBarInputText.showDropDown()
             }
         }
-
-        binding.searchBarChipGroup.setOnCheckedStateChangeListener { chipGroup, checkedIds ->
-            val tagList:MutableList<String> = mutableListOf()
-            if(checkedIds.isNotEmpty()){
-            checkedIds.forEach {
-                val checkedChip = binding.root.findViewById<Chip>(it)
-                val chipName = checkedChip.text.toString()
-                tagList.add(chipName)
-            }}
-            viewModel.onChipSelected(tagList)
-        }
-
     }
 
     private fun addChipToGroup(tag: String) {
         val chip = Chip(context)
         chip.text = tag
-        chip.setChipBackgroundColorResource(R.color.colorAccent)
+        chip.setChipBackgroundColorResource(R.color.black)
         chip.chipIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_launcher_background)
         chip.isChipIconVisible = false
         chip.isCloseIconVisible = true
@@ -108,9 +98,27 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
         chip.isClickable = true
         chip.isCheckable = false
         binding.searchBarChipGroup.addView(chip as View)
-        chip.setOnCloseIconClickListener { binding.searchBarChipGroup.removeView(chip as View) }
+        chip.setOnCloseIconClickListener {
+            binding.searchBarChipGroup.removeView(chip as View)
+            updateChipList()
+        }
         binding.searchBarInputText.text.clear()
         eventListener.hideKeyboard(binding.searchBarInputText)
+        updateChipList()
     }
 
+    private fun updateChipList() {
+        val tagList:MutableList<String> = mutableListOf()
+        for (i in 0 until binding.searchBarChipGroup.childCount) {
+            // Get the child view at the specified index
+            val childView = binding.searchBarChipGroup.getChildAt(i)
+            // Check if the child view is a Chip
+            if (childView is Chip) {
+                val chipName = childView.text.toString()
+                tagList.add(chipName)
+            }
+        }
+        viewModel.onChipGroupUpdate(tagList)
     }
+
+}

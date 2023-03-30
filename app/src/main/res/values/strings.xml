@@ -43,4 +43,6 @@
     <string name="cant_insert_real_estate">Unable to add or update the real estate.</string>
     <string name="search">Search...</string>
     <string name="error_search_empty">Nothing to search.</string>
+    <string name="entryDate">SELECT MARKET ENTRY DATE</string>
+    <string name="saleDate">SELECT SALE DATE</string>
 </resources>

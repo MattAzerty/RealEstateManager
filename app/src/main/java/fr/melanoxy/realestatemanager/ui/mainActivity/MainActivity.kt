@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import fr.melanoxy.realestatemanager.R
@@ -13,6 +14,8 @@ import fr.melanoxy.realestatemanager.databinding.ActivityMainBinding
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateDetailsFrag.RealEstateDetailsFrag
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.RealEstateListFrag
 import fr.melanoxy.realestatemanager.ui.utils.viewBinding
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 @AndroidEntryPoint
@@ -49,9 +52,27 @@ class MainActivity : AppCompatActivity(), MainEventListener {
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    override fun showkeyboard(view: View) {
+    override fun showKeyboard(view: View) {
         val inputMethodManager = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    override fun showDatePicker(type:Int) {
+
+        val pickerEntryDate = MaterialDatePicker
+            .Builder
+            .datePicker()
+            .setTheme(R.style.MyDatePickerStyle)
+            .setTitleText(type)
+            .build()
+
+        pickerEntryDate.addOnPositiveButtonClickListener { selectedDate ->
+            val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val formattedDate = dateFormat.format(Date(selectedDate))
+            viewModel.onDateSelected(type, formattedDate)
+        }
+
+        pickerEntryDate.show(supportFragmentManager, "DATE_PICKER")
     }
 
     override fun onResume() {

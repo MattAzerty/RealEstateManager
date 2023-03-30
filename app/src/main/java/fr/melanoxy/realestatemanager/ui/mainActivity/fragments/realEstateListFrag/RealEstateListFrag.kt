@@ -4,16 +4,11 @@ import android.content.Context
 import android.os.Bundle
 import android.transition.ChangeBounds
 import android.transition.Transition
-import android.transition.TransitionInflater
 import android.transition.TransitionManager
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.hilt.android.AndroidEntryPoint
@@ -155,7 +150,7 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
             override fun onTransitionEnd(transition: Transition?) {
                 if (isExpanded) {
                     binding.searchBarInputText.requestFocus()
-                    eventListener.showkeyboard(binding.searchBarInputText)
+                    eventListener.showKeyboard(binding.searchBarInputText)
                 } else  {
                     eventListener.hideKeyboard(binding.searchBarInputText)
                 }

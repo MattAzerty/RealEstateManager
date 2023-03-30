@@ -104,7 +104,6 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
             AnimationUtils.loadAnimation(requireContext(), R.anim.rotate_arrow_180_deg_backward)
 
         setupViewPager()
-        setupDatePickers()
         bindAutoCompleteText()
         bindChips()
         bindButtons()
@@ -268,6 +267,26 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
         binding.createNewRealEstateButtonSaveRealEstate.setOnClickListener {
             viewModel.onSaveRealEstateClicked()
         }
+//DatePicker
+        binding.createNewRealEstateButtonMarketEntryDate.setOnClickListener {
+            eventListener.showDatePicker(R.string.entryDate)
+        }
+        viewModel.entryDatePickedLiveData.observe(viewLifecycleOwner) { event ->
+            event.handleContent {
+                binding.createNewRealEstateButtonMarketEntryDate.text =
+                    "Market entry date: $it"
+                binding.createNewRealEstateButtonMarketEntryDate.elevation = 0F
+            }
+        }
+        binding.createNewRealEstateButtonSaleDate.setOnClickListener {
+            eventListener.showDatePicker(R.string.saleDate)
+        }
+        viewModel.saleDatePickedLiveData.observe(viewLifecycleOwner) { event ->
+            event.handleContent {
+                binding.createNewRealEstateButtonSaleDate.text = "Sale entry date: $it"
+                binding.createNewRealEstateButtonSaleDate.elevation = 0F
+            }
+        }
 
     }
 
@@ -329,49 +348,6 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
 
             isOpen = true
         }
-    }
-
-    private fun setupDatePickers() {
-
-        binding.createNewRealEstateButtonMarketEntryDate.setOnClickListener {
-            val pickerEntryDate = MaterialDatePicker
-                .Builder
-                .datePicker()
-                .setTheme(R.style.MyDatePickerStyle)
-                .setTitleText("Select market entry date")
-                .build()
-
-            pickerEntryDate.addOnPositiveButtonClickListener { selectedDate ->
-                val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                val formattedDate = dateFormat.format(Date(selectedDate))
-                binding.createNewRealEstateButtonMarketEntryDate.text =
-                    "Market entry date: $formattedDate"
-                binding.createNewRealEstateButtonMarketEntryDate.elevation = 0F
-                viewModel.onEntryDateSelected(formattedDate)
-            }
-
-            pickerEntryDate.show(childFragmentManager, "DATE_ENTRY_PICKER")
-        }
-
-        binding.createNewRealEstateButtonSaleDate.setOnClickListener {
-            val pickerSaleDate = MaterialDatePicker
-                .Builder
-                .datePicker()
-                .setTheme(R.style.MyDatePickerStyle)
-                .setTitleText("Select sale date")
-                .build()
-
-            pickerSaleDate.addOnPositiveButtonClickListener { selectedDate ->
-                val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                val formattedDate = dateFormat.format(Date(selectedDate))
-                binding.createNewRealEstateButtonSaleDate.text = "Sale entry date: $formattedDate"
-                binding.createNewRealEstateButtonSaleDate.elevation = 0F
-                viewModel.onSaleDateSelected(formattedDate)
-            }
-
-            pickerSaleDate.show(childFragmentManager, "DATE_SALE_PICKER")
-        }
-
     }
 
     private fun setupViewPager() {

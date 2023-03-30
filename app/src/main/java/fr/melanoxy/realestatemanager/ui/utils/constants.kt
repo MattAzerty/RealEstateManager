@@ -49,9 +49,9 @@ val FILTERING_CRITERIA_LIST = listOf(
     "[MED<]:Before this market entry date.",
     "[$>]:Price superior to.",
     "[$<]:Price inferior to.",
+    "[#R]:Number of room(s).",
+    "[#B]:Number of bedroom(s).",
     "[S>]:Surface minimum.",
     "[S<]:Surface maximum.",
-    "[#R]:Number of room(s).",
-    "[#B]:Number of bedroom(s)."
 )
 
