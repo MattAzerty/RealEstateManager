@@ -1,5 +1,6 @@
 package fr.melanoxy.realestatemanager.data.repositories
 
+import fr.melanoxy.realestatemanager.ui.mainActivity.NavigationEvent
 import fr.melanoxy.realestatemanager.ui.utils.FILTERING_CRITERIA_LIST
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -12,21 +13,33 @@ import javax.inject.Singleton
 @Singleton
 class SharedRepository @Inject constructor(
 ) {
+//FRAGMENT STATE
+val fragmentStateFlow= MutableStateFlow<NavigationEvent>(NavigationEvent.RealEstateListFragment)
+
 //ENTRY DATE PICKER
-private val entryDatePickedMutableStateFlow = MutableStateFlow<String?>(null)
-    val entryDatePickedChannel = Channel<String>()
+
+    val entryDatePickedChannelFromAddOrEdit = Channel<String>()//TODO howToHandleOnceButWithMultipleListeners?
+    val entryDatePickedChannelFromSearchBar = Channel<String>()
 
     fun setEntryDatePicked(entryDatePicked: String) {
-        entryDatePickedMutableStateFlow.value = entryDatePicked
-        entryDatePickedChannel.trySend(entryDatePicked)
+        when (fragmentStateFlow.value) {
+        NavigationEvent.AddOrEditRealEstateFragment -> entryDatePickedChannelFromAddOrEdit.trySend(entryDatePicked)
+        NavigationEvent.RealEstateListFragment -> entryDatePickedChannelFromSearchBar.trySend(entryDatePicked)
+    }
     }
 //SALE DATE PICKER
-    private val saleDatePickedMutableStateFlow = MutableStateFlow<String?>(null)
-    val saleDatePickedChannel = Channel<String>()
+    val saleDatePickedChannelFromAddOrEdit = Channel<String>()
+    val saleDatePickedChannelFromSearchBar = Channel<String>()
 
     fun setSaleDatePicked(saleDatePicked: String) {
-        saleDatePickedMutableStateFlow.value = saleDatePicked
-        saleDatePickedChannel.trySend(saleDatePicked)
+        when (fragmentStateFlow.value) {
+            NavigationEvent.AddOrEditRealEstateFragment -> saleDatePickedChannelFromAddOrEdit.trySend(
+                saleDatePicked
+            )
+            NavigationEvent.RealEstateListFragment -> saleDatePickedChannelFromSearchBar.trySend(
+                saleDatePicked
+            )
+        }
     }
 //TABLET MODE DATA
     val isTabletStateFlow = MutableStateFlow(false)

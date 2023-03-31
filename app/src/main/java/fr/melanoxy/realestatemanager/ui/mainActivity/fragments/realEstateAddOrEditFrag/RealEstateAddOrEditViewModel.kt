@@ -20,12 +20,11 @@ import fr.melanoxy.realestatemanager.domain.estatePicture.InsertEstatePictureUse
 import fr.melanoxy.realestatemanager.domain.estatePicture.StoreEstatePicturesUseCase
 import fr.melanoxy.realestatemanager.domain.realEstate.InsertRealEstateUseCase
 import fr.melanoxy.realestatemanager.domain.realEstate.RealEstateEntity
+import fr.melanoxy.realestatemanager.ui.mainActivity.NavigationEvent
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.realEstateSpinners.AddAgentViewStateItem
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstatePictureRv.RealEstatePictureViewStateItem
 import fr.melanoxy.realestatemanager.ui.utils.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -35,7 +34,7 @@ class RealEstateAddOrEditViewModel @Inject constructor(
     private val permissionChecker: PermissionChecker,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
     private val realEstateRepository: RealEstateRepository,
-    sharedRepository: SharedRepository,
+    private val sharedRepository: SharedRepository,
     private val getPictureOfRealEstateUseCase: GetPictureOfRealEstateUseCase,
     private val getEstateAgentUseCase: GetEstateAgentUseCase,
     private val insertRealEstateUseCase: InsertRealEstateUseCase,
@@ -44,7 +43,6 @@ class RealEstateAddOrEditViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val realEstateAddOrEditViewState = RealEstateAddOrEditViewState()
-
     private var itemIndex = 1
     private var deletedItemIndices: MutableList<Int> = mutableListOf()
     private var selectedPicture: Uri?=null
@@ -52,17 +50,16 @@ class RealEstateAddOrEditViewModel @Inject constructor(
     private val selectedRealEstateId =realEstateRepository.selectedRealEstateIdMutableStateFlow.value
     private val tempPictureListItemLiveData = MutableLiveData<List<RealEstatePictureViewStateItem>>()
 
-    val entryDatePickedLiveData: LiveData<Event<String>> = sharedRepository.entryDatePickedChannel.asLiveDataEvent(
+    val entryDatePickedLiveData: LiveData<Event<String>> = sharedRepository.entryDatePickedChannelFromAddOrEdit.asLiveDataEvent(
         coroutineDispatcherProvider.io) {
         emit(it)
     }
 
-    val saleDatePickedLiveData: LiveData<Event<String>> = sharedRepository.saleDatePickedChannel.asLiveDataEvent(
+    val saleDatePickedLiveData: LiveData<Event<String>> = sharedRepository.saleDatePickedChannelFromAddOrEdit.asLiveDataEvent(
         coroutineDispatcherProvider.io) {
         emit(it)
     }
 
-    //TODO Change this to globalViewState
     val agentViewStateLiveData: LiveData<List<AddAgentViewStateItem>> = liveData(coroutineDispatcherProvider.io){
         if(selectedRealEstateId==null){
             getEstateAgentUseCase.invoke().collect { agents ->
@@ -477,6 +474,10 @@ class RealEstateAddOrEditViewModel @Inject constructor(
 
     fun onSaleDateSelected(saleDate: String) {
         realEstateAddOrEditViewState.saleDate = toDateFormat(saleDate)
+    }
+
+    fun notifyFragmentNav() {
+    sharedRepository.fragmentStateFlow.value = NavigationEvent.AddOrEditRealEstateFragment
     }
 
     val realEstateAddFragSingleLiveEvent = SingleLiveEvent<RealEstateAddOrEditEvent>()

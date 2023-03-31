@@ -35,6 +35,7 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.notifyFragmentNav()
         isTablet()
         bindFab()
         bindSearchBar()

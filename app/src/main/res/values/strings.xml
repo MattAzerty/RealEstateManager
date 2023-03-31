@@ -45,4 +45,10 @@
     <string name="error_search_empty">Nothing to search.</string>
     <string name="entryDate">SELECT MARKET ENTRY DATE</string>
     <string name="saleDate">SELECT SALE DATE</string>
+    <string name="closePOI">Close</string>
+    <string name="parkPOI">Park</string>
+    <string name="grocery_store_POI">Grocery Store</string>
+    <string name="shopping_mall_poi">Shopping mall</string>
+    <string name="hospitalPOI">Hospital</string>
+    <string name="schoolPOI">School</string>
 </resources>

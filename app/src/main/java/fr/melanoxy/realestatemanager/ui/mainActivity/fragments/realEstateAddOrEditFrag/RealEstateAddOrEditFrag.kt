@@ -33,6 +33,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.databinding.FragmentRealEstateAddBinding
 import fr.melanoxy.realestatemanager.ui.mainActivity.MainEventListener
+import fr.melanoxy.realestatemanager.ui.mainActivity.NavigationEvent
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.realEstateSpinners.AddAgentSpinnerAdapter
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.viewPagerInfos.ViewPagerInfosAdapter
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.RealEstateListFrag
@@ -102,6 +103,8 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
             AnimationUtils.loadAnimation(requireContext(), R.anim.rotate_arrow_180_deg_forward)
         arrowRotationBackward =
             AnimationUtils.loadAnimation(requireContext(), R.anim.rotate_arrow_180_deg_backward)
+
+        viewModel.notifyFragmentNav()
 
         setupViewPager()
         bindAutoCompleteText()
@@ -276,6 +279,7 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
                 binding.createNewRealEstateButtonMarketEntryDate.text =
                     "Market entry date: $it"
                 binding.createNewRealEstateButtonMarketEntryDate.elevation = 0F
+                viewModel.onEntryDateSelected(it)
             }
         }
         binding.createNewRealEstateButtonSaleDate.setOnClickListener {
@@ -283,8 +287,9 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
         }
         viewModel.saleDatePickedLiveData.observe(viewLifecycleOwner) { event ->
             event.handleContent {
-                binding.createNewRealEstateButtonSaleDate.text = "Sale entry date: $it"
+                binding.createNewRealEstateButtonSaleDate.text = "Sale date: $it"
                 binding.createNewRealEstateButtonSaleDate.elevation = 0F
+                viewModel.onSaleDateSelected(it)
             }
         }
 

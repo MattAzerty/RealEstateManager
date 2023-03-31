@@ -10,6 +10,7 @@ import fr.melanoxy.realestatemanager.data.repositories.RealEstateRepository
 import fr.melanoxy.realestatemanager.data.repositories.SharedRepository
 import fr.melanoxy.realestatemanager.data.utils.CoroutineDispatcherProvider
 import fr.melanoxy.realestatemanager.domain.realEstateWithPictureEntity.GetRealEstateWithPicturesUseCase
+import fr.melanoxy.realestatemanager.ui.mainActivity.NavigationEvent
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.realEstateRv.RealEstateViewStateItem
 import fr.melanoxy.realestatemanager.ui.utils.SingleLiveEvent
 import javax.inject.Inject
@@ -17,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RealEstateListViewModel @Inject constructor(
     realEstateRepository: RealEstateRepository,
-    sharedRepository: SharedRepository,
+    private val sharedRepository: SharedRepository,
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
     getRealEstateWithPicturesUseCase: GetRealEstateWithPicturesUseCase,
 ) : ViewModel() {
@@ -47,4 +48,8 @@ class RealEstateListViewModel @Inject constructor(
         singleLiveRealEstateListEvent.value = RealEstateListEvent.ReplaceCurrentFragment(fabButtonId)
         }
 
+    fun notifyFragmentNav() {
+        sharedRepository.fragmentStateFlow.value = NavigationEvent.RealEstateListFragment
     }
+
+}

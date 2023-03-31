@@ -2,7 +2,11 @@ package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateDetail
 
 import android.content.Context
 import android.os.Bundle
+import android.transition.ChangeBounds
+import android.transition.Transition
+import android.transition.TransitionManager
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -12,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.databinding.FragmentRealEstateDetailsBinding
 import fr.melanoxy.realestatemanager.ui.mainActivity.MainEventListener
+import fr.melanoxy.realestatemanager.ui.mainActivity.NavigationEvent
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateSearchBar.RealEstateSearchBarSpinnerAdapter
 import fr.melanoxy.realestatemanager.ui.utils.exhaustive
 import fr.melanoxy.realestatemanager.ui.utils.viewBinding
@@ -22,6 +27,7 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
     private val binding by viewBinding { FragmentRealEstateDetailsBinding.bind(it) }
     private val viewModel by viewModels<RealEstateDetailsViewModel>()
     private lateinit var eventListener: MainEventListener
+    private var isExpanded = true
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -41,12 +47,21 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
                 )
                 RealEstateDetailsEvent.ShowSaleDatePicker -> eventListener.showDatePicker(R.string.saleDate)
                 RealEstateDetailsEvent.ShowMarketEntryDatePicker -> eventListener.showDatePicker(R.string.entryDate)
+                RealEstateDetailsEvent.ShowSearchBarKeyboard -> showSearchBarKeyboard()
+                RealEstateDetailsEvent.ShowPOISelector -> binding.searchBarChipGroupHvPoi.visibility = View.VISIBLE
             }.exhaustive
         }
 
         }
 
     private fun bindSearchBarForTabletMode() {
+
+        viewModel.fragmentNavigationLiveData.observe(viewLifecycleOwner) {event ->
+            when (event) {
+                NavigationEvent.RealEstateListFragment -> expand()
+                NavigationEvent.AddOrEditRealEstateFragment -> collapse()
+            }
+        }
 
         //Dropdown menu
         val adapterForTags = RealEstateSearchBarSpinnerAdapter()
@@ -55,8 +70,6 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
             adapterForTags.setData(it)
         }
         binding.searchBarInputText.setOnItemClickListener { _, v, position, _ ->
-            binding.searchBarInputText.requestFocus()
-            eventListener.showKeyboard(binding.searchBarInputText)
             adapterForTags.getItem(position)?.let {
                     viewModel.onTagSelected(it.tag)
                 }
@@ -85,6 +98,71 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
                 binding.searchBarInputText.showDropDown()
             }
         }
+        //CHIPS for POI
+        binding.chipClose.setOnClickListener {
+            binding.searchBarChipGroupHvPoi.visibility = View.GONE
+        }
+        binding.chipPark.setOnClickListener {binding.searchBarInputText.text.append("Park|")}
+        binding.chipSchool.setOnClickListener {binding.searchBarInputText.text.append("School|")}
+        binding.chipStore.setOnClickListener {binding.searchBarInputText.text.append("Store|")}
+        binding.chipMall.setOnClickListener {binding.searchBarInputText.text.append("Mall|")}
+        binding.chipHospital.setOnClickListener {binding.searchBarInputText.text.append("Hospital|")}
+        //DATE Picker
+        viewModel.entryDatePickedLiveData.observe(viewLifecycleOwner) { event ->
+            event.handleContent {
+                binding.searchBarInputText.text.append(it)
+                viewModel.onAddChipCriteria(binding.searchBarInputText.text.trim().toString())
+            }}
+        viewModel.saleDatePickedLiveData.observe(viewLifecycleOwner) { event ->
+            event.handleContent {
+                binding.searchBarInputText.text.append(it)
+                viewModel.onAddChipCriteria(binding.searchBarInputText.text.trim().toString())
+            }}
+    }
+
+    private fun expand() {
+        isExpanded=true
+        binding.searchBarCardContainer.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
+        binding.searchBarCardContainer.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorAccent))
+        TransitionManager.beginDelayedTransition(binding.searchBarCardContainer, transition)
+        binding.searchBarChipGroup.visibility = View.VISIBLE
+        binding.searchBarCardContainer.layoutParams.width = 0
+        binding.searchBarCardContainer2.visibility = View.VISIBLE
+        //binding.searchBarCardContainer.setCardBackgroundColor(searchBarBackgroundColorFocused)
+        binding.searchBarSearchIcon.visibility = View.GONE
+        binding.searchBarInputContainer.visibility = View.VISIBLE
+    }
+
+    private fun collapse() {
+        isExpanded=false
+        binding.searchBarCardContainer2.visibility = View.INVISIBLE
+        TransitionManager.beginDelayedTransition(binding.searchBarCardContainer, transition)
+        binding.searchBarChipGroup.visibility = View.INVISIBLE
+        binding.searchBarInputText.text.clear()
+        binding.searchBarCardContainer.layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT
+        //binding.searchBarCardContainer.setCardBackgroundColor(searchBarBackgroundColor)
+        binding.searchBarSearchIcon.visibility = View.VISIBLE
+        binding.searchBarInputContainer.visibility = View.GONE
+    }
+
+    private var transition: Transition = ChangeBounds().apply {
+        duration = 150
+        addListener(object : Transition.TransitionListener {
+            override fun onTransitionEnd(transition: Transition?) {
+                if (isExpanded) {
+                    //
+                } else  {
+                    binding.searchBarCardContainer.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.black))
+                    binding.searchBarCardContainer.strokeColor = ContextCompat.getColor(requireContext(), R.color.black)
+                }
+            }
+
+            // Unused functions.
+            override fun onTransitionResume(transition: Transition?) = Unit
+            override fun onTransitionPause(transition: Transition?) = Unit
+            override fun onTransitionCancel(transition: Transition?) = Unit
+            override fun onTransitionStart(transition: Transition?) = Unit
+        })
     }
 
     private fun addChipToGroup(tag: String) {
@@ -103,6 +181,7 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
             updateChipList()
         }
         binding.searchBarInputText.text.clear()
+        binding.searchBarChipGroupHvPoi.visibility = View.GONE
         eventListener.hideKeyboard(binding.searchBarInputText)
         updateChipList()
     }
@@ -121,4 +200,8 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
         viewModel.onChipGroupUpdate(tagList)
     }
 
+    private fun showSearchBarKeyboard() {
+    binding.searchBarInputText.requestFocus()
+    eventListener.showKeyboard(binding.searchBarInputText)
+    }
 }

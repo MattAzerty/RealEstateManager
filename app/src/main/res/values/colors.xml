@@ -5,9 +5,10 @@
     <color name="colorPrimary">#004e68</color>
     <color name="colorTextDark">#747474</color>
     <color name="colorAccent">#ffa600</color>
-    <color name="colorAccentDark">#F8A100</color>
+    <color name="colorAccentDark">#F39E02</color>
     <color name="colorSecondary">#E3E3E3</color>
     <color name="colorSecondaryDark">#323232</color>
+    <color name="colorRed">#D50000</color>
 
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>

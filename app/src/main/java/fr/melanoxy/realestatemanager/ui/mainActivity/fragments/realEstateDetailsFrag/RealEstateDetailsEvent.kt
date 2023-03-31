@@ -7,4 +7,6 @@ sealed class RealEstateDetailsEvent {
     data class DisplaySnackBarMessage(val message: NativeText) : RealEstateDetailsEvent()
     object ShowSaleDatePicker : RealEstateDetailsEvent()
     object ShowMarketEntryDatePicker : RealEstateDetailsEvent()
+    object ShowSearchBarKeyboard : RealEstateDetailsEvent()
+    object ShowPOISelector : RealEstateDetailsEvent()
 }
