@@ -127,7 +127,7 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
         TransitionManager.beginDelayedTransition(binding.searchBarCardContainer, transition)
         binding.searchBarChipGroup.visibility = View.VISIBLE
         binding.searchBarCardContainer.layoutParams.width = 0
-        binding.searchBarCardContainer2.visibility = View.VISIBLE
+        binding.searchBarCardContainer2.layoutParams.width = 700
         //binding.searchBarCardContainer.setCardBackgroundColor(searchBarBackgroundColorFocused)
         binding.searchBarSearchIcon.visibility = View.GONE
         binding.searchBarInputContainer.visibility = View.VISIBLE
@@ -135,7 +135,9 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
 
     private fun collapse() {
         isExpanded=false
-        binding.searchBarCardContainer2.visibility = View.INVISIBLE
+        binding.searchBarCardContainer.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorAccent))
+        TransitionManager.beginDelayedTransition(binding.searchBarCardContainer2, transition)
+        binding.searchBarCardContainer2.layoutParams.width = 50
         TransitionManager.beginDelayedTransition(binding.searchBarCardContainer, transition)
         binding.searchBarChipGroup.visibility = View.INVISIBLE
         binding.searchBarInputText.text.clear()
@@ -146,7 +148,7 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
     }
 
     private var transition: Transition = ChangeBounds().apply {
-        duration = 150
+        duration = 200
         addListener(object : Transition.TransitionListener {
             override fun onTransitionEnd(transition: Transition?) {
                 if (isExpanded) {

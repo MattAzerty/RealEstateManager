@@ -167,9 +167,9 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
 
     private fun bindRecyclerView() {
 
-        val adapter = RealEstateAdapter()
+       val adapter = RealEstateAdapter()
        binding.fragRealEstateListRecyclerView.adapter = adapter
-       viewModel.realEstatesLiveData.observe(viewLifecycleOwner) {
+       viewModel.realEstateListLiveData.observe(viewLifecycleOwner) {
            adapter.submitList(it)
        }
     }

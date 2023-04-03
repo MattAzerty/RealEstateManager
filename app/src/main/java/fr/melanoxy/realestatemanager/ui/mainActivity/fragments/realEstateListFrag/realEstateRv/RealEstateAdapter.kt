@@ -28,6 +28,16 @@ class RealEstateAdapter : ListAdapter<RealEstateViewStateItem, RealEstateAdapter
             binding.realEstateItemTvType.text = item.realEstateType
             binding.realEstateItemTvCity.text = item.realEstateCity
             binding.realEstateItemTvPrice.text = item.realEstatePrice
+            if(item.isSelected) {//TODO color
+                binding.realEstateItemCl.setBackgroundColor(0xFFffa600.toInt())
+                binding.realEstateItemTvPrice.setTextColor(0xFFFFFFFF.toInt())
+                binding.realEstateItemDivider1.dividerColor = 0xFFF39E02.toInt()
+            }
+            else {
+                binding.realEstateItemCl.setBackgroundColor(0xFFFFFFFF.toInt())
+                binding.realEstateItemTvPrice.setTextColor(0xFFffa600.toInt())
+                binding.realEstateItemDivider1.dividerColor = 0xFFE3E3E3.toInt()
+            }
             binding.realEstateItemCl.setOnClickListener {
                 item.onRealEstateClicked.invoke()
             }

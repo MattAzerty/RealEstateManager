@@ -51,4 +51,5 @@
     <string name="shopping_mall_poi">Shopping mall</string>
     <string name="hospitalPOI">Hospital</string>
     <string name="schoolPOI">School</string>
+    <string name="media">Media</string>
 </resources>

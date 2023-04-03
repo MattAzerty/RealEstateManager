@@ -237,7 +237,7 @@
                 android:gravity="center"
                 android:text="@string/description"
                 android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="@id/create_new_real_estate_TextInputLayout_type"
                 app:layout_constraintTop_toBottomOf="@id/create_new_real_estate_header_l1"
                 app:drawableLeftCompat="@drawable/ic_assignment_white_24dp"
@@ -539,7 +539,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:maxImageSize="30dp"
-                app:rippleColor="@color/black"
+                app:rippleColor="@color/white"
                 app:tint="@color/white"
                 tools:ignore="ContentDescription" />
 
