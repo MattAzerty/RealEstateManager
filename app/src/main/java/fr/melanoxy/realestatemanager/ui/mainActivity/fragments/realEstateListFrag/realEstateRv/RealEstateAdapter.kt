@@ -41,6 +41,10 @@ class RealEstateAdapter : ListAdapter<RealEstateViewStateItem, RealEstateAdapter
             binding.realEstateItemCl.setOnClickListener {
                 item.onRealEstateClicked.invoke()
             }
+            binding.realEstateItemCl.setOnLongClickListener {
+                item.onRealEstateLongClick.invoke()
+                true
+            }
         }
     }
 

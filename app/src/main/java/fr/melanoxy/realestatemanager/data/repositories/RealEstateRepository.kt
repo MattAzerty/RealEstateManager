@@ -5,6 +5,7 @@ import fr.melanoxy.realestatemanager.domain.estatePicture.EstatePictureEntity
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.viewPagerInfos.RealEstateViewPagerInfosStateItem
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstatePictureRv.RealEstatePictureViewStateItem
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
 import java.io.FileOutputStream
 import javax.inject.Inject
@@ -15,7 +16,8 @@ class RealEstateRepository @Inject constructor(
     private val context: Context
 ) {
 
-    val selectedRealEstateIdMutableStateFlow = MutableStateFlow<Long?>(null)
+    private val selectedRealEstateIdMutableStateFlow = MutableStateFlow<Long?>(null)
+    val selectedRealEstateIdStateFlow = selectedRealEstateIdMutableStateFlow.asStateFlow()
     val estatePicturesListEntityMutableStateFlow = MutableStateFlow<List<EstatePictureEntity>?>(null)
 
     val realEstateViewPagerInfosStateItem = RealEstateViewPagerInfosStateItem()
@@ -85,6 +87,10 @@ class RealEstateRepository @Inject constructor(
 
         estatePicturesListEntityMutableStateFlow.emit(pictureEntity)
 
+    }
+
+    fun setSelectedRealEstateId(id: Long?) {
+        selectedRealEstateIdMutableStateFlow.value = id
     }
 
 }

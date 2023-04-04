@@ -3,6 +3,7 @@ package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFr
 import android.net.Uri
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.data.repositories.RealEstateRepository
 import fr.melanoxy.realestatemanager.data.repositories.SharedRepository
 import fr.melanoxy.realestatemanager.data.utils.CoroutineDispatcherProvider
@@ -45,7 +46,7 @@ class RealEstateListViewModel @Inject constructor(
     }*/
 
     private val realEstateWithPicturesListLiveData = getRealEstateWithPicturesUseCase.invoke().asLiveData()
-    private val selectedEstateIdLiveData = realEstateRepository.selectedRealEstateIdMutableStateFlow.asLiveData()
+    private val selectedEstateIdLiveData = realEstateRepository.selectedRealEstateIdStateFlow.asLiveData()
 
     private val mediatorLiveData = MediatorLiveData<List<RealEstateViewStateItem>>()
     init {
@@ -66,15 +67,26 @@ class RealEstateListViewModel @Inject constructor(
                     realEstateCity=it.realEstateEntity.address.city,
                     realEstatePrice="$${it.realEstateEntity.price}",
                     isSelected = it.realEstateEntity.id == selectedEstateId,
-                    onRealEstateClicked={
-                        realEstateRepository.selectedRealEstateIdMutableStateFlow.value=it.realEstateEntity.id
-                    }
+                    onRealEstateClicked= {
+                        realEstateRepository.setSelectedRealEstateId(it.realEstateEntity.id)
+                        onItemClicked()
+                    },
+                    onRealEstateLongClick = {
+                    realEstateRepository.setSelectedRealEstateId(it.realEstateEntity.id)
+                    //same fragment and same behavior phone/tablet
+                    singleLiveRealEstateListEvent.value = RealEstateListEvent.ReplaceCurrentFragment(R.id.frag_real_estate_list_fab_add)
+                },
                 )
             }
         }
 
 
         mediatorLiveData.value = listOfRealEstateViewStateItem
+    }
+
+    private fun onItemClicked() {
+        if(!sharedRepository.isTabletStateFlow.value)
+            singleLiveRealEstateListEvent.value = RealEstateListEvent.ReplaceCurrentFragment(R.id.real_estate_details_cl_root)
     }
 
     val realEstateListLiveData: LiveData<List<RealEstateViewStateItem>>

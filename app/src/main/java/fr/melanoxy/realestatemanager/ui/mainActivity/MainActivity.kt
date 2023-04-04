@@ -39,8 +39,13 @@ class MainActivity : AppCompatActivity(), MainEventListener {
                 .replace(containerDetailsId, RealEstateDetailsFrag())
                 .commitNow()
         }
-
-
+        //To avoid duplicated DetailsFragment
+        val containerMasterId =binding.activityMainFrameLayoutContainerRealEstateList.id
+        if (containerDetailsId != null && supportFragmentManager.findFragmentById(containerMasterId) is RealEstateDetailsFrag) {
+            supportFragmentManager.beginTransaction()
+                .replace(containerMasterId, RealEstateListFrag())
+                .commitNow()
+        }
     }
 
     override fun displaySnackBarMessage(message: CharSequence) {

@@ -47,7 +47,7 @@ class RealEstateAddOrEditViewModel @Inject constructor(
     private var deletedItemIndices: MutableList<Int> = mutableListOf()
     private var selectedPicture: Uri?=null
 
-    private val selectedRealEstateId =realEstateRepository.selectedRealEstateIdMutableStateFlow.value
+    private val selectedRealEstateId =realEstateRepository.selectedRealEstateIdStateFlow.value
     private val tempPictureListItemLiveData = MutableLiveData<List<RealEstatePictureViewStateItem>>()
 
     val entryDatePickedLiveData: LiveData<Event<String>> = sharedRepository.entryDatePickedChannelFromAddOrEdit.asLiveDataEvent(

@@ -52,4 +52,5 @@
     <string name="hospitalPOI">Hospital</string>
     <string name="schoolPOI">School</string>
     <string name="media">Media</string>
+    <string name="descriptionDetails">Description:</string>
 </resources>

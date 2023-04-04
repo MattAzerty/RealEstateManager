@@ -8,8 +8,9 @@ data class RealEstateViewStateItem (
     val realEstateType: String,
     val realEstateCity: String,
     val realEstatePrice: String,
-    var isSelected: Boolean,
+    val isSelected: Boolean,
     val onRealEstateClicked: () -> Unit,
+    val onRealEstateLongClick: () -> Unit,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

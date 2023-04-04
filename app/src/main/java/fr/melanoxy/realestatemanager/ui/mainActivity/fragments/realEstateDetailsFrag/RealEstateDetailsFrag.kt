@@ -1,10 +1,12 @@
 package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateDetailsFrag
 
 import android.content.Context
+import android.graphics.Typeface
 import android.os.Bundle
 import android.transition.ChangeBounds
 import android.transition.Transition
 import android.transition.TransitionManager
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -17,6 +19,8 @@ import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.databinding.FragmentRealEstateDetailsBinding
 import fr.melanoxy.realestatemanager.ui.mainActivity.MainEventListener
 import fr.melanoxy.realestatemanager.ui.mainActivity.NavigationEvent
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.RealEstateListFrag
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstatePictureRv.RealEstatePictureAdapter
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateSearchBar.RealEstateSearchBarSpinnerAdapter
 import fr.melanoxy.realestatemanager.ui.utils.exhaustive
 import fr.melanoxy.realestatemanager.ui.utils.viewBinding
@@ -37,7 +41,9 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        bindSearchBarForTabletMode()
+        viewModel.isTabletLiveData.observe(viewLifecycleOwner) {
+            if(it) bindSearchBarForTabletMode() else adaptSearchBar()
+        }
 
         viewModel.singleLiveRealEstateDetailsEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
@@ -52,9 +58,63 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
             }.exhaustive
         }
 
+        bindView()
+
         }
 
+    private fun adaptSearchBar() {
+        binding.searchBarDropdownMenu.setImageResource(R.drawable.vc_arrow_back_white_24dp)
+        binding.searchBarChipIcon.setImageResource(R.drawable.vc_align_vertical_bottom_white_24dp)
+        binding.searchBarInputText.setText("DETAILS ◢")
+        binding.searchBarInputText.setTypeface(null, Typeface.BOLD)
+        binding.searchBarInputText.gravity = Gravity.CENTER
+        binding.searchBarInputText.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorAccent))
+        binding.searchBarInputText.textSize = 22F
+        binding.searchBarInputText.isFocusable = false
+
+        binding.searchBarDropdownMenu.setOnClickListener {
+            viewModel.onCloseFragmentClicked()
+            closeFragment()
+        }
+    }
+
+
+    private fun closeFragment() {
+        //requireActivity().supportFragmentManager.popBackStackImmediate()
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.replace(
+            R.id.activity_main_FrameLayout_container_real_estate_list,
+            RealEstateListFrag()
+        )
+        transaction.commit()
+    }
+
+
+    private fun bindView() {
+        viewModel.detailsOfRealEstateStateItemLiveData.observe(viewLifecycleOwner) {
+            //Pictures list
+            val adapter = RealEstatePictureAdapter()
+            binding.realEstateDetailsRecyclerViewPictures.adapter = adapter
+            adapter.submitList(it.pictureList)
+            //Description
+            binding.realEstateDetailsTvDescriptionContent.text = it.description
+
+
+        }
+    }
+
     private fun bindSearchBarForTabletMode() {
+
+        binding.searchBarDropdownMenu.setImageResource(R.drawable.vc_keyboard_arrow_down_white_24dp)
+        binding.searchBarChipIcon.setImageResource(R.drawable.vc_manage_search_white_24dp)
+        binding.searchBarInputText.text.clear()
+        binding.searchBarInputText.setTypeface(null, Typeface.ITALIC)
+        binding.searchBarInputText.gravity = Gravity.CENTER_VERTICAL
+        binding.searchBarInputText.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+        binding.searchBarInputText.textSize = 20F
+        binding.searchBarInputText.isFocusable = true
+
+
 
         viewModel.fragmentNavigationLiveData.observe(viewLifecycleOwner) {event ->
             when (event) {

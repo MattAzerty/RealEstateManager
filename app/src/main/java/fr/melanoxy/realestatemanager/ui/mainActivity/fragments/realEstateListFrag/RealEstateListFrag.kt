@@ -16,6 +16,7 @@ import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.databinding.FragmentRealEstateListBinding
 import fr.melanoxy.realestatemanager.ui.mainActivity.MainEventListener
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.RealEstateAddOrEditFrag
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateDetailsFrag.RealEstateDetailsFrag
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.realEstateRv.RealEstateAdapter
 import fr.melanoxy.realestatemanager.ui.utils.viewBinding
 
@@ -26,6 +27,8 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
     private val viewModel by viewModels<RealEstateListViewModel>()
     private lateinit var eventListener: MainEventListener
     private var isExpanded=false
+
+ //Fragment and mainActivity communicate with interface MainEventListener and callback mechanisms.
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -69,10 +72,9 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
     private fun switchFragment(fragmentId: Int) {
 
         val transaction = parentFragmentManager.beginTransaction()
-
         when(fragmentId){
             R.id.frag_real_estate_list_fab_add -> transaction.replace(R.id.activity_main_FrameLayout_container_real_estate_list, RealEstateAddOrEditFrag())
-
+            R.id.real_estate_details_cl_root -> transaction.replace(R.id.activity_main_FrameLayout_container_real_estate_list, RealEstateDetailsFrag())
         }
         //transaction.addToBackStack(null)
         //transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -81,12 +83,10 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
 
 
     private fun bindFab() {
-
         binding.fragRealEstateListFabAdd
             .setOnClickListener {viewModel.onFabButtonClicked(R.id.frag_real_estate_list_fab_add)}//1000004
         binding.fragRealEstateListFabMap
             .setOnClickListener {viewModel.onFabButtonClicked(R.id.frag_real_estate_list_fab_map)}//1000003
-
     }
 
     private fun bindSearchBar() {
