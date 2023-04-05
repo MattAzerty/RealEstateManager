@@ -13,6 +13,7 @@ import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.databinding.ActivityMainBinding
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateDetailsFrag.RealEstateDetailsFrag
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.RealEstateListFrag
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateMapFrag.RealEstateMapFrag
 import fr.melanoxy.realestatemanager.ui.utils.viewBinding
 import java.text.SimpleDateFormat
 import java.util.*
@@ -41,7 +42,8 @@ class MainActivity : AppCompatActivity(), MainEventListener {
         }
         //To avoid duplicated DetailsFragment
         val containerMasterId =binding.activityMainFrameLayoutContainerRealEstateList.id
-        if (containerDetailsId != null && supportFragmentManager.findFragmentById(containerMasterId) is RealEstateDetailsFrag) {
+        if (containerDetailsId != null && (supportFragmentManager.findFragmentById(containerMasterId) is RealEstateDetailsFrag ||
+                    supportFragmentManager.findFragmentById(containerMasterId) is RealEstateMapFrag)) {
             supportFragmentManager.beginTransaction()
                 .replace(containerMasterId, RealEstateListFrag())
                 .commitNow()

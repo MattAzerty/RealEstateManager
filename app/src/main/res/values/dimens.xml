@@ -32,4 +32,5 @@
     <dimen name="stroke">3dp</dimen>
     <dimen name="stroke2">1dp</dimen>
     <dimen name="cl_margin">20dp</dimen>
+    <dimen name="dividerDetailsStart">170dp</dimen>
 </resources>

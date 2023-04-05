@@ -23,6 +23,7 @@ import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFra
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstatePictureRv.RealEstatePictureAdapter
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateSearchBar.RealEstateSearchBarSpinnerAdapter
 import fr.melanoxy.realestatemanager.ui.utils.exhaustive
+import fr.melanoxy.realestatemanager.ui.utils.setMargins
 import fr.melanoxy.realestatemanager.ui.utils.viewBinding
 
 @AndroidEntryPoint
@@ -41,8 +42,11 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.isTabletLiveData.observe(viewLifecycleOwner) {
-            if(it) bindSearchBarForTabletMode() else adaptSearchBar()
+        viewModel.isTabletLiveData.observe(viewLifecycleOwner) { isTablet ->
+            when(isTablet){
+                false ->  adaptSearchBar()
+                true -> bindSearchBarForTabletMode()
+            }
         }
 
         viewModel.singleLiveRealEstateDetailsEvent.observe(viewLifecycleOwner) { event ->
@@ -63,21 +67,22 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
         }
 
     private fun adaptSearchBar() {
+        binding.searchBarCardContainer.setMargins(left = null)
+        binding.searchBarCardContainer.strokeColor = ContextCompat.getColor(requireContext(), R.color.colorAccent)
         binding.searchBarDropdownMenu.setImageResource(R.drawable.vc_arrow_back_white_24dp)
         binding.searchBarChipIcon.setImageResource(R.drawable.vc_align_vertical_bottom_white_24dp)
         binding.searchBarInputText.setText("DETAILS ◢")
         binding.searchBarInputText.setTypeface(null, Typeface.BOLD)
         binding.searchBarInputText.gravity = Gravity.CENTER
-        binding.searchBarInputText.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorAccent))
+        binding.searchBarInputText.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorSecondary))
         binding.searchBarInputText.textSize = 22F
-        binding.searchBarInputText.isFocusable = false
+        binding.searchBarInputText.isEnabled = false
 
         binding.searchBarDropdownMenu.setOnClickListener {
             viewModel.onCloseFragmentClicked()
             closeFragment()
         }
     }
-
 
     private fun closeFragment() {
         //requireActivity().supportFragmentManager.popBackStackImmediate()
@@ -88,7 +93,6 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
         )
         transaction.commit()
     }
-
 
     private fun bindView() {
         viewModel.detailsOfRealEstateStateItemLiveData.observe(viewLifecycleOwner) {
@@ -104,7 +108,8 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
     }
 
     private fun bindSearchBarForTabletMode() {
-
+        binding.searchBarCardContainer.setMargins(left = 200)
+        binding.searchBarCardContainer.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
         binding.searchBarDropdownMenu.setImageResource(R.drawable.vc_keyboard_arrow_down_white_24dp)
         binding.searchBarChipIcon.setImageResource(R.drawable.vc_manage_search_white_24dp)
         binding.searchBarInputText.text.clear()
@@ -112,9 +117,7 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
         binding.searchBarInputText.gravity = Gravity.CENTER_VERTICAL
         binding.searchBarInputText.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
         binding.searchBarInputText.textSize = 20F
-        binding.searchBarInputText.isFocusable = true
-
-
+        binding.searchBarInputText.isEnabled = true
 
         viewModel.fragmentNavigationLiveData.observe(viewLifecycleOwner) {event ->
             when (event) {

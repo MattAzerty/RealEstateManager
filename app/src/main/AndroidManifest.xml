@@ -7,6 +7,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- FOR INTERNET -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- FOR GPS -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".MainApplication"
@@ -28,9 +31,16 @@
             </intent-filter>
         </activity>
 
+        <!-- MAP SDK -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
 
         <!-- See https://developer.android.com/training/dependency-injection/hilt-jetpack#workmanager -->
         <!-- See https://developer.android.com/jetpack/androidx/releases/work#2.6.0-alpha01 -->

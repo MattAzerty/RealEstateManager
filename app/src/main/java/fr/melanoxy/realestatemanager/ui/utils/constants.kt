@@ -5,6 +5,7 @@ import fr.melanoxy.realestatemanager.domain.estateAgent.EstateAgentEntity
 
 //PERMISSIONS
 const val CAMERA_PERMISSION = Manifest.permission.CAMERA
+const val LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION
 
 //ROOM
 const val KEY_INPUT_DATA_WORK_MANAGER = "KEY_INPUT_DATA_WORK_MANAGER"

@@ -18,7 +18,7 @@ val fragmentStateFlow= MutableStateFlow<NavigationEvent>(NavigationEvent.RealEst
 
 //ENTRY DATE PICKER
 
-    val entryDatePickedChannelFromAddOrEdit = Channel<String>()//TODO howToHandleOnceButWithMultipleListeners?
+    val entryDatePickedChannelFromAddOrEdit = Channel<String>()
     val entryDatePickedChannelFromSearchBar = Channel<String>()
 
     fun setEntryDatePicked(entryDatePicked: String) {

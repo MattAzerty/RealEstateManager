@@ -51,6 +51,8 @@
     <string name="shopping_mall_poi">Shopping mall</string>
     <string name="hospitalPOI">Hospital</string>
     <string name="schoolPOI">School</string>
-    <string name="media">Media</string>
-    <string name="descriptionDetails">Description:</string>
+    <string name="media">■ Media </string>
+    <string name="descriptionDetails">■ Description </string>
+    <string name="infos">■ Infos </string>
+    <string name="error_location_permission">Location permission denied.</string>
 </resources>

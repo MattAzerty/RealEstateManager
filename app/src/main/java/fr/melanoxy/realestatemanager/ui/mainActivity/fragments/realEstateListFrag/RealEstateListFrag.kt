@@ -9,15 +9,22 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.hilt.android.AndroidEntryPoint
 import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.databinding.FragmentRealEstateListBinding
 import fr.melanoxy.realestatemanager.ui.mainActivity.MainEventListener
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.RealEstateAddOrEditEvent
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.RealEstateAddOrEditFrag
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateDetailsFrag.RealEstateDetailsFrag
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.realEstateRv.RealEstateAdapter
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateMapFrag.RealEstateMapFrag
+import fr.melanoxy.realestatemanager.ui.utils.CAMERA_PERMISSION
+import fr.melanoxy.realestatemanager.ui.utils.LOCATION_PERMISSION
+import fr.melanoxy.realestatemanager.ui.utils.exhaustive
 import fr.melanoxy.realestatemanager.ui.utils.viewBinding
 
 @AndroidEntryPoint
@@ -26,6 +33,7 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
     private val binding by viewBinding { FragmentRealEstateListBinding.bind(it) }
     private val viewModel by viewModels<RealEstateListViewModel>()
     private lateinit var eventListener: MainEventListener
+    private lateinit var activityResultForLocationPermission: ActivityResultLauncher<String>
     private var isExpanded=false
 
  //Fragment and mainActivity communicate with interface MainEventListener and callback mechanisms.
@@ -33,6 +41,12 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         eventListener = context as MainEventListener
+
+        // Initialize the permission launcher for location permission
+        activityResultForLocationPermission =
+            registerForActivityResult(ActivityResultContracts.RequestPermission()) { permission ->
+                viewModel.onLocationPermissionResult(permission)
+            }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,12 +61,23 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
         viewModel.singleLiveRealEstateListEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
                 is RealEstateListEvent.ReplaceCurrentFragment -> switchFragment(event.fragmentId)
-                else -> {//TODO: something went wrong
-                }
-            }
+                RealEstateListEvent.ReplaceSecondPaneFragment -> replaceSecondPane()
+                RealEstateListEvent.RequestLocationPermission -> activityResultForLocationPermission.launch(
+                    LOCATION_PERMISSION
+                )
+                is RealEstateListEvent.DisplaySnackBarMessage -> eventListener.displaySnackBarMessage(
+                    event.message.toCharSequence(requireContext())
+                )
+            }.exhaustive
         }
 
 
+    }
+
+    private fun replaceSecondPane() {
+        val transaction = parentFragmentManager.beginTransaction()
+        transaction.replace(R.id.main_FrameLayout_container_details, RealEstateMapFrag())
+        transaction.commit()
     }
 
     private fun isTablet() {
@@ -75,6 +100,7 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
         when(fragmentId){
             R.id.frag_real_estate_list_fab_add -> transaction.replace(R.id.activity_main_FrameLayout_container_real_estate_list, RealEstateAddOrEditFrag())
             R.id.real_estate_details_cl_root -> transaction.replace(R.id.activity_main_FrameLayout_container_real_estate_list, RealEstateDetailsFrag())
+            R.id.frag_real_estate_list_fab_map -> transaction.replace(R.id.activity_main_FrameLayout_container_real_estate_list, RealEstateMapFrag())
         }
         //transaction.addToBackStack(null)
         //transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)

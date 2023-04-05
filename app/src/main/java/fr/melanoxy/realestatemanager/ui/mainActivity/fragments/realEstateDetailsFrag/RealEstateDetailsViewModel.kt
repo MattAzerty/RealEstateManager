@@ -59,33 +59,6 @@ class RealEstateDetailsViewModel @Inject constructor(
         }
     }
 
-    //detailsOfRealEstateStateItem
-    //private val selectedRealEstateLiveData = realEstateRepository.selectedRealEstateIdMutableStateFlow.asLiveData()
-
-/*val detailsOfRealEstateStateItemLiveData: LiveData<RealEstateDetailsViewState> =  liveData(coroutineDispatcherProvider.io){
-
-    realEstateRepository.selectedRealEstateIdStateFlow.collect { selectedId ->
-        if (selectedId != null) {
-            getRealEstateWithPicturesFromIdUseCase.invoke(selectedId).collect{ pictureEntity ->
-                emit(
-                    RealEstateDetailsViewState(
-                        pictureList = pictureEntity.estatePictureEntities.map {
-                            RealEstatePictureViewStateItem(
-                                realEstateId = selectedId,
-                                pictureUri = Uri.parse("file://${it.path}"),
-                                realEstatePictureName = it.name,
-                                isStored = false,
-                                isEdited = false,
-                                toDelete = false,
-                            )
-                        },
-                        description= pictureEntity.realEstateEntity.description,
-                    )
-                )
-            }
-        }
-    }
-}*/
 
 val isTabletLiveData = sharedRepository.isTabletStateFlow.asLiveData()
 val fragmentNavigationLiveData = sharedRepository.fragmentStateFlow.asLiveData()
