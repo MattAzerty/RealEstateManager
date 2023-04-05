@@ -41,7 +41,7 @@
                     android:animateLayoutChanges="true"
                     app:cardBackgroundColor="@color/colorAccent"
                     app:cardCornerRadius="@dimen/corner_radius_rounded"
-                    app:cardElevation="2dp"
+                    app:cardElevation="4dp"
                     app:cardPreventCornerOverlap="false"
                     app:cardUseCompatPadding="true"
                     app:strokeColor="@color/colorAccentDark"
@@ -62,7 +62,7 @@
                     android:animateLayoutChanges="true"
                     app:cardBackgroundColor="@color/colorAccent"
                     app:cardCornerRadius="@dimen/corner_radius_rounded"
-                    app:cardElevation="2dp"
+                    app:cardElevation="4dp"
                     app:cardPreventCornerOverlap="false"
                     app:cardUseCompatPadding="true"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -252,7 +252,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
         <!--end-->
         <androidx.core.widget.NestedScrollView
             android:id="@+id/real_estate_details_nsv"
@@ -260,27 +259,109 @@
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:paddingTop="8dp"
             android:paddingBottom="16dp"
             android:scrollbars="none"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_bar_tablet_root">
+            app:layout_constraintTop_toBottomOf="@id/search_bar_tablet_root">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/real_estate_details_root"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="22dp"
                 android:background="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/one_pane_layout"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="22dp"
+                    android:elevation="4dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/real_estate_details_divider1"
+                    android:background="@drawable/shape_rectangle_with_stroke"
+                    >
+
+                    <ImageView
+                        android:id="@+id/real_estate_item_iv_pic1"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:importantForAccessibility="no"
+                        android:layout_marginStart="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:tint="@color/black"
+                        android:src="@drawable/vc_apartment_white_24dp" />
+
+                    <TextView
+                        android:id="@+id/real_estate_item_tv_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/fab_margin"
+                        android:layout_marginTop="@dimen/fab_margin"
+                        android:singleLine="true"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        app:layout_constraintStart_toEndOf="@id/real_estate_item_iv_pic1"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:text="Penthouse" />
+
+                    <TextView
+                        android:id="@+id/real_estate_item_tv_city"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:textColor="@color/colorTextDark"
+                        app:layout_constraintStart_toStartOf="@id/real_estate_item_tv_type"
+                        app:layout_constraintTop_toBottomOf="@+id/real_estate_item_tv_type"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:text="Upper East Side" />
+
+                    <TextView
+                        android:id="@+id/real_estate_item_tv_price"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/fab_margin"
+                        android:gravity="start"
+                        android:singleLine="true"
+                        android:textStyle="bold"
+                        android:textSize="24sp"
+                        android:textColor="@color/colorAccent"
+                        app:layout_constraintStart_toStartOf="@id/real_estate_item_tv_type"
+                        app:layout_constraintTop_toBottomOf="@+id/real_estate_item_tv_city"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:text="$29,872,000" />
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/real_estate_details_fab_location"
+                        android:backgroundTint="@color/colorAccent"
+                        app:borderWidth="0dp"
+                        app:shapeAppearanceOverlay="@style/AddPictureShapeOverlay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginTop="@dimen/fab_margin"
+                        android:layout_marginBottom="@dimen/fab_margin"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:src="@drawable/vc_location_on_white_24dp"
+                        android:contentDescription="@string/add_a_real_estate_property" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/real_estate_details_divider1.5"
                     android:layout_width="match_parent"
                     android:layout_height="8dp"
+                    android:layout_marginStart="22dp"
                     app:dividerColor="@color/black"
-                    android:layout_marginEnd="8dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="@id/real_estate_details_divider1"
                     app:layout_constraintTop_toTopOf="@id/real_estate_details_divider1" />
@@ -290,8 +371,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
                     app:dividerColor="@color/black"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginStart="8dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/search_bar_chip_group" />
+                    app:layout_constraintTop_toBottomOf="@id/one_pane_layout" />
 
                 <TextView
                     android:id="@+id/real_estate_details_tv_media_title"
@@ -299,20 +383,24 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="40dp"
                     android:background="@color/white"
-                    android:padding="16dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
                     android:text="@string/media"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/black"
                     android:textSize="24sp"
                     android:textStyle="bold"
+                    android:drawableTint="@color/colorAccent"
+                    android:drawableStart="@drawable/vc_image_white_24dp"
                     app:layout_constraintBottom_toBottomOf="@id/real_estate_details_divider1"
                     app:layout_constraintLeft_toLeftOf="@id/real_estate_details_divider1"
-                    app:layout_constraintTop_toBottomOf="@+id/search_bar_chip_group"
                     app:layout_constraintTop_toTopOf="@id/real_estate_details_divider1" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/real_estate_details_recyclerView_pictures"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
                     android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintStart_toStartOf="parent"
@@ -324,17 +412,19 @@
                     android:id="@+id/real_estate_details_divider2.5"
                     android:layout_width="match_parent"
                     android:layout_height="8dp"
+                    android:layout_marginStart="50dp"
                     app:dividerColor="@color/black"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginEnd="8dp"
                     app:layout_constraintBottom_toBottomOf="@id/real_estate_details_divider2"
                     app:layout_constraintTop_toTopOf="@id/real_estate_details_divider2" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/real_estate_details_divider2"
                     android:layout_width="match_parent"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginStart="50dp"
                     android:layout_height="20dp"
-                    android:layout_marginTop="28dp"
+                    android:layout_marginTop="16dp"
                     app:dividerColor="@color/black"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/real_estate_details_recyclerView_pictures" />
@@ -344,15 +434,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="40dp"
-                    android:padding="16dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
                     android:text="@string/descriptionDetails"
                     android:background="@color/white"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/black"
+                    android:drawableStart="@drawable/ic_assignment_white_24dp"
+                    android:drawableTint="@color/colorAccent"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@id/real_estate_details_divider2"
                     app:layout_constraintLeft_toLeftOf="@id/real_estate_details_divider2"
-                    app:layout_constraintTop_toBottomOf="@+id/search_bar_chip_group"
                     app:layout_constraintTop_toTopOf="@id/real_estate_details_divider2" />
 
                 <TextView
@@ -360,11 +452,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="100dp"
-                    android:background="@color/colorSecondary"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginEnd="20dp"
-                    android:padding="@dimen/fab_margin"
+                    android:background="@color/shadow"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="12dp"
+                    android:paddingTop="2dp"
+                    android:paddingStart="4dp"
+                    android:paddingBottom="4dp"
                     android:text="No description."
                     android:textColor="@color/black"
                     android:textSize="18sp"
@@ -377,16 +470,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="8dp"
                     app:dividerColor="@color/black"
+                    android:layout_marginStart="100dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginEnd="8dp"
                     app:layout_constraintBottom_toBottomOf="@id/real_estate_details_divider3"
                     app:layout_constraintTop_toTopOf="@id/real_estate_details_divider3" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/real_estate_details_divider3"
                     android:layout_width="match_parent"
+                    android:layout_marginEnd="4dp"
                     android:layout_height="20dp"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginStart="100dp"
+                    android:layout_marginTop="26dp"
                     app:dividerColor="@color/black"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/real_estate_details_tv_description_content" />
@@ -396,30 +491,75 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="40dp"
-                    android:padding="16dp"
-                    android:text="@string/infos"
                     android:background="@color/white"
-                    android:textColor="@color/colorAccent"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:text="@string/infos"
+                    android:textColor="@color/black"
+                    android:drawableStart="@drawable/vc_info_white_24dp"
+                    android:drawableTint="@color/colorAccent"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@id/real_estate_details_divider3"
                     app:layout_constraintLeft_toLeftOf="@id/real_estate_details_divider3"
-                    app:layout_constraintTop_toBottomOf="@+id/search_bar_chip_group"
                     app:layout_constraintTop_toTopOf="@id/real_estate_details_divider3" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/info_layout"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="@dimen/fab_margin"
+                android:layout_marginRight="@dimen/fab_margin"
+                android:layout_marginBottom="@dimen/fab_margin"
+                android:layout_marginTop="26dp"
+                android:elevation="2dp"
+                android:padding="8dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/real_estate_details_divider3"
+                android:background="@drawable/shape_rectangle_with_stroke2"
+                >
+
+                <TextView
+                    android:id="@+id/real_estate_details_infos_title_tv_agent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:drawableLeft="@drawable/vc_account_box_white_24dp"
+                    android:drawableTint="@color/black"
+                    android:text=" Agent:"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/real_estate_details_infos_tv_agent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/real_estate_details_divider3" />
+
+                <TextView
+                    android:id="@+id/real_estate_details_infos_tv_agent"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintWidth_min="100dp"
+                    android:layout_marginRight="20dp"
+                    android:paddingStart="12dp"
+                    android:text="Jean BINOT"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    app:layout_constraintLeft_toRightOf="@+id/real_estate_details_infos_title_tv_agent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/real_estate_details_infos_title_tv_agent"/>
 
                 <TextView
                     android:id="@+id/real_estate_details_infos_title_tv_surface"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="26dp"
+                    android:layout_marginTop="8dp"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:text=" Surface:"
                     android:drawableLeft="@drawable/vc_aspect_ratio_white_24dp"
                     android:drawableTint="@color/black"
-                    app:layout_constraintStart_toStartOf="@+id/real_estate_details_tv_description_content"
-                    app:layout_constraintTop_toBottomOf="@+id/real_estate_details_divider3"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/real_estate_details_infos_tv_agent"
                     app:layout_constraintEnd_toStartOf="@+id/real_estate_details_infos_tv_surface"
                     />
 
@@ -448,7 +588,7 @@
                     android:text=" Nb. room(s):"
                     android:drawableLeft="@drawable/vc_home_white_24dp"
                     android:drawableTint="@color/black"
-                    app:layout_constraintStart_toStartOf="@+id/real_estate_details_tv_description_content"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/real_estate_details_infos_title_tv_surface"
                     app:layout_constraintEnd_toStartOf="@+id/real_estate_details_infos_tv_room"
                     />
@@ -478,7 +618,7 @@
                     android:text=" Nb. bedroom(s):"
                     android:drawableLeft="@drawable/vc_local_hotel_white_24dp"
                     android:drawableTint="@color/black"
-                    app:layout_constraintStart_toStartOf="@+id/real_estate_details_tv_description_content"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/real_estate_details_infos_tv_room"
                     app:layout_constraintEnd_toStartOf="@+id/real_estate_details_infos_tv_bedroom"
                     />
@@ -508,7 +648,7 @@
                     android:text=" Near POI:"
                     android:drawableLeft="@drawable/vc_add_location_white_24dp"
                     android:drawableTint="@color/black"
-                    app:layout_constraintStart_toStartOf="@+id/real_estate_details_tv_description_content"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/real_estate_details_infos_tv_bedroom"
                     app:layout_constraintEnd_toStartOf="@+id/real_estate_details_infos_tv_poi"
                     />
@@ -538,7 +678,7 @@
                     android:text=" Location:"
                     android:drawableLeft="@drawable/vc_location_on_white_24dp"
                     android:drawableTint="@color/black"
-                    app:layout_constraintStart_toStartOf="@+id/real_estate_details_tv_description_content"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/real_estate_details_infos_tv_poi"
                     app:layout_constraintEnd_toStartOf="@+id/real_estate_details_infos_tv_position"
                     />
@@ -557,19 +697,27 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/real_estate_details_infos_title_tv_position"/>
 
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/real_estate_details_divider4"
                     android:layout_width="100dp"
                     android:layout_height="8dp"
                     android:layout_marginTop="32dp"
+                    android:layout_marginBottom="20dp"
                     app:dividerColor="@color/black"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/real_estate_details_infos_tv_position" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/info_layout" />
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

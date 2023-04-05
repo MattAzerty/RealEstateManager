@@ -71,11 +71,11 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
         binding.searchBarCardContainer.strokeColor = ContextCompat.getColor(requireContext(), R.color.colorAccent)
         binding.searchBarDropdownMenu.setImageResource(R.drawable.vc_arrow_back_white_24dp)
         binding.searchBarChipIcon.setImageResource(R.drawable.vc_align_vertical_bottom_white_24dp)
-        binding.searchBarInputText.setText("DETAILS ◢")
+        binding.searchBarInputText.setText("REAL ESTATE DETAILS: ")
         binding.searchBarInputText.setTypeface(null, Typeface.BOLD)
         binding.searchBarInputText.gravity = Gravity.CENTER
-        binding.searchBarInputText.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorSecondary))
-        binding.searchBarInputText.textSize = 22F
+        binding.searchBarInputText.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorAccent))
+        binding.searchBarInputText.textSize = 20F
         binding.searchBarInputText.isEnabled = false
 
         binding.searchBarDropdownMenu.setOnClickListener {
@@ -96,13 +96,23 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
 
     private fun bindView() {
         viewModel.detailsOfRealEstateStateItemLiveData.observe(viewLifecycleOwner) {
+            //Recap
+            binding.realEstateItemTvType.text = it.type
+            binding.realEstateItemTvCity.text = it.city
+            binding.realEstateItemTvPrice.text = it.price
             //Pictures list
             val adapter = RealEstatePictureAdapter()
             binding.realEstateDetailsRecyclerViewPictures.adapter = adapter
             adapter.submitList(it.pictureList)
             //Description
             binding.realEstateDetailsTvDescriptionContent.text = it.description
-
+            //Infos
+            binding.realEstateDetailsInfosTvAgent.text = it.agentName
+            binding.realEstateDetailsInfosTvSurface.text = it.surface
+            binding.realEstateDetailsInfosTvRoom.text = it.room
+            binding.realEstateDetailsInfosTvBedroom.text = it.bedroom
+            binding.realEstateDetailsInfosTvPoi.text = it.nearPOI
+            binding.realEstateDetailsInfosTvPosition.text = it.locationCoordinate
 
         }
     }

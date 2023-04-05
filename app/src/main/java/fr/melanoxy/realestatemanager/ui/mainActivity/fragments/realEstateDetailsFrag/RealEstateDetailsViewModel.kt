@@ -14,10 +14,7 @@ import fr.melanoxy.realestatemanager.domain.searchBar.GetFilterListTagUseCase
 import fr.melanoxy.realestatemanager.domain.searchBar.SetCurrentFilterListUseCase
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstatePictureRv.RealEstatePictureViewStateItem
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateSearchBar.RealEstateSearchBarStateItem
-import fr.melanoxy.realestatemanager.ui.utils.Event
-import fr.melanoxy.realestatemanager.ui.utils.NativeText
-import fr.melanoxy.realestatemanager.ui.utils.SingleLiveEvent
-import fr.melanoxy.realestatemanager.ui.utils.asLiveDataEvent
+import fr.melanoxy.realestatemanager.ui.utils.*
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
@@ -38,10 +35,13 @@ class RealEstateDetailsViewModel @Inject constructor(
 
         liveData {
             if (selectedId != null){
-                getRealEstateWithPicturesFromIdUseCase.invoke(selectedId).collect { pictureEntity ->
+                getRealEstateWithPicturesFromIdUseCase.invoke(selectedId).collect { entity ->
                     emit(
                         RealEstateDetailsViewState(
-                            pictureList = pictureEntity.estatePictureEntities.map {
+                            type = entity.realEstateEntity.propertyType,
+                            city = entity.realEstateEntity.address.city,
+                            price = "$${entity.realEstateEntity.price}",
+                            pictureList = entity.estatePictureEntities.map {
                                 RealEstatePictureViewStateItem(
                                     realEstateId = selectedId,
                                     pictureUri = Uri.parse("file://${it.path}"),
@@ -51,7 +51,13 @@ class RealEstateDetailsViewModel @Inject constructor(
                                     toDelete = false,
                                 )
                             },
-                            description = pictureEntity.realEstateEntity.description,
+                            description = entity.realEstateEntity.description,
+                            agentName = "${ESTATE_AGENTS[entity.realEstateEntity.estateAgentId.toInt()].firstName} ${ESTATE_AGENTS[entity.realEstateEntity.estateAgentId.toInt()].lastName}",
+                            surface =  "${entity.realEstateEntity.surfaceArea}m²",
+                            room = entity.realEstateEntity.numberOfRooms.toString(),
+                            bedroom = entity.realEstateEntity.numberOfBedrooms.toString(),
+                            nearPOI = "buildPOIList(entity.realEstateEntity.pointsOfInterest)",
+                            locationCoordinate = "tbd"
                         )
                     )
                 }

@@ -3,11 +3,14 @@ package fr.melanoxy.realestatemanager.data.repositories
 import android.location.Location
 import android.os.Looper
 import androidx.annotation.RequiresPermission
+import androidx.lifecycle.LiveData
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 //https://developer.android.com/training/location/retrieve-current
@@ -24,6 +27,12 @@ class LocationRepository @Inject constructor(
     private var callback: LocationCallback? = null
     private val locationMutableStateFlow = MutableStateFlow<Location?>(null)
 
+
+    fun getUserPosition(): StateFlow<Location?> {
+        return locationMutableStateFlow.asStateFlow()
+    }
+
+
     @RequiresPermission(anyOf = ["android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"])
     fun startLocationRequest() {
         if (callback == null) {
@@ -34,7 +43,7 @@ class LocationRepository @Inject constructor(
                 }
             }
         }
-        fusedLocationProviderClient.removeLocationUpdates(callback!!)
+        fusedLocationProviderClient.removeLocationUpdates(callback!!)//TODO: https://developer.android.com/training/location/request-updates
         fusedLocationProviderClient.requestLocationUpdates( //when position change updates will be send
             LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)

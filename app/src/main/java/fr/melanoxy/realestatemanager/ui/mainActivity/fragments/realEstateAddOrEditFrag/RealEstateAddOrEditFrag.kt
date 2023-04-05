@@ -25,6 +25,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -168,16 +169,9 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
 
     private fun bindTv() {
 
-        binding.createNewRealEstateTvDescription.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {}
-            override fun beforeTextChanged(s: CharSequence, start: Int,
-                                           count: Int, after: Int) {
-            }
-            override fun onTextChanged(s: CharSequence, start: Int,
-                                       before: Int, count: Int) {
-                viewModel.onDescriptionChanged(s.toString())
-            }
-        })
+        binding.createNewRealEstateTvDescription.doOnTextChanged { text, _, _, _ ->
+            viewModel.onDescriptionChanged(text.toString())
+        }
 
         binding.createNewRealEstateTlChangePictureName.setEndIconOnClickListener {
             viewModel.onNewNameForPicProvided(binding.createNewRealEstateTvChangePictureName.text.toString().trim())

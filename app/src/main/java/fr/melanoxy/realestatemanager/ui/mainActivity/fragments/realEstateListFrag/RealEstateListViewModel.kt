@@ -7,13 +7,10 @@ import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.data.PermissionChecker
 import fr.melanoxy.realestatemanager.data.repositories.RealEstateRepository
 import fr.melanoxy.realestatemanager.data.repositories.SharedRepository
-import fr.melanoxy.realestatemanager.data.utils.CoroutineDispatcherProvider
 import fr.melanoxy.realestatemanager.domain.realEstateWithPictureEntity.GetRealEstateWithPicturesUseCase
 import fr.melanoxy.realestatemanager.domain.realEstateWithPictureEntity.RealEstateWithPictureEntity
 import fr.melanoxy.realestatemanager.ui.mainActivity.NavigationEvent
-import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.RealEstateAddOrEditEvent
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.realEstateRv.RealEstateViewStateItem
-import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstatePictureRv.RealEstatePictureViewStateItem
 import fr.melanoxy.realestatemanager.ui.utils.NativeText
 import fr.melanoxy.realestatemanager.ui.utils.SingleLiveEvent
 import javax.inject.Inject
