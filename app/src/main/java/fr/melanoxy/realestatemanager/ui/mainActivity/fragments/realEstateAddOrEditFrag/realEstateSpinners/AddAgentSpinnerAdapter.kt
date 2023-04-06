@@ -52,7 +52,7 @@ class AddAgentSpinnerAdapter : ListAdapter, Filterable {
         getItem(position)?.let {
             Glide.with(binding.addAgentItemImageViewPfp)
                 .load(it.agentPfpUrl)
-                .apply(RequestOptions.centerCropTransform())
+                .apply(RequestOptions.circleCropTransform())
                 .into(binding.addAgentItemImageViewPfp)
             binding.addAgentItemTextViewName.text = it.agentName
         }

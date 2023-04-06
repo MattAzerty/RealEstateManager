@@ -13,6 +13,8 @@ import android.view.inputmethod.EditorInfo
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.chip.Chip
 import dagger.hilt.android.AndroidEntryPoint
 import fr.melanoxy.realestatemanager.R
@@ -71,7 +73,7 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
         binding.searchBarCardContainer.strokeColor = ContextCompat.getColor(requireContext(), R.color.colorAccent)
         binding.searchBarDropdownMenu.setImageResource(R.drawable.vc_arrow_back_white_24dp)
         binding.searchBarChipIcon.setImageResource(R.drawable.vc_align_vertical_bottom_white_24dp)
-        binding.searchBarInputText.setText("REAL ESTATE DETAILS: ")
+        binding.searchBarInputText.setText("REAL ESTATE DETAILS ")
         binding.searchBarInputText.setTypeface(null, Typeface.BOLD)
         binding.searchBarInputText.gravity = Gravity.CENTER
         binding.searchBarInputText.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorAccent))
@@ -100,6 +102,11 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
             binding.realEstateItemTvType.text = it.type
             binding.realEstateItemTvCity.text = it.city
             binding.realEstateItemTvPrice.text = it.price
+            Glide.with(binding.realEstateItemIvMap)
+                .load(it.thumbnail)
+                .apply(RequestOptions.circleCropTransform())
+                .into(binding.realEstateItemIvMap)
+            binding.realEstateItemIvMap
             //Pictures list
             val adapter = RealEstatePictureAdapter()
             binding.realEstateDetailsRecyclerViewPictures.adapter = adapter

@@ -28,6 +28,7 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -140,7 +141,14 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
 
     private fun bindChips() {
         binding.createNewRealEstateChipGroup.setOnCheckedStateChangeListener { _, checkedIds ->
-        viewModel.onChipSelected(checkedIds)
+            val chipGroup = binding.createNewRealEstateChipGroup
+            val chipNameList = mutableListOf<String>()
+
+            for (id in checkedIds) {
+                val chip = chipGroup.findViewById<Chip>(id)
+                chipNameList.add(chip.text.toString())
+            }
+        viewModel.onChipSelected(chipNameList)
         }
     }
 
@@ -169,8 +177,8 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
 
     private fun bindTv() {
 
-        binding.createNewRealEstateTvDescription.doOnTextChanged { text, _, _, _ ->
-            viewModel.onDescriptionChanged(text.toString())
+        binding.createNewRealEstateInputDescription.doOnTextChanged { text, _, _, _ ->
+            if(!text.isNullOrEmpty()) viewModel.onDescriptionChanged(text.toString())
         }
 
         binding.createNewRealEstateTlChangePictureName.setEndIconOnClickListener {

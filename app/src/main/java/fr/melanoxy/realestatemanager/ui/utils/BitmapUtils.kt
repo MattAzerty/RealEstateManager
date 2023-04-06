@@ -1,6 +1,10 @@
 package fr.melanoxy.realestatemanager.ui.utils
 
 import android.graphics.*
+import java.io.IOException
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
 
 
 fun intToBitmap(size: Int): Bitmap {

@@ -1,6 +1,7 @@
 package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag
 
 import android.app.Activity
+import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import android.view.View
@@ -18,6 +19,8 @@ import fr.melanoxy.realestatemanager.domain.estatePicture.EstatePictureEntity
 import fr.melanoxy.realestatemanager.domain.estatePicture.GetPictureOfRealEstateUseCase
 import fr.melanoxy.realestatemanager.domain.estatePicture.InsertEstatePictureUserCase
 import fr.melanoxy.realestatemanager.domain.estatePicture.StoreEstatePicturesUseCase
+import fr.melanoxy.realestatemanager.domain.realEstate.GetCoordinateRealEstateUseCase
+import fr.melanoxy.realestatemanager.domain.realEstate.GetThumbnailRealEstateUseCase
 import fr.melanoxy.realestatemanager.domain.realEstate.InsertRealEstateUseCase
 import fr.melanoxy.realestatemanager.domain.realEstate.RealEstateEntity
 import fr.melanoxy.realestatemanager.ui.mainActivity.NavigationEvent
@@ -37,6 +40,8 @@ class RealEstateAddOrEditViewModel @Inject constructor(
     private val sharedRepository: SharedRepository,
     private val getPictureOfRealEstateUseCase: GetPictureOfRealEstateUseCase,
     private val getEstateAgentUseCase: GetEstateAgentUseCase,
+    private val getCoordinateRealEstateUseCase: GetCoordinateRealEstateUseCase,
+    private val getThumbnailRealEstateUseCase: GetThumbnailRealEstateUseCase,
     private val insertRealEstateUseCase: InsertRealEstateUseCase,
     private val storeEstatePicturesUseCase: StoreEstatePicturesUseCase,
     private val insertEstatePictureUserCase: InsertEstatePictureUserCase,
@@ -405,11 +410,26 @@ class RealEstateAddOrEditViewModel @Inject constructor(
 
         val viewPagerInfos = realEstateRepository.realEstateViewPagerInfosStateItem
         val picList = tempPictureListItemLiveData.value
+        var realEstateIdCreated:Long? = null
 
         if(allFieldsNonNull(viewPagerInfos) && realEstateAddOrEditViewState.estateAgentId!=null) {
         viewModelScope.launch(coroutineDispatcherProvider.io) {
 
-            val realEstateIdCreated = insertRealEstateUseCase.invoke(
+            val realEstateAddress = Address(
+                street = viewPagerInfos.street!!,
+                city = viewPagerInfos.city!!,
+                state = viewPagerInfos.state!!,
+                zipCode = viewPagerInfos.zipcode!!
+            )
+
+            val realEstateCoordinate = getCoordinateRealEstateUseCase.invoke(realEstateAddress)
+
+            if(realEstateCoordinate!=null){
+
+            val thumbnail = getThumbnailRealEstateUseCase.invoke(realEstateCoordinate)
+
+            if(thumbnail!=null){
+            realEstateIdCreated = insertRealEstateUseCase.invoke(
                 RealEstateEntity(
                     estateAgentId = realEstateAddOrEditViewState.estateAgentId!!,
                     propertyType = realEstateAddOrEditViewState.propertyType ?: "Unknown",
@@ -417,23 +437,19 @@ class RealEstateAddOrEditViewModel @Inject constructor(
                     surfaceArea = viewPagerInfos.surfaceArea ?: 0.0,
                     numberOfRooms = viewPagerInfos.numberOfRooms ?: 0,
                     numberOfBedrooms = viewPagerInfos.numberOfBedrooms ?: 0,
-                    description = realEstateAddOrEditViewState.description ?: "No Description",
-                    thumbnail = ByteArray(1),//TODO change this
-                    address = Address(
-                        street = viewPagerInfos.street!!,
-                        city = viewPagerInfos.city!!,
-                        state = viewPagerInfos.state!!,
-                        zipCode = viewPagerInfos.zipcode!!
-                    ),
+                    description = realEstateAddOrEditViewState.description ?: "No Description.",
+                    thumbnail = thumbnail,
+                    address = realEstateAddress,
+                    coordinates= "${realEstateCoordinate.latitude},${realEstateCoordinate.longitude}",
                     pointsOfInterest = realEstateAddOrEditViewState.pointsOfInterest ?: ArrayList(),
                     marketEntryDate = realEstateAddOrEditViewState.marketEntryDate ?: Date(),
                     saleDate = realEstateAddOrEditViewState.saleDate ?: Date()
                 )
-            )
+            )}}
 
             //PictureEntities to Room
 
-            if (picList!=null && picList.isNotEmpty()){
+            if (picList!=null && realEstateIdCreated!=null && picList.isNotEmpty()){
                 storeEstatePicturesUseCase.invoke(picList, realEstateIdCreated)
             }
 
@@ -460,7 +476,7 @@ class RealEstateAddOrEditViewModel @Inject constructor(
         realEstateAddOrEditViewState.propertyType = typeOfProperty
     }
 
-    fun onChipSelected(listOfTypeSelected: List<Int>) {
+    fun onChipSelected(listOfTypeSelected: List<String>) {
     realEstateAddOrEditViewState.pointsOfInterest = ArrayList(listOfTypeSelected)
     }
 

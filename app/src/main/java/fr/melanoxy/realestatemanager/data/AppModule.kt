@@ -2,6 +2,7 @@ package fr.melanoxy.realestatemanager.data
 
 import android.app.Application
 import android.content.Context
+import android.location.Geocoder
 import androidx.work.WorkManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -30,6 +31,10 @@ object AppModule {
         LocationServices.getFusedLocationProviderClient(
             application
         )
+
+    @Singleton
+    @Provides
+    fun provideGeocoder(application: Application): Geocoder = Geocoder(application)
 
     @Singleton
     @Provides

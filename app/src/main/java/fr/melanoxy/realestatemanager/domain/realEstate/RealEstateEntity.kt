@@ -1,8 +1,9 @@
 package fr.melanoxy.realestatemanager.domain.realEstate
 
+import android.graphics.Bitmap
 import androidx.room.*
 import fr.melanoxy.realestatemanager.domain.Address
-import fr.melanoxy.realestatemanager.data.utils.converters.ByteArrayPngConverter
+import fr.melanoxy.realestatemanager.data.utils.converters.ByteArrayBitmapConverter
 import fr.melanoxy.realestatemanager.data.utils.converters.DateConverter
 import fr.melanoxy.realestatemanager.data.utils.converters.IntegerArrayListConverter
 import fr.melanoxy.realestatemanager.data.utils.converters.StringArrayListConverter
@@ -21,7 +22,7 @@ import kotlin.collections.ArrayList
     ],
 )
 
-@TypeConverters(DateConverter::class, IntegerArrayListConverter::class, StringArrayListConverter::class, ByteArrayPngConverter::class )
+@TypeConverters(DateConverter::class, IntegerArrayListConverter::class, StringArrayListConverter::class, ByteArrayBitmapConverter::class )
 data class RealEstateEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
@@ -33,10 +34,11 @@ data class RealEstateEntity(
     val numberOfRooms: Int,
     val numberOfBedrooms: Int,
     val description: String,
-    val thumbnail: ByteArray,
+    val thumbnail: Bitmap,
     @Embedded
     val address: Address,
-    val pointsOfInterest:ArrayList<Int>,
+    val coordinates:String,
+    val pointsOfInterest:ArrayList<String>,
     val marketEntryDate: Date,
     val saleDate: Date,
 )

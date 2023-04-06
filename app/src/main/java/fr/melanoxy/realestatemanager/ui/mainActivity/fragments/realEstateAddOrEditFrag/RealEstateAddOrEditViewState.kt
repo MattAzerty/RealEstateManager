@@ -7,7 +7,7 @@ import kotlin.collections.ArrayList
 data class RealEstateAddOrEditViewState(
     var estateAgentId: Long?=null,
     var propertyType: String?=null,
-    var pointsOfInterest: ArrayList<Int>?=null,
+    var pointsOfInterest: ArrayList<String>?=null,
     var description: String?=null,
     var photosListPath: ArrayList<String>?=null,
     var marketEntryDate: Date?=null,

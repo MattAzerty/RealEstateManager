@@ -41,6 +41,7 @@ class RealEstateDetailsViewModel @Inject constructor(
                             type = entity.realEstateEntity.propertyType,
                             city = entity.realEstateEntity.address.city,
                             price = "$${entity.realEstateEntity.price}",
+                            thumbnail=entity.realEstateEntity.thumbnail,
                             pictureList = entity.estatePictureEntities.map {
                                 RealEstatePictureViewStateItem(
                                     realEstateId = selectedId,
@@ -56,8 +57,8 @@ class RealEstateDetailsViewModel @Inject constructor(
                             surface =  "${entity.realEstateEntity.surfaceArea}m²",
                             room = entity.realEstateEntity.numberOfRooms.toString(),
                             bedroom = entity.realEstateEntity.numberOfBedrooms.toString(),
-                            nearPOI = "buildPOIList(entity.realEstateEntity.pointsOfInterest)",
-                            locationCoordinate = "tbd"
+                            nearPOI = buildPOIList(entity.realEstateEntity.pointsOfInterest),
+                            locationCoordinate = adaptCoordinates(entity.realEstateEntity.coordinates)
                         )
                     )
                 }
@@ -65,8 +66,18 @@ class RealEstateDetailsViewModel @Inject constructor(
         }
     }
 
+    private fun adaptCoordinates(coordinates: String): String {
+        val lat = String.format("%.5f", coordinates.split(",")[0].toDouble())
+        val long = String.format("%.5f", coordinates.split(",")[1].toDouble())
+        return "$lat $long"
+    }
 
-val isTabletLiveData = sharedRepository.isTabletStateFlow.asLiveData()
+    private fun buildPOIList(pointsOfInterest: ArrayList<String>): String {
+    return pointsOfInterest.joinToString(separator = "|")
+    }
+
+
+    val isTabletLiveData = sharedRepository.isTabletStateFlow.asLiveData()
 val fragmentNavigationLiveData = sharedRepository.fragmentStateFlow.asLiveData()
 val singleLiveRealEstateDetailsEvent = SingleLiveEvent<RealEstateDetailsEvent>()
 
