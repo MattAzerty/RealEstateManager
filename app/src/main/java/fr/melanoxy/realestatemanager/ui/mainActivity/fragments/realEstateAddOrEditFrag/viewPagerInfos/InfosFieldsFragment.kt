@@ -22,6 +22,13 @@ class InfosFieldsFragment : Fragment(R.layout.fragment_infos_fields) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.realEstateViewPagerInfosStateItemLiveData.observe(viewLifecycleOwner) {
+            binding.fragInfosFieldEtPrice.setText(it?.price?.toString())
+            binding.fragInfosFieldEtRoom.setText(it?.numberOfRooms?.toString())
+            binding.fragInfosFieldEtBedroom.setText(it?.numberOfBedrooms?.toString())
+            binding.fragInfosFieldEtSurface.setText(it?.surfaceArea?.toString())
+        }
+
         binding.fragInfosFieldEtPrice.doOnTextChanged { text, _, _, _ ->
             if(!text.isNullOrEmpty()) viewModel.onPriceFieldChanged(text.toString()) }
         binding.fragInfosFieldEtRoom.doOnTextChanged { text, _, _, _ ->

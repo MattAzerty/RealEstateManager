@@ -46,7 +46,7 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
 
         viewModel.isTabletLiveData.observe(viewLifecycleOwner) { isTablet ->
             when(isTablet){
-                false ->  adaptSearchBar()
+                false ->  adaptDetailsView()
                 true -> bindSearchBarForTabletMode()
             }
         }
@@ -68,7 +68,10 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
 
         }
 
-    private fun adaptSearchBar() {
+    private fun adaptDetailsView() {
+        binding.realEstateDetailsClRoot.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.black))
+        binding.onePaneLayout.visibility= View.VISIBLE
+        binding.realEstateDetailsDivider1.setMargins(top=null)
         binding.searchBarCardContainer.setMargins(left = null)
         binding.searchBarCardContainer.strokeColor = ContextCompat.getColor(requireContext(), R.color.colorAccent)
         binding.searchBarDropdownMenu.setImageResource(R.drawable.vc_arrow_back_white_24dp)
@@ -125,6 +128,9 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
     }
 
     private fun bindSearchBarForTabletMode() {
+        binding.realEstateDetailsClRoot.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+        binding.onePaneLayout.visibility= View.GONE
+        binding.realEstateDetailsDivider1.setMargins(top=20)
         binding.searchBarCardContainer.setMargins(left = 200)
         binding.searchBarCardContainer.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
         binding.searchBarDropdownMenu.setImageResource(R.drawable.vc_keyboard_arrow_down_white_24dp)
@@ -140,6 +146,7 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
             when (event) {
                 NavigationEvent.RealEstateListFragment -> expand()
                 NavigationEvent.AddOrEditRealEstateFragment -> collapse()
+                else -> {}
             }
         }
 

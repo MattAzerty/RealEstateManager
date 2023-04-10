@@ -11,6 +11,12 @@ interface EstatePictureDao {
     @Insert
     suspend fun insert(estatePictureEntity: EstatePictureEntity)
 
+    @Update
+    suspend fun update(estatePictureEntity: List<EstatePictureEntity>)
+
+    @Query("DELETE FROM estatePicture WHERE id=:pictureId")
+    suspend fun delete(pictureId: Long)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(pictureEntities: List<EstatePictureEntity>)
 

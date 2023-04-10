@@ -22,6 +22,15 @@ class AddressFieldsFragment : Fragment(R.layout.fragment_address_fields) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+        viewModel.realEstateViewPagerInfosStateItemLiveData.observe(viewLifecycleOwner) {
+            binding.fragAddressFieldEtStreet.setText(it.street)
+            binding.fragAddressFieldEtCity.setText(it.city)
+            binding.fragAddressFieldEtState.setText(it.state)
+            binding.fragAddressFieldEtZipcode.setText(it.zipcode)
+        }
+
+
         binding.fragAddressFieldEtStreet.doAfterTextChanged {
             if(!it.isNullOrEmpty())
             viewModel.onStreetFieldChanged(it.toString())

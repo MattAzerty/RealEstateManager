@@ -3,10 +3,10 @@ package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrE
 import android.app.Activity
 import android.graphics.Bitmap
 import android.net.Uri
-import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.lifecycle.*
+import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.data.PermissionChecker
@@ -15,19 +15,16 @@ import fr.melanoxy.realestatemanager.data.repositories.SharedRepository
 import fr.melanoxy.realestatemanager.data.utils.CoroutineDispatcherProvider
 import fr.melanoxy.realestatemanager.domain.Address
 import fr.melanoxy.realestatemanager.domain.estateAgent.GetEstateAgentUseCase
-import fr.melanoxy.realestatemanager.domain.estatePicture.EstatePictureEntity
-import fr.melanoxy.realestatemanager.domain.estatePicture.GetPictureOfRealEstateUseCase
-import fr.melanoxy.realestatemanager.domain.estatePicture.InsertEstatePictureUserCase
-import fr.melanoxy.realestatemanager.domain.estatePicture.StoreEstatePicturesUseCase
-import fr.melanoxy.realestatemanager.domain.realEstate.GetCoordinateRealEstateUseCase
-import fr.melanoxy.realestatemanager.domain.realEstate.GetThumbnailRealEstateUseCase
-import fr.melanoxy.realestatemanager.domain.realEstate.InsertRealEstateUseCase
-import fr.melanoxy.realestatemanager.domain.realEstate.RealEstateEntity
+import fr.melanoxy.realestatemanager.domain.estatePicture.*
+import fr.melanoxy.realestatemanager.domain.realEstate.*
+import fr.melanoxy.realestatemanager.domain.realEstateWithPictureEntity.GetRealEstateWithPicturesFromIdUseCase
+import fr.melanoxy.realestatemanager.domain.realEstateWithPictureEntity.RealEstateWithPictureEntity
 import fr.melanoxy.realestatemanager.ui.mainActivity.NavigationEvent
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.realEstateSpinners.AddAgentViewStateItem
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstatePictureRv.RealEstatePictureViewStateItem
 import fr.melanoxy.realestatemanager.ui.utils.*
 import kotlinx.coroutines.*
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -38,462 +35,622 @@ class RealEstateAddOrEditViewModel @Inject constructor(
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
     private val realEstateRepository: RealEstateRepository,
     private val sharedRepository: SharedRepository,
-    private val getPictureOfRealEstateUseCase: GetPictureOfRealEstateUseCase,
+    private val getRealEstateWithPicturesFromIdUseCase: GetRealEstateWithPicturesFromIdUseCase,
     private val getEstateAgentUseCase: GetEstateAgentUseCase,
     private val getCoordinateRealEstateUseCase: GetCoordinateRealEstateUseCase,
     private val getThumbnailRealEstateUseCase: GetThumbnailRealEstateUseCase,
     private val insertRealEstateUseCase: InsertRealEstateUseCase,
+    private val updateRealEstateUseCase: UpdateRealEstateUseCase,
+    private val updateEstatePictureUseCase: UpdateEstatePictureUseCase,
     private val storeEstatePicturesUseCase: StoreEstatePicturesUseCase,
+    private val deleteEstatePictureUseCase: DeleteEstatePictureUseCase,
     private val insertEstatePictureUserCase: InsertEstatePictureUserCase,
 ) : ViewModel() {
 
-    private val realEstateAddOrEditViewState = RealEstateAddOrEditViewState()
-    private var itemIndex = 1
-    private var deletedItemIndices: MutableList<Int> = mutableListOf()
-    private var selectedPicture: Uri?=null
+    private val realEstateAddOrEditViewStateLiveData =
+        MutableLiveData(RealEstateAddOrEditViewState())
 
-    private val selectedRealEstateId =realEstateRepository.selectedRealEstateIdStateFlow.value
-    private val tempPictureListItemLiveData = MutableLiveData<List<RealEstatePictureViewStateItem>>()
+    //For picture item modifications (delete/rename)
+    private var pictureItemIndex = 1
+    private var deletedPictureItemIndices: MutableList<Int> = mutableListOf()
+    private var selectedPicture: Uri? = null
 
-    val entryDatePickedLiveData: LiveData<Event<String>> = sharedRepository.entryDatePickedChannelFromAddOrEdit.asLiveDataEvent(
-        coroutineDispatcherProvider.io) {
-        emit(it)
-    }
+    //Selected RE from list (if not null -> editMode)
+    private val selectedRealEstateId = realEstateRepository.selectedRealEstateIdStateFlow.value
 
-    val saleDatePickedLiveData: LiveData<Event<String>> = sharedRepository.saleDatePickedChannelFromAddOrEdit.asLiveDataEvent(
-        coroutineDispatcherProvider.io) {
-        emit(it)
-    }
+    //Trigger from mainActivity for entryDate
+    val entryDatePickedLiveData: LiveData<Event<String>> =
+        sharedRepository.entryDatePickedChannelFromAddOrEdit.asLiveDataEvent(
+            coroutineDispatcherProvider.io
+        ) {
+            emit(it)
+        }
 
-    val agentViewStateLiveData: LiveData<List<AddAgentViewStateItem>> = liveData(coroutineDispatcherProvider.io){
-        if(selectedRealEstateId==null){
+    //Trigger from mainActivity for saleDate
+    val saleDatePickedLiveData: LiveData<Event<String>> =
+        sharedRepository.saleDatePickedChannelFromAddOrEdit.asLiveDataEvent(
+            coroutineDispatcherProvider.io
+        ) {
+            emit(it)
+        }
+
+    //For AgentSelectionSpinner
+    val agentListViewStateLiveData: LiveData<List<AddAgentViewStateItem>> =
+        liveData(coroutineDispatcherProvider.io) {
             getEstateAgentUseCase.invoke().collect { agents ->
-                emit(
-                    agents.map {
-                        AddAgentViewStateItem(
-                            agentId = it.id,
-                            agentName = "${it.firstName} ${it.lastName}",
-                            agentPfpUrl = it.picUrl
-                        )
-                    }
-                )
+                emit(agents.map {
+                    AddAgentViewStateItem(
+                        agentId = it.id,
+                        agentName = "${it.firstName} ${it.lastName}",
+                        agentPfpUrl = it.picUrl
+                    )
+                })
             }
         }
-        }
 
-    private val pictureEntityListLiveData: LiveData<List<EstatePictureEntity>> = liveData(coroutineDispatcherProvider.io){
-        if(selectedRealEstateId!=null){
-            getPictureOfRealEstateUseCase.invoke(selectedRealEstateId).collect {
-                emit(it)
-            }
-        }
-    }
-
-    private val mediatorLiveData = MediatorLiveData<List<RealEstatePictureViewStateItem>>()
-    init {
-        mediatorLiveData.addSource(pictureEntityListLiveData) { pictureListFromRealEstateId -> combine(pictureListFromRealEstateId, tempPictureListItemLiveData.value)}
-        mediatorLiveData.addSource(tempPictureListItemLiveData) { tempListOfPicture -> combine(pictureEntityListLiveData.value, tempListOfPicture)}
-    }
-
-    private fun combine(pictureListFromRealEstate: List<EstatePictureEntity>?, tempListOfPicture: List<RealEstatePictureViewStateItem>?) {
-
-        val listOfLoadedPicture = tempListOfPicture ?: emptyList()
-        var listFromRealEstate:List<RealEstatePictureViewStateItem> = emptyList()
-
-        if(pictureListFromRealEstate!=null && pictureListFromRealEstate.isNotEmpty()){
-
-            listFromRealEstate = pictureListFromRealEstate.map {
-
-            RealEstatePictureViewStateItem(
-                realEstateId = selectedRealEstateId!!,
-                pictureUri = Uri.parse(it.path),
-                realEstatePictureName = it.name,
-                isStored = true,
-                isEdited = false,
-                toDelete = false,
-                onRealEstatePictureClicked = {
-                    Log.e("MyViewModel", "Error occurred while doing something")
-                                             },
-                onRealEstatePictureLongPress = {
-                    selectedPicture = Uri.parse(it.path)
-                    notifyPictureToDelete()
-                },
-                onRealEstatePictureDeleteClicked = {
-                    deletePictureSelected()
-                },
-                onRealEstatePictureDeleteLongPress = {
-                    selectedPicture = Uri.parse(it.path)
-                    notifyPictureToDelete()
-                },
-                onRealEstatePictureNameClicked = {
-                    selectedPicture = Uri.parse(it.path)
-                    notifyPictureIsEdited()
+    private val realEstateWithPictureFromIdLiveData: LiveData<RealEstateWithPictureEntity> =
+        liveData(coroutineDispatcherProvider.io) {
+            if (selectedRealEstateId != null) {
+                getRealEstateWithPicturesFromIdUseCase.invoke(selectedRealEstateId).collect {
+                    emit(it)
                 }
-            )
-
             }
         }
 
-//Update behavior of AddPictureBar
-        if(listOfLoadedPicture.isEmpty()) {realEstateAddFragSingleLiveEvent.value =
-            RealEstateAddOrEditEvent.UpdateBarMessage(
+    private val mediatorLiveData = MediatorLiveData<RealEstateAddOrEditViewState?>()
+
+    init {
+        mediatorLiveData.addSource(realEstateWithPictureFromIdLiveData) { estateEntity ->
+            combine(
+                estateEntity, realEstateAddOrEditViewStateLiveData.value
+            )
+        }
+        mediatorLiveData.addSource(realEstateAddOrEditViewStateLiveData) { estateViewStateTemp ->
+            combine(
+                realEstateWithPictureFromIdLiveData.value, estateViewStateTemp
+            )
+        }
+    }
+
+    private fun combine(
+        estateEntity: RealEstateWithPictureEntity?,
+        estateViewStateTemp: RealEstateAddOrEditViewState?
+    ) {
+
+        val pictureListOnView = (estateViewStateTemp?.pictureItemList
+            ?: emptyList()).toMutableList()//From View (StateItem)
+//Update behavior of AddPictureBarWidget
+        if (pictureListOnView.isEmpty()) {
+            realEstateAddFragSingleLiveEvent.value = RealEstateAddOrEditEvent.UpdateBarMessage(
                 RealEstateAddOrEditPictureBarViewState(
                     noPictureTextViewVisibility = View.VISIBLE,
                     barText = NativeText.Resource(R.string.select_methode),
                     barIconTip = null
                 )
             )
-        }else{realEstateAddFragSingleLiveEvent.value =
-            RealEstateAddOrEditEvent.UpdateBarMessage(
+        } else {
+            realEstateAddFragSingleLiveEvent.value = RealEstateAddOrEditEvent.UpdateBarMessage(
                 RealEstateAddOrEditPictureBarViewState(
                     noPictureTextViewVisibility = View.GONE,
                     barText = NativeText.Resource(R.string.x_picture_selected),
-                    barIconTip = intToBitmap(listOfLoadedPicture.size)
+                    barIconTip = intToBitmap(pictureListOnView.size)
                 )
             )
-            }
+        }
 
-        mediatorLiveData.value = (listOfLoadedPicture + listFromRealEstate).sortedBy{it.pictureUri}.reversed()
+//Fulfill itemViewState If on EditMod.
+
+        val itemViewState: RealEstateAddOrEditViewState?
+
+        if (estateEntity != null && estateViewStateTemp?.estateAgentId == null) {
+
+            itemViewState = RealEstateAddOrEditViewState(
+                estateAgentId = estateEntity.realEstateEntity.estateAgentId,
+                propertyType = estateEntity.realEstateEntity.propertyType,
+                pointsOfInterest = estateEntity.realEstateEntity.pointsOfInterest,
+                description = estateEntity.realEstateEntity.description,
+                pictureItemList = estateEntity.estatePictureEntities.map {
+
+                    RealEstatePictureViewStateItem(realEstateId = selectedRealEstateId!!,
+                        pictureUri = Uri.parse("file://${it.path}"),
+                        realEstatePictureName = it.name,
+                        isStored = true,
+                        isEdited = false,
+                        toDelete = false,
+                        onRealEstatePictureLongPress = {
+                            selectedPicture = Uri.parse("file://${it.path}")
+                            notifyPictureToDelete()
+                        },
+                        onRealEstatePictureDeleteClicked = {
+                            deletePictureSelected()
+                        },
+                        onRealEstatePictureDeleteLongPress = {
+                            selectedPicture = Uri.parse("file://${it.path}")
+                            notifyPictureToDelete()
+                        },
+                        onRealEstatePictureNameClicked = {
+                            selectedPicture = Uri.parse("file://${it.path}")
+                            notifyPictureIsEdited()
+                        })
+                }.sortedBy{it.pictureUri}.reversed(),
+                marketEntryDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(
+                    Date(
+                        estateEntity.realEstateEntity.marketEntryDate.time
+                    )
+                ),
+                saleDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(
+                    Date(
+                        estateEntity.realEstateEntity.saleDate.time
+                    )
+                )
+            )
+            realEstateAddOrEditViewStateLiveData.value = itemViewState
+
+        } else itemViewState = estateViewStateTemp
+
+        mediatorLiveData.value = itemViewState
 
     }
 
+
     private fun deletePictureSelected() {
+        //Get currentList of picture on View else emptyList
+        val picList = realEstateAddOrEditViewStateLiveData.value?.pictureItemList?.toMutableList()
+            ?: mutableListOf()
 
-        val picList = tempPictureListItemLiveData.value?.toMutableList() ?: mutableListOf()
-
-        repeat(picList.count { it.toDelete })
-        {
+        repeat(picList.count { it.toDelete }) {
             val index = picList.indexOfFirst { it.toDelete }
             if (index != -1) {
-                val picture = picList[index]
                 picList.removeAt(index)
-                tempPictureListItemLiveData.value = picList
-
+                realEstateAddOrEditViewStateLiveData.value =
+                    updateItemWith(RealEstateAddOrEditViewState(pictureItemList = picList))
             }
         }
+        selectedPicture = null
+    }
 
-        selectedPicture=null
+    private fun updateItemWith(newItem: RealEstateAddOrEditViewState): RealEstateAddOrEditViewState {
+        val oldItem = realEstateAddOrEditViewStateLiveData.value
+
+        return RealEstateAddOrEditViewState(
+            estateAgentId = newItem.estateAgentId ?: oldItem?.estateAgentId,
+            propertyType = newItem.propertyType ?: oldItem?.propertyType,
+            pointsOfInterest = newItem.pointsOfInterest ?: oldItem?.pointsOfInterest,
+            description = newItem.description ?: oldItem?.description,
+            pictureItemList = newItem.pictureItemList?.sortedBy{it.pictureUri}?.reversed() ?: oldItem?.pictureItemList,
+            marketEntryDate = newItem.marketEntryDate ?: oldItem?.marketEntryDate,
+            saleDate = newItem.saleDate ?: oldItem?.saleDate
+        )
     }
 
     private fun notifyPictureIsEdited() {
 
-        val picList = tempPictureListItemLiveData.value?.toMutableList() ?: mutableListOf()
-
+        val picList = realEstateAddOrEditViewStateLiveData.value?.pictureItemList?.toMutableList()
+            ?: mutableListOf()
         val index = picList.indexOfFirst { it.pictureUri == selectedPicture }
         if (index != -1) {
-           val picture = picList[index]
-           picList.removeAt(index)
-            picList.add(
-                RealEstatePictureViewStateItem(
-                    realEstateId = null,
-                    pictureUri = picture.pictureUri,
-                    realEstatePictureName = picture.realEstatePictureName,
-                    isStored = false,
-                    isEdited = !picture.isEdited,
-                    toDelete =false,
-                    onRealEstatePictureClicked = {
-                        Log.e("MyViewModel", "Error occurred while doing something")
-                    },
-                    onRealEstatePictureLongPress = {
-                        selectedPicture = picture.pictureUri
-                        notifyPictureToDelete()
-                    },
-                    onRealEstatePictureDeleteClicked = {
-                        deletePictureSelected()
-                    },
-                    onRealEstatePictureDeleteLongPress = {
-                        selectedPicture = picture.pictureUri
-                        notifyPictureToDelete()
-                    },
-                    onRealEstatePictureNameClicked = {
-                        selectedPicture = picture.pictureUri
-                        notifyPictureIsEdited()
-                    }
-                ) )
+            val picture = picList[index]
+            picList.removeAt(index)
+            picList.add(RealEstatePictureViewStateItem(realEstateId = null,
+                pictureUri = picture.pictureUri,
+                realEstatePictureName = picture.realEstatePictureName,
+                isStored = false,
+                isEdited = !picture.isEdited,
+                toDelete = false,
+                onRealEstatePictureLongPress = {
+                    selectedPicture = picture.pictureUri
+                    notifyPictureToDelete()
+                },
+                onRealEstatePictureDeleteClicked = {
+                    deletePictureSelected()
+                },
+                onRealEstatePictureDeleteLongPress = {
+                    selectedPicture = picture.pictureUri
+                    notifyPictureToDelete()
+                },
+                onRealEstatePictureNameClicked = {
+                    selectedPicture = picture.pictureUri
+                    notifyPictureIsEdited()
+                }))
 
-            tempPictureListItemLiveData.value = picList
+            realEstateAddOrEditViewStateLiveData.value =
+                updateItemWith(RealEstateAddOrEditViewState(pictureItemList = picList))
 
-            if(!picList.any { it.isEdited }) {
-                realEstateAddFragSingleLiveEvent.value = RealEstateAddOrEditEvent.CloseEditTextToChangePictureName
-            }else{realEstateAddFragSingleLiveEvent.value = RealEstateAddOrEditEvent.ShowEditTextToChangePictureName}
+            if (!picList.any { it.isEdited }) {
+                realEstateAddFragSingleLiveEvent.value =
+                    RealEstateAddOrEditEvent.CloseEditTextToChangePictureName
+            } else {
+                realEstateAddFragSingleLiveEvent.value =
+                    RealEstateAddOrEditEvent.ShowEditTextToChangePictureName
+            }
         }
     }
 
-    val realEstatePicturesLiveData: LiveData<List<RealEstatePictureViewStateItem>>
-           get() = mediatorLiveData
+    val realEstateItemLiveData: LiveData<RealEstateAddOrEditViewState?>
+        get() = mediatorLiveData
 
     fun onCameraPermissionResult(hasCameraPermission: Boolean?) {
-        if(hasCameraPermission == true) realEstateAddFragSingleLiveEvent.value = RealEstateAddOrEditEvent.LaunchActivityPhotoCapture
-        else realEstateAddFragSingleLiveEvent.value = RealEstateAddOrEditEvent.DisplaySnackBarMessage(NativeText.Resource(
-            R.string.error_camera_permission))
+        if (hasCameraPermission == true) realEstateAddFragSingleLiveEvent.value =
+            RealEstateAddOrEditEvent.LaunchActivityPhotoCapture
+        else realEstateAddFragSingleLiveEvent.value =
+            RealEstateAddOrEditEvent.DisplaySnackBarMessage(
+                NativeText.Resource(
+                    R.string.error_camera_permission
+                )
+            )
     }
 
     fun onCloseFragmentClicked() {
-        realEstateAddFragSingleLiveEvent.value= RealEstateAddOrEditEvent.CloseFragment
+        realEstateRepository.setSelectedRealEstateId(null)
+        realEstateAddFragSingleLiveEvent.value = RealEstateAddOrEditEvent.CloseFragment
     }
 
     fun onAddPictureFromCameraSelected() {
-        if(permissionChecker.hasCameraPermission()) realEstateAddFragSingleLiveEvent.value = RealEstateAddOrEditEvent.LaunchActivityPhotoCapture
-        else realEstateAddFragSingleLiveEvent.value = RealEstateAddOrEditEvent.RequestCameraPermission
+        if (permissionChecker.hasCameraPermission()) realEstateAddFragSingleLiveEvent.value =
+            RealEstateAddOrEditEvent.LaunchActivityPhotoCapture
+        else realEstateAddFragSingleLiveEvent.value =
+            RealEstateAddOrEditEvent.RequestCameraPermission
     }
 
     fun onPickPicturesFromGallerySelected() {
-        realEstateAddFragSingleLiveEvent.value = RealEstateAddOrEditEvent.LaunchActivityPickVisualMedia
+        realEstateAddFragSingleLiveEvent.value =
+            RealEstateAddOrEditEvent.LaunchActivityPickVisualMedia
     }
 
     fun onLaunchCameraInterfaceResult(result: ActivityResult, imageUri: Uri?) {
-        when (result.resultCode){
+        when (result.resultCode) {
             Activity.RESULT_OK -> addPicturesToRv(listOf(imageUri!!))
-            Activity.RESULT_CANCELED -> realEstateAddFragSingleLiveEvent.value = RealEstateAddOrEditEvent.DisplaySnackBarMessage(NativeText.Resource(
-                R.string.no_picture_selected))
+            Activity.RESULT_CANCELED -> realEstateAddFragSingleLiveEvent.value =
+                RealEstateAddOrEditEvent.DisplaySnackBarMessage(
+                    NativeText.Resource(
+                        R.string.no_picture_selected
+                    )
+                )
         }
     }
 
     fun onPickVisualMediaResult(uris: List<Uri>?) {
-        if (uris!=null && uris.isNotEmpty()) {addPicturesToRv(uris)}
-        else {realEstateAddFragSingleLiveEvent.value = RealEstateAddOrEditEvent.DisplaySnackBarMessage(NativeText.Resource(
-            R.string.no_picture_selected))}
+        if (uris != null && uris.isNotEmpty()) {
+            addPicturesToRv(uris)
+        } else {
+            realEstateAddFragSingleLiveEvent.value =
+                RealEstateAddOrEditEvent.DisplaySnackBarMessage(
+                    NativeText.Resource(
+                        R.string.no_picture_selected
+                    )
+                )
+        }
     }
 
     private fun addPicturesToRv(listOfImageUri: List<Uri>) {
-        val previousPic = tempPictureListItemLiveData.value?.toMutableList() ?: mutableListOf()
+        val picList = realEstateAddOrEditViewStateLiveData.value?.pictureItemList?.toMutableList()
+            ?: mutableListOf()
         listOfImageUri.forEach {
-            previousPic.add(
-                RealEstatePictureViewStateItem(
-                    realEstateId = null,
-                    pictureUri = it,
-                    realEstatePictureName = getNextItemName(),
-                    isStored = false,
-                    isEdited = false,
-                    toDelete =false,
-                    onRealEstatePictureClicked = {
-                        Log.e("MyViewModel", "Error occurred while doing something")
-                                                 },
-                    onRealEstatePictureLongPress = {
-                        selectedPicture = it
-                        notifyPictureToDelete()
-                    },
-                    onRealEstatePictureDeleteClicked = {
-                        deletePictureSelected()
-                    },
-                    onRealEstatePictureDeleteLongPress = {
-                        selectedPicture = it
-                        notifyPictureToDelete()
-                    },
-                    onRealEstatePictureNameClicked = {
-                        selectedPicture = it
-                        notifyPictureIsEdited()
-                    }
-                ) )
+            picList.add(RealEstatePictureViewStateItem(realEstateId = null,
+                pictureUri = it,
+                realEstatePictureName = getNextItemName(),
+                isStored = false,
+                isEdited = false,
+                toDelete = false,
+                onRealEstatePictureLongPress = {
+                    selectedPicture = it
+                    notifyPictureToDelete()
+                },
+                onRealEstatePictureDeleteClicked = {
+                    deletePictureSelected()
+                },
+                onRealEstatePictureDeleteLongPress = {
+                    selectedPicture = it
+                    notifyPictureToDelete()
+                },
+                onRealEstatePictureNameClicked = {
+                    selectedPicture = it
+                    notifyPictureIsEdited()
+                }))
         }
 
-
-        tempPictureListItemLiveData.value = previousPic
+        realEstateAddOrEditViewStateLiveData.value =
+            updateItemWith(RealEstateAddOrEditViewState(pictureItemList = picList))
     }
 
     private fun getNextItemName(): String {
-        val pictureName:String
-        if(deletedItemIndices.isEmpty()) {
-            pictureName = "PIC$itemIndex"
-            itemIndex++
-        }else{
-            pictureName ="PIC${deletedItemIndices[0]}"
+        val pictureName: String
+        if (deletedPictureItemIndices.isEmpty()) {
+            pictureName = "PIC$pictureItemIndex"
+            pictureItemIndex++
+        } else {
+            pictureName = "PIC${deletedPictureItemIndices[0]}"
         }
 
         return pictureName
-
     }
 
     fun onCloseAddPictureClicked() {
-        itemIndex = 1
-        deletedItemIndices.clear()
-        tempPictureListItemLiveData.value = emptyList()
+        pictureItemIndex = 1
+        deletedPictureItemIndices.clear()
+        realEstateAddOrEditViewStateLiveData.value =
+            updateItemWith(RealEstateAddOrEditViewState(pictureItemList = mutableListOf()))
     }
 
     fun onNewNameForPicProvided(nameForPic: String) {
 
-    if(nameForPic.length>1){
+        if (nameForPic.length > 1) {
 
-        val picList = tempPictureListItemLiveData.value?.toMutableList() ?: mutableListOf()
+            val picList =
+                realEstateAddOrEditViewStateLiveData.value?.pictureItemList?.toMutableList()
+                    ?: mutableListOf()
 
-        repeat(picList.count { it.isEdited })
-        {
-        val index = picList.indexOfFirst { it.isEdited }
-        if (index != -1) {
-            val picture = picList[index]
-            picList.removeAt(index)
-            picList.add(
-                RealEstatePictureViewStateItem(
-                    realEstateId = null,
-                    pictureUri = picture.pictureUri,
-                    realEstatePictureName = nameForPic,
-                    isStored = false,
-                    isEdited = false,
-                    toDelete =false,
-                    onRealEstatePictureClicked = {
-                        Log.e("MyViewModel", "Error occurred while doing something")
-                    },
-                    onRealEstatePictureLongPress = {
-                        selectedPicture = picture.pictureUri
-                        notifyPictureToDelete()
-                    },
-                    onRealEstatePictureDeleteClicked = {
-                        deletePictureSelected()
-                    },
-                    onRealEstatePictureDeleteLongPress = {
-                        selectedPicture = picture.pictureUri
-                        notifyPictureToDelete()
-                    },
-                    onRealEstatePictureNameClicked = {
-                        selectedPicture = picture.pictureUri
-                        notifyPictureIsEdited()
-                    }
-                ) )
-            tempPictureListItemLiveData.value = picList
-            selectedPicture=null
+            repeat(picList.count { it.isEdited }) {
+                val index = picList.indexOfFirst { it.isEdited }
+                if (index != -1) {
+                    val picture = picList[index]
+                    picList.removeAt(index)
+                    picList.add(RealEstatePictureViewStateItem(realEstateId = null,
+                        pictureUri = picture.pictureUri,
+                        realEstatePictureName = nameForPic,
+                        isStored = false,
+                        isEdited = false,
+                        toDelete = false,
+                        onRealEstatePictureLongPress = {
+                            selectedPicture = picture.pictureUri
+                            notifyPictureToDelete()
+                        },
+                        onRealEstatePictureDeleteClicked = {
+                            deletePictureSelected()
+                        },
+                        onRealEstatePictureDeleteLongPress = {
+                            selectedPicture = picture.pictureUri
+                            notifyPictureToDelete()
+                        },
+                        onRealEstatePictureNameClicked = {
+                            selectedPicture = picture.pictureUri
+                            notifyPictureIsEdited()
+                        }))
+                    realEstateAddOrEditViewStateLiveData.value =
+                        updateItemWith(RealEstateAddOrEditViewState(pictureItemList = picList))
+                    selectedPicture = null
+                }
+            }
+
+        } else {
+            notifyPictureIsEdited()
+            realEstateAddFragSingleLiveEvent.value =
+                RealEstateAddOrEditEvent.DisplaySnackBarMessage(
+                    NativeText.Resource(
+                        R.string.name_too_short
+                    )
+                )
+
         }
-        }
-
-    }else {
-        notifyPictureIsEdited()
-        realEstateAddFragSingleLiveEvent.value = RealEstateAddOrEditEvent.DisplaySnackBarMessage(NativeText.Resource(
-        R.string.name_too_short))
-
-    }
     }
 
     private fun notifyPictureToDelete() {
 
-        val picList = tempPictureListItemLiveData.value?.toMutableList() ?: mutableListOf()
-
+        val picList = realEstateAddOrEditViewStateLiveData.value?.pictureItemList?.toMutableList()
+            ?: mutableListOf()
+        //Todo add the edit list of pictures
         val index = picList.indexOfFirst { it.pictureUri == selectedPicture }
         if (index != -1) {
             val picture = picList[index]
             picList.removeAt(index)
-            picList.add(
-                RealEstatePictureViewStateItem(
-                    realEstateId = null,
-                    pictureUri = picture.pictureUri,
-                    realEstatePictureName = picture.realEstatePictureName,
-                    isStored = false,
-                    isEdited = false,
-                    toDelete =!picture.toDelete,
-                    onRealEstatePictureClicked = {
-                        Log.e("MyViewModel", "Error occurred while doing something")
-                    },
-                    onRealEstatePictureLongPress = {
-                        selectedPicture = picture.pictureUri
-                        notifyPictureToDelete()
-                    },
-                    onRealEstatePictureDeleteClicked = {
-                        deletePictureSelected()
-                    },
-                    onRealEstatePictureDeleteLongPress = {
-                        selectedPicture = picture.pictureUri
-                        notifyPictureToDelete()
-                    },
-                    onRealEstatePictureNameClicked = {
-                        selectedPicture = picture.pictureUri
-                        notifyPictureIsEdited()
-                    }
-                ) )
+            picList.add(RealEstatePictureViewStateItem(realEstateId = null,
+                pictureUri = picture.pictureUri,
+                realEstatePictureName = picture.realEstatePictureName,
+                isStored = false,
+                isEdited = false,
+                toDelete = !picture.toDelete,
+                onRealEstatePictureLongPress = {
+                    selectedPicture = picture.pictureUri
+                    notifyPictureToDelete()
+                },
+                onRealEstatePictureDeleteClicked = {
+                    deletePictureSelected()
+                },
+                onRealEstatePictureDeleteLongPress = {
+                    selectedPicture = picture.pictureUri
+                    notifyPictureToDelete()
+                },
+                onRealEstatePictureNameClicked = {
+                    selectedPicture = picture.pictureUri
+                    notifyPictureIsEdited()
+                }))
 
-            tempPictureListItemLiveData.value = picList
+            realEstateAddOrEditViewStateLiveData.value =
+                updateItemWith(RealEstateAddOrEditViewState(pictureItemList = picList))
         }
     }
 
     fun onAgentSelected(agentId: Long) {
-        realEstateAddOrEditViewState.estateAgentId = agentId
+        realEstateAddOrEditViewStateLiveData.value =
+            updateItemWith(RealEstateAddOrEditViewState(estateAgentId = agentId))
     }
 
     fun onSaveRealEstateClicked() {
 
+        //get input data from viewPager (Address + Specifications)
         val viewPagerInfos = realEstateRepository.realEstateViewPagerInfosStateItem
-        val picList = tempPictureListItemLiveData.value
-        var realEstateIdCreated:Long? = null
+        //get pictureList currently loaded on view
+        val picList = realEstateAddOrEditViewStateLiveData.value?.pictureItemList
+        //insert (null) or update(!=null) in room
+        val oldRealEstateWithPictureEntity = realEstateWithPictureFromIdLiveData.value
+        var realEstateIdToSave: Long? = selectedRealEstateId
 
-        if(allFieldsNonNull(viewPagerInfos) && realEstateAddOrEditViewState.estateAgentId!=null) {
-        viewModelScope.launch(coroutineDispatcherProvider.io) {
+        if ((allFieldsNonNull(viewPagerInfos) && realEstateAddOrEditViewStateLiveData.value?.estateAgentId != null) || realEstateIdToSave!=null) {
+            viewModelScope.launch(coroutineDispatcherProvider.io) {
 
-            val realEstateAddress = Address(
-                street = viewPagerInfos.street!!,
-                city = viewPagerInfos.city!!,
-                state = viewPagerInfos.state!!,
-                zipCode = viewPagerInfos.zipcode!!
-            )
-
-            val realEstateCoordinate = getCoordinateRealEstateUseCase.invoke(realEstateAddress)
-
-            if(realEstateCoordinate!=null){
-
-            val thumbnail = getThumbnailRealEstateUseCase.invoke(realEstateCoordinate)
-
-            if(thumbnail!=null){
-            realEstateIdCreated = insertRealEstateUseCase.invoke(
-                RealEstateEntity(
-                    estateAgentId = realEstateAddOrEditViewState.estateAgentId!!,
-                    propertyType = realEstateAddOrEditViewState.propertyType ?: "Unknown",
-                    price = viewPagerInfos.price ?: 0.0,
-                    surfaceArea = viewPagerInfos.surfaceArea ?: 0.0,
-                    numberOfRooms = viewPagerInfos.numberOfRooms ?: 0,
-                    numberOfBedrooms = viewPagerInfos.numberOfBedrooms ?: 0,
-                    description = realEstateAddOrEditViewState.description ?: "No Description.",
-                    thumbnail = thumbnail,
-                    address = realEstateAddress,
-                    coordinates= "${realEstateCoordinate.latitude},${realEstateCoordinate.longitude}",
-                    pointsOfInterest = realEstateAddOrEditViewState.pointsOfInterest ?: ArrayList(),
-                    marketEntryDate = realEstateAddOrEditViewState.marketEntryDate ?: Date(),
-                    saleDate = realEstateAddOrEditViewState.saleDate ?: Date()
+                val realEstateAddress = Address(
+                    street = viewPagerInfos.street!!,
+                    city = viewPagerInfos.city!!,
+                    state = viewPagerInfos.state!!,
+                    zipCode = viewPagerInfos.zipcode!!
                 )
-            )}}
 
-            //PictureEntities to Room
+                var thumbnail: Bitmap? = null
+                var realEstateCoordinate: LatLng? = null
 
-            if (picList!=null && realEstateIdCreated!=null && picList.isNotEmpty()){
-                storeEstatePicturesUseCase.invoke(picList, realEstateIdCreated)
-            }
-
-            val success = insertEstatePictureUserCase.invoke(
-               realEstateRepository.estatePicturesListEntityMutableStateFlow.value!!
-            )
-
-            withContext(coroutineDispatcherProvider.main) {
-                realEstateAddFragSingleLiveEvent.value = if (success) {
-                    RealEstateAddOrEditEvent.CloseFragment
-                } else {
-                    RealEstateAddOrEditEvent.DisplaySnackBarMessage(NativeText.Resource(R.string.cant_insert_real_estate))
+                //If in edit mode and Address the same, skip the Api calls for coordinate and thumbnail
+                if(realEstateIdToSave==null || realEstateAddress!=oldRealEstateWithPictureEntity?.realEstateEntity?.address ) {
+                    //get Coordinate from Address
+                    realEstateCoordinate = getCoordinateRealEstateUseCase.invoke(realEstateAddress)
+                    if (realEstateCoordinate != null) {
+                        //get thumbnail Bitmap from coordinate
+                        thumbnail = getThumbnailRealEstateUseCase.invoke(realEstateCoordinate)
+                    }
                 }
+
+                //Then insert the realEstateEntity in Room:
+                        if (realEstateIdToSave==null && thumbnail != null && realEstateCoordinate!=null) {//Insert realEstate entity in room
+                            realEstateIdToSave = insertRealEstateUseCase.invoke(RealEstateEntity(
+                                estateAgentId = realEstateAddOrEditViewStateLiveData.value?.estateAgentId!!,
+                                propertyType = realEstateAddOrEditViewStateLiveData.value?.propertyType
+                                    ?: "Unknown",
+                                price = viewPagerInfos.price ?: 0.0,
+                                surfaceArea = viewPagerInfos.surfaceArea ?: 0.0,
+                                numberOfRooms = viewPagerInfos.numberOfRooms ?: 0,
+                                numberOfBedrooms = viewPagerInfos.numberOfBedrooms ?: 0,
+                                description = realEstateAddOrEditViewStateLiveData.value?.description
+                                    ?: "No Description.",
+                                thumbnail = thumbnail,
+                                address = realEstateAddress,
+                                coordinates = "${realEstateCoordinate.latitude},${realEstateCoordinate.longitude}",
+                                pointsOfInterest = realEstateAddOrEditViewStateLiveData.value?.pointsOfInterest
+                                    ?: ArrayList(),
+                                marketEntryDate = realEstateAddOrEditViewStateLiveData.value?.marketEntryDate?.let {
+                                    toDateFormat(it)
+                                } ?: Date(),
+                                saleDate = realEstateAddOrEditViewStateLiveData.value?.saleDate?.let {
+                                    toDateFormat(it)
+                                } ?: Date()))
+                        }else{//or Update It...
+
+                            val lat = realEstateCoordinate?.latitude ?: oldRealEstateWithPictureEntity?.realEstateEntity!!.coordinates.split(",")[0]
+                            val long = realEstateCoordinate?.longitude ?: oldRealEstateWithPictureEntity?.realEstateEntity!!.coordinates.split(",")[1]
+
+                            updateRealEstateUseCase.invoke(RealEstateEntity(
+                                id= realEstateWithPictureFromIdLiveData.value!!.realEstateEntity.id,
+                                estateAgentId = realEstateAddOrEditViewStateLiveData.value?.estateAgentId!!,
+                                propertyType = realEstateAddOrEditViewStateLiveData.value?.propertyType
+                                    ?: "Unknown",
+                                price = viewPagerInfos.price ?: realEstateWithPictureFromIdLiveData.value!!.realEstateEntity.price,
+                                surfaceArea = viewPagerInfos.surfaceArea ?: realEstateWithPictureFromIdLiveData.value!!.realEstateEntity.surfaceArea,
+                                numberOfRooms = viewPagerInfos.numberOfRooms ?: realEstateWithPictureFromIdLiveData.value!!.realEstateEntity.numberOfRooms,
+                                numberOfBedrooms = viewPagerInfos.numberOfBedrooms ?: realEstateWithPictureFromIdLiveData.value!!.realEstateEntity.numberOfBedrooms,
+                                description = realEstateAddOrEditViewStateLiveData.value?.description
+                                    ?: "No Description.",
+                                thumbnail = thumbnail ?: oldRealEstateWithPictureEntity?.realEstateEntity!!.thumbnail,
+                                address = realEstateAddress,
+                                coordinates = "$lat,$long",
+                                pointsOfInterest = realEstateAddOrEditViewStateLiveData.value?.pointsOfInterest
+                                    ?: ArrayList(),
+                                marketEntryDate = realEstateAddOrEditViewStateLiveData.value?.marketEntryDate?.let {
+                                    toDateFormat(it)
+                                } ?: Date(),
+                                saleDate = realEstateAddOrEditViewStateLiveData.value?.saleDate?.let {
+                                    toDateFormat(it)
+                                } ?: Date())
+                            )
+                        }
+
+
+
+                //PictureEntities to Room and storage
+
+                if (picList != null && realEstateIdToSave != null) {
+
+                    var pictureListAlreadyStored: List<RealEstatePictureViewStateItem> = emptyList()
+
+                    if(oldRealEstateWithPictureEntity?.estatePictureEntities!=null) {//Case only when in editMode
+
+                        pictureListAlreadyStored = picList.filter { pictureFromView ->
+                            oldRealEstateWithPictureEntity.estatePictureEntities.any { oldEntity ->
+                                Uri.parse("file://${oldEntity.path}") == pictureFromView.pictureUri
+                            }
+                        }
+
+                        val picturesToDelete =  oldRealEstateWithPictureEntity.estatePictureEntities.filterNot { oldEntity ->
+                            picList.any { pictureFromView ->
+                                Uri.parse("file://${oldEntity.path}") == pictureFromView.pictureUri
+                            }
+                        }
+                        //Delete picture(s) in room and storage
+                        if(picturesToDelete.isNotEmpty()) deleteEstatePictureUseCase.invoke(picturesToDelete)
+                        //if the tag isStored as been lost (false), an update on room is needed
+                        val picturesToUpdate = pictureListAlreadyStored.filter { !it.isStored }
+                        //Update picture(s) in room.
+                        if(picturesToUpdate.isNotEmpty()) updateEstatePictureUseCase.invoke(picturesToUpdate.map { stateItem ->
+                            EstatePictureEntity(
+                           id = oldRealEstateWithPictureEntity.estatePictureEntities.find { it.path == stateItem.pictureUri.path }?.id!!,
+                           realEstateId = oldRealEstateWithPictureEntity.estatePictureEntities.find { it.path == stateItem.pictureUri.path }?.realEstateId!!,
+                           name= stateItem.realEstatePictureName,
+                           path= stateItem.pictureUri.path!!
+                            )
+                        })
+                    }
+
+                    val pictureToSave = picList - pictureListAlreadyStored.toSet()
+
+                    //SaveEntityToRoom and storage
+                    if(pictureToSave.isNotEmpty()) storeEstatePicturesUseCase.invoke(pictureToSave, realEstateIdToSave)
+
+                }
+
+                val success = insertEstatePictureUserCase.invoke(
+                    realEstateRepository.estatePicturesListEntityMutableStateFlow.value!!
+                )
+
+                withContext(coroutineDispatcherProvider.main) {
+                    realEstateAddFragSingleLiveEvent.value = if (success) {
+                        RealEstateAddOrEditEvent.CloseFragment
+                    } else {
+                        RealEstateAddOrEditEvent.DisplaySnackBarMessage(NativeText.Resource(R.string.cant_insert_real_estate))
+                    }
+                }
+
             }
 
+        } else {
+            realEstateAddFragSingleLiveEvent.value =
+                RealEstateAddOrEditEvent.DisplaySnackBarMessage(
+                    NativeText.Resource(
+                        R.string.please_provide_all_infos
+                    )
+                )
         }
-
-    }else{
-        realEstateAddFragSingleLiveEvent.value = RealEstateAddOrEditEvent.DisplaySnackBarMessage(NativeText.Resource(
-        R.string.please_provide_all_infos))}
     }
 
     fun onTypeOfPropertySelected(typeOfProperty: String) {
-        realEstateAddOrEditViewState.propertyType = typeOfProperty
+        realEstateAddOrEditViewStateLiveData.value =
+            updateItemWith(RealEstateAddOrEditViewState(propertyType = typeOfProperty))
     }
 
     fun onChipSelected(listOfTypeSelected: List<String>) {
-    realEstateAddOrEditViewState.pointsOfInterest = ArrayList(listOfTypeSelected)
+        realEstateAddOrEditViewStateLiveData.value = updateItemWith(
+            RealEstateAddOrEditViewState(
+                pointsOfInterest = ArrayList(
+                    listOfTypeSelected
+                )
+            )
+        )
     }
 
     fun onDescriptionChanged(description: String) {
-        realEstateAddOrEditViewState.description = description
+        /*realEstateAddOrEditViewStateLiveData.value =
+            updateItemWith(RealEstateAddOrEditViewState(description = description))*/
+        realEstateAddOrEditViewStateLiveData.value?.description = description//To not enter in infinite loop when StateItem is updated and watched in the same time.
     }
 
     fun onEntryDateSelected(entryDate: String) {
-        realEstateAddOrEditViewState.marketEntryDate = toDateFormat(entryDate)
+        realEstateAddOrEditViewStateLiveData.value =
+            updateItemWith(RealEstateAddOrEditViewState(marketEntryDate = entryDate))
     }
 
     fun onSaleDateSelected(saleDate: String) {
-        realEstateAddOrEditViewState.saleDate = toDateFormat(saleDate)
+        realEstateAddOrEditViewStateLiveData.value =
+            updateItemWith(RealEstateAddOrEditViewState(saleDate = saleDate))
     }
 
     fun notifyFragmentNav() {
-    sharedRepository.fragmentStateFlow.value = NavigationEvent.AddOrEditRealEstateFragment
+        sharedRepository.fragmentStateFlow.value = NavigationEvent.AddOrEditRealEstateFragment
     }
 
     val realEstateAddFragSingleLiveEvent = SingleLiveEvent<RealEstateAddOrEditEvent>()

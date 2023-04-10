@@ -1,6 +1,8 @@
 package fr.melanoxy.realestatemanager.data.repositories
 
 import android.content.Context
+import fr.melanoxy.realestatemanager.data.dao.EstatePictureDao
+import fr.melanoxy.realestatemanager.domain.estatePicture.DeleteEstatePictureUseCase
 import fr.melanoxy.realestatemanager.domain.estatePicture.EstatePictureEntity
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.viewPagerInfos.RealEstateViewPagerInfosStateItem
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstatePictureRv.RealEstatePictureViewStateItem
@@ -13,7 +15,8 @@ import javax.inject.Singleton
 
 @Singleton
 class RealEstateRepository @Inject constructor(
-    private val context: Context
+    private val context: Context,
+    private val estatePictureDao: EstatePictureDao
 ) {
 
     private val selectedRealEstateIdMutableStateFlow = MutableStateFlow<Long?>(null)
@@ -89,8 +92,17 @@ class RealEstateRepository @Inject constructor(
 
     }
 
+    suspend fun deleteEstatePictureEntities(
+        estatePictureList: List<EstatePictureEntity>
+    ) {
+        estatePictureList.forEach {
+            if(File(it.path).delete()) estatePictureDao.delete(it.id)
+        }
+    }
+
     fun setSelectedRealEstateId(id: Long?) {
-        selectedRealEstateIdMutableStateFlow.value = id
+        if(selectedRealEstateIdMutableStateFlow.value!= id) selectedRealEstateIdMutableStateFlow.value = id
+        else selectedRealEstateIdMutableStateFlow.value = null
     }
 
 }

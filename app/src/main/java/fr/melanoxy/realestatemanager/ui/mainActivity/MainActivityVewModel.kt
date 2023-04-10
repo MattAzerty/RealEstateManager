@@ -25,7 +25,7 @@ class MainActivityViewModel @Inject constructor(
         sharedRepository.isTablet(isTablet)
         this.isTablet = isTablet
         //StartLocation on permission granted
-        if (permissionChecker.hasLocationPermission()) {
+        if (permissionChecker.hasLocationPermission() && sharedRepository.fragmentStateFlow.value == NavigationEvent.RealEstateMapFragment) {
             locationRepository.startLocationRequest()
         } else {
             locationRepository.stopLocationRequest()

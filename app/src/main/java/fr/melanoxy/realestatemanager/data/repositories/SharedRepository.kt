@@ -25,9 +25,11 @@ val fragmentStateFlow= MutableStateFlow<NavigationEvent>(NavigationEvent.RealEst
         when (fragmentStateFlow.value) {
         NavigationEvent.AddOrEditRealEstateFragment -> entryDatePickedChannelFromAddOrEdit.trySend(entryDatePicked)
         NavigationEvent.RealEstateListFragment -> entryDatePickedChannelFromSearchBar.trySend(entryDatePicked)
+        else -> {}
+        }
     }
-    }
-//SALE DATE PICKER
+
+    //SALE DATE PICKER
     val saleDatePickedChannelFromAddOrEdit = Channel<String>()
     val saleDatePickedChannelFromSearchBar = Channel<String>()
 
@@ -39,6 +41,7 @@ val fragmentStateFlow= MutableStateFlow<NavigationEvent>(NavigationEvent.RealEst
             NavigationEvent.RealEstateListFragment -> saleDatePickedChannelFromSearchBar.trySend(
                 saleDatePicked
             )
+            else -> {}
         }
     }
 //TABLET MODE DATA

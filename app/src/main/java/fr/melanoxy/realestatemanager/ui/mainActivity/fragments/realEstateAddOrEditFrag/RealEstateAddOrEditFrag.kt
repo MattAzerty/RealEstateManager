@@ -6,8 +6,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.text.Editable
-import android.text.TextWatcher
 import android.transition.ChangeBounds
 import android.transition.Transition
 import android.transition.TransitionInflater
@@ -18,6 +16,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
@@ -25,27 +24,20 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
-import androidx.core.widget.doOnTextChanged
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.chip.Chip
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.databinding.FragmentRealEstateAddBinding
 import fr.melanoxy.realestatemanager.ui.mainActivity.MainEventListener
-import fr.melanoxy.realestatemanager.ui.mainActivity.NavigationEvent
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.realEstateSpinners.AddAgentSpinnerAdapter
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.viewPagerInfos.ViewPagerInfosAdapter
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.RealEstateListFrag
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstatePictureRv.RealEstatePictureAdapter
-import fr.melanoxy.realestatemanager.ui.utils.CAMERA_PERMISSION
-import fr.melanoxy.realestatemanager.ui.utils.REAL_ESTATE_TYPES
-import fr.melanoxy.realestatemanager.ui.utils.exhaustive
-import fr.melanoxy.realestatemanager.ui.utils.viewBinding
-import java.text.SimpleDateFormat
-import java.util.*
+import fr.melanoxy.realestatemanager.ui.utils.*
 
 
 @AndroidEntryPoint
@@ -112,8 +104,8 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
         bindAutoCompleteText()
         bindChips()
         bindButtons()
-        bindRv()
         bindTv()
+        bindView()
 
         viewModel.realEstateAddFragSingleLiveEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
@@ -143,7 +135,6 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
         binding.createNewRealEstateChipGroup.setOnCheckedStateChangeListener { _, checkedIds ->
             val chipGroup = binding.createNewRealEstateChipGroup
             val chipNameList = mutableListOf<String>()
-
             for (id in checkedIds) {
                 val chip = chipGroup.findViewById<Chip>(id)
                 chipNameList.add(chip.text.toString())
@@ -161,7 +152,7 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
                 viewModel.onAgentSelected(it.agentId)
             }
         }
-        viewModel.agentViewStateLiveData.observe(viewLifecycleOwner) { agentViewState ->
+        viewModel.agentListViewStateLiveData.observe(viewLifecycleOwner) { agentViewState ->
             adapterForAgent.setData(agentViewState)
             //Type
             val adapterForType =
@@ -177,8 +168,9 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
 
     private fun bindTv() {
 
-        binding.createNewRealEstateInputDescription.doOnTextChanged { text, _, _, _ ->
-            if(!text.isNullOrEmpty()) viewModel.onDescriptionChanged(text.toString())
+        binding.createNewRealEstateInputDescription.doAfterTextChanged {
+            if(!it.isNullOrEmpty())
+                viewModel.onDescriptionChanged(it.toString())
         }
 
         binding.createNewRealEstateTlChangePictureName.setEndIconOnClickListener {
@@ -224,11 +216,29 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
     }
 
 
-    private fun bindRv() {
+    private fun bindView() {
         val adapter = RealEstatePictureAdapter()
         binding.createNewRealEstateRecyclerView.adapter = adapter
-        viewModel.realEstatePicturesLiveData.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+        viewModel.realEstateItemLiveData.observe(viewLifecycleOwner) {
+        if(it?.estateAgentId !=null) {
+            binding.createNewRealEstateAutoCompleteTextViewAgents.setText("${ESTATE_AGENTS[it.estateAgentId.toInt() - 1].firstName} ${ESTATE_AGENTS[it.estateAgentId.toInt() - 1].lastName}")//TODO with position?
+            binding.createNewRealEstateAutoCompleteTextViewType.setText(it.propertyType)
+            //binding.createNewRealEstateAutoCompleteTextViewType.performCompletion()
+            it.pointsOfInterest?.let { poi -> checkChips(poi) }
+            binding.createNewRealEstateInputDescription.setText(it.description, TextView.BufferType.EDITABLE)//TODO infinite loop
+            adapter.submitList(it.pictureItemList)//rv
+            binding.createNewRealEstateButtonMarketEntryDate.text =
+                it.marketEntryDate ?: resources.getText(R.string.entryDate)//entryDate
+            binding.createNewRealEstateButtonSaleDate.text =
+                it.saleDate ?: resources.getText(R.string.saleDate)//saleDate
+        }
+        }
+    }
+
+    private fun checkChips(pointsOfInterest: ArrayList<String>) {
+        pointsOfInterest.forEach {
+            val chip = binding.createNewRealEstateChipGroup.findViewWithTag<Chip>(it)
+            chip.isChecked =true
         }
     }
 

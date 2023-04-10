@@ -16,6 +16,9 @@ import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
 import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.databinding.FragmentRealEstateMapBinding
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateDetailsFrag.RealEstateDetailsFrag
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.RealEstateListFrag
+import fr.melanoxy.realestatemanager.ui.utils.exhaustive
 import fr.melanoxy.realestatemanager.ui.utils.viewBinding
 
 @AndroidEntryPoint
@@ -27,13 +30,48 @@ class RealEstateMapFrag : Fragment(R.layout.fragment_real_estate_map),
     private val binding by viewBinding { FragmentRealEstateMapBinding.bind(it) }
     private val viewModel by viewModels<RealEstateMapViewModel>()
     private var myPositionMaker: Marker? = null
+    private lateinit var mMap: GoogleMap
     private val realEstatesMarker: List<Marker> = ArrayList()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        viewModel.notifyFragmentNav()
+        //FAB
+        binding.fragmentRealEstateMapFabPosition
+            .setOnClickListener {viewModel.onFabButtonClicked(R.id.fragment_real_estate_map_fab_position)}
+        binding.fragmentRealEstateMapFabClose
+            .setOnClickListener {viewModel.onFabButtonClicked(R.id.fragment_real_estate_map_fab_close)}
+        //googleMap
         binding.googleMapView.onCreate(savedInstanceState)
         binding.googleMapView.getMapAsync(this)
+        //Event
+        viewModel.singleLiveRealEstateMapEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                RealEstateMapEvent.CloseFragment -> closeFragment()
+                RealEstateMapEvent.CloseSecondPaneFragment -> closeSecondPaneFragment()
+                RealEstateMapEvent.CenterCameraOnUserPosition -> centerCameraOnPosition()
+            }.exhaustive
+
+        }
+
+    }
+
+    private fun closeSecondPaneFragment() {
+        val transaction = parentFragmentManager.beginTransaction()
+        transaction.replace(R.id.main_FrameLayout_container_details, RealEstateDetailsFrag())
+        transaction.commit()
+    }
+
+    private fun centerCameraOnPosition() {
+        val markerLatLng = LatLng(myPositionMaker?.position?.latitude ?:0.0, myPositionMaker?.position?.longitude ?:0.0)
+        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(markerLatLng, 15f)
+        mMap.animateCamera(cameraUpdate)
+    }
+
+    private fun closeFragment() {
+        val transaction = parentFragmentManager.beginTransaction()
+        transaction.replace(R.id.activity_main_FrameLayout_container_real_estate_list, RealEstateListFrag())
+        transaction.commit()
     }
 
     override fun onResume() {
@@ -48,7 +86,7 @@ class RealEstateMapFrag : Fragment(R.layout.fragment_real_estate_map),
 
     /*override fun onDestroy() {
         super.onDestroy()
-        binding.googleMapView.onDestroy()
+        viewModel.stop
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -66,6 +104,8 @@ class RealEstateMapFrag : Fragment(R.layout.fragment_real_estate_map),
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
+
+        mMap = googleMap
 
         viewModel.userPositionLiveData.observe(viewLifecycleOwner) {
             if(it!=null){
