@@ -178,11 +178,11 @@ class RealEstateAddOrEditViewModel @Inject constructor(
                         estateEntity.realEstateEntity.marketEntryDate.time
                     )
                 ),
-                saleDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(
-                    Date(
-                        estateEntity.realEstateEntity.saleDate.time
+                saleDate = estateEntity.realEstateEntity.saleDate?.let {
+                    SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(
+                        Date(it.time)
                     )
-                )
+                }
             )
             realEstateAddOrEditViewStateLiveData.value = itemViewState
 
@@ -520,7 +520,7 @@ class RealEstateAddOrEditViewModel @Inject constructor(
                                 } ?: Date(),
                                 saleDate = realEstateAddOrEditViewStateLiveData.value?.saleDate?.let {
                                     toDateFormat(it)
-                                } ?: Date()))
+                                } ))
                         }else{//or Update It...
 
                             val lat = realEstateCoordinate?.latitude ?: oldRealEstateWithPictureEntity?.realEstateEntity!!.coordinates.split(",")[0]
@@ -547,11 +547,9 @@ class RealEstateAddOrEditViewModel @Inject constructor(
                                 } ?: Date(),
                                 saleDate = realEstateAddOrEditViewStateLiveData.value?.saleDate?.let {
                                     toDateFormat(it)
-                                } ?: Date())
+                                } )
                             )
                         }
-
-
 
                 //PictureEntities to Room and storage
 
@@ -594,11 +592,12 @@ class RealEstateAddOrEditViewModel @Inject constructor(
 
                 }
 
-                val success = insertEstatePictureUserCase.invoke(
-                    realEstateRepository.estatePicturesListEntityMutableStateFlow.value!!
-                )
+                val success = if(realEstateRepository.estatePicturesListEntityMutableStateFlow.value!=null) {insertEstatePictureUserCase.invoke(
+                    realEstateRepository.estatePicturesListEntityMutableStateFlow.value!!)}else true
+
 
                 withContext(coroutineDispatcherProvider.main) {
+                    realEstateRepository.setSelectedRealEstateId(null)
                     realEstateAddFragSingleLiveEvent.value = if (success) {
                         RealEstateAddOrEditEvent.CloseFragment
                     } else {

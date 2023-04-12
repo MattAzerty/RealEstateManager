@@ -11,6 +11,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.databinding.ActivityMainBinding
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.RealEstateAddOrEditFrag
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateDetailsFrag.RealEstateDetailsFrag
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.RealEstateListFrag
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateMapFrag.RealEstateMapFrag
@@ -41,11 +42,11 @@ class MainActivity : AppCompatActivity(), MainEventListener {
                 .commitNow()
         }
         //To avoid duplicated DetailsFragment
-        val containerMasterId =binding.activityMainFrameLayoutContainerRealEstateList.id
-        if (containerDetailsId != null && (supportFragmentManager.findFragmentById(containerMasterId) is RealEstateDetailsFrag ||
-                    supportFragmentManager.findFragmentById(containerMasterId) is RealEstateMapFrag)) {
+        val containerMainId =binding.activityMainFrameLayoutContainerRealEstateList.id
+        if (containerDetailsId != null && (supportFragmentManager.findFragmentById(containerMainId) is RealEstateDetailsFrag ||
+                    supportFragmentManager.findFragmentById(containerMainId) is RealEstateMapFrag)) {
             supportFragmentManager.beginTransaction()
-                .replace(containerMasterId, RealEstateListFrag())
+                .replace(containerMainId, RealEstateListFrag())
                 .commitNow()
         }
     }
@@ -82,9 +83,37 @@ class MainActivity : AppCompatActivity(), MainEventListener {
         pickerEntryDate.show(supportFragmentManager, "DATE_PICKER")
     }
 
+    override fun switchMainPane(id: Int) {
+        val fragTransaction = supportFragmentManager.beginTransaction()
+        when(id){
+            R.layout.fragment_real_estate_list -> fragTransaction.replace(binding.activityMainFrameLayoutContainerRealEstateList.id, RealEstateListFrag())
+            R.layout.fragment_real_estate_add -> fragTransaction.replace(binding.activityMainFrameLayoutContainerRealEstateList.id, RealEstateAddOrEditFrag())
+            R.layout.fragment_real_estate_map -> fragTransaction.replace(binding.activityMainFrameLayoutContainerRealEstateList.id, RealEstateMapFrag())
+            R.layout.fragment_real_estate_details -> {
+                fragTransaction.replace(binding.activityMainFrameLayoutContainerRealEstateList.id, RealEstateDetailsFrag())
+                fragTransaction.addToBackStack(null)//TODO add at each call?
+            }
+        }
+        fragTransaction.commit()
+    }
+
+    override fun switchSecondPane(id: Int) {
+        val fragTransaction = supportFragmentManager.beginTransaction()
+        when(id){
+        R.layout.fragment_real_estate_map -> binding.mainFrameLayoutContainerDetails?.id?.let {
+            fragTransaction.replace(
+                it, RealEstateMapFrag())
+        }
+        R.layout.fragment_real_estate_details -> {
+            binding.mainFrameLayoutContainerDetails?.id?.let {fragTransaction.replace(it, RealEstateDetailsFrag())}
+            if(supportFragmentManager.findFragmentById(binding.activityMainFrameLayoutContainerRealEstateList.id) is RealEstateDetailsFrag)switchMainPane(R.layout.fragment_real_estate_list)
+        }
+        }
+        fragTransaction.commit()
+    }
+
     override fun onResume() {
         super.onResume()
         viewModel.onResume(resources.getBoolean(R.bool.isTablet))
     }
-
 }

@@ -19,7 +19,7 @@ class RealEstateRepository @Inject constructor(
     private val estatePictureDao: EstatePictureDao
 ) {
 
-    private val selectedRealEstateIdMutableStateFlow = MutableStateFlow<Long?>(null)
+    private val selectedRealEstateIdMutableStateFlow = MutableStateFlow<Long?>(1)
     val selectedRealEstateIdStateFlow = selectedRealEstateIdMutableStateFlow.asStateFlow()
     val estatePicturesListEntityMutableStateFlow = MutableStateFlow<List<EstatePictureEntity>?>(null)
 

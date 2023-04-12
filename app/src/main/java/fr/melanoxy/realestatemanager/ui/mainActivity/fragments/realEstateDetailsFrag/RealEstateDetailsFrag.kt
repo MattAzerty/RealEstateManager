@@ -44,6 +44,7 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         viewModel.isTabletLiveData.observe(viewLifecycleOwner) { isTablet ->
             when(isTablet){
                 false ->  adaptDetailsView()
@@ -57,10 +58,12 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
                 is RealEstateDetailsEvent.DisplaySnackBarMessage -> eventListener.displaySnackBarMessage(
                     event.message.toCharSequence(requireContext())
                 )
+                is RealEstateDetailsEvent.CloseFragment -> eventListener.switchMainPane(event.layoutId)
                 RealEstateDetailsEvent.ShowSaleDatePicker -> eventListener.showDatePicker(R.string.saleDate)
                 RealEstateDetailsEvent.ShowMarketEntryDatePicker -> eventListener.showDatePicker(R.string.entryDate)
                 RealEstateDetailsEvent.ShowSearchBarKeyboard -> showSearchBarKeyboard()
                 RealEstateDetailsEvent.ShowPOISelector -> binding.searchBarChipGroupHvPoi.visibility = View.VISIBLE
+                RealEstateDetailsEvent.PopToBackStack -> requireActivity().supportFragmentManager.popBackStack()
             }.exhaustive
         }
 
@@ -85,18 +88,7 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
 
         binding.searchBarDropdownMenu.setOnClickListener {
             viewModel.onCloseFragmentClicked()
-            closeFragment()
         }
-    }
-
-    private fun closeFragment() {
-        //requireActivity().supportFragmentManager.popBackStackImmediate()
-        val transaction = requireActivity().supportFragmentManager.beginTransaction()
-        transaction.replace(
-            R.id.activity_main_FrameLayout_container_real_estate_list,
-            RealEstateListFrag()
-        )
-        transaction.commit()
     }
 
     private fun bindView() {
@@ -146,6 +138,7 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
             when (event) {
                 NavigationEvent.RealEstateListFragment -> expand()
                 NavigationEvent.AddOrEditRealEstateFragment -> collapse()
+                NavigationEvent.RealEstateDetailsFragment -> closeMode()
                 else -> {}
             }
         }
@@ -205,6 +198,16 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
                 binding.searchBarInputText.text.append(it)
                 viewModel.onAddChipCriteria(binding.searchBarInputText.text.trim().toString())
             }}
+    }
+
+    private fun closeMode() {
+        collapse()
+        binding.searchBarCardContainer.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorAccent))
+        binding.searchBarCardContainer.strokeColor = ContextCompat.getColor(requireContext(), R.color.colorAccent)
+        binding.searchBarSearchIcon.setImageResource(R.drawable.vc_view_list_white_24dp)
+        binding.searchBarSearchIcon.setOnClickListener {
+            viewModel.onCloseFragmentClicked()
+        }
     }
 
     private fun expand() {

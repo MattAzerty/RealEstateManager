@@ -1,7 +1,14 @@
 package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateMapFrag
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -9,15 +16,11 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import dagger.hilt.android.AndroidEntryPoint
 import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.databinding.FragmentRealEstateMapBinding
-import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateDetailsFrag.RealEstateDetailsFrag
-import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.RealEstateListFrag
+import fr.melanoxy.realestatemanager.ui.mainActivity.MainEventListener
 import fr.melanoxy.realestatemanager.ui.utils.exhaustive
 import fr.melanoxy.realestatemanager.ui.utils.viewBinding
 
@@ -29,9 +32,16 @@ class RealEstateMapFrag : Fragment(R.layout.fragment_real_estate_map),
 
     private val binding by viewBinding { FragmentRealEstateMapBinding.bind(it) }
     private val viewModel by viewModels<RealEstateMapViewModel>()
+    private lateinit var eventListener: MainEventListener
     private var myPositionMaker: Marker? = null
+    private val realEstateMarkers: MutableList<Marker> = mutableListOf()
+    private var mBounds: LatLngBounds? = null
     private lateinit var mMap: GoogleMap
-    private val realEstatesMarker: List<Marker> = ArrayList()
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        eventListener = context as MainEventListener
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,31 +57,18 @@ class RealEstateMapFrag : Fragment(R.layout.fragment_real_estate_map),
         //Event
         viewModel.singleLiveRealEstateMapEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
-                RealEstateMapEvent.CloseFragment -> closeFragment()
-                RealEstateMapEvent.CloseSecondPaneFragment -> closeSecondPaneFragment()
+                RealEstateMapEvent.CloseFragment -> eventListener.switchMainPane(R.layout.fragment_real_estate_list)
+                RealEstateMapEvent.CloseSecondPaneFragment -> eventListener.switchSecondPane(R.layout.fragment_real_estate_details)
                 RealEstateMapEvent.CenterCameraOnUserPosition -> centerCameraOnPosition()
+                RealEstateMapEvent.OpenDetailsFragment -> eventListener.switchMainPane(R.layout.fragment_real_estate_details)
             }.exhaustive
-
         }
-
-    }
-
-    private fun closeSecondPaneFragment() {
-        val transaction = parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.main_FrameLayout_container_details, RealEstateDetailsFrag())
-        transaction.commit()
     }
 
     private fun centerCameraOnPosition() {
         val markerLatLng = LatLng(myPositionMaker?.position?.latitude ?:0.0, myPositionMaker?.position?.longitude ?:0.0)
         val cameraUpdate = CameraUpdateFactory.newLatLngZoom(markerLatLng, 15f)
         mMap.animateCamera(cameraUpdate)
-    }
-
-    private fun closeFragment() {
-        val transaction = parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.activity_main_FrameLayout_container_real_estate_list, RealEstateListFrag())
-        transaction.commit()
     }
 
     override fun onResume() {
@@ -100,7 +97,7 @@ class RealEstateMapFrag : Fragment(R.layout.fragment_real_estate_map),
     }
 
     override fun onInfoWindowClick(marker: Marker) {
-        //TODO("Not yet implemented")
+        viewModel.onInfoWindowClicked(marker.tag as Long)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -110,18 +107,84 @@ class RealEstateMapFrag : Fragment(R.layout.fragment_real_estate_map),
         viewModel.userPositionLiveData.observe(viewLifecycleOwner) {
             if(it!=null){
                 val latLng = LatLng(it.latitude, it.longitude)
-                addMyLocationMarker(googleMap, latLng) //place on the map the userCurrentPosition
+                addMyLocationMarker(latLng) //place on the map the userCurrentPosition
 
+            }
+        }
+
+        viewModel.realEstatesPositionsLiveData.observe(viewLifecycleOwner) { realEstateMarkers ->
+            if(realEstateMarkers!=null){
+                addRealEstateMarkers(realEstateMarkers)
             }
         }
     }
 
-    private fun addMyLocationMarker(googleMap: GoogleMap, latLng: LatLng) {
+    private fun addRealEstateMarkers(realEstateMarkersStateItem: List<RealEstateMarkerStateItem>) {
+        if (realEstateMarkers.isNotEmpty()) { //If previous markers exist, we clear the map before adding updated markers
+            realEstateMarkers.clear()
+            addMyLocationMarker(myPositionMaker!!.position)
+        }
+
+        val builderBounds = LatLngBounds.Builder()
+
+        for (markerInfos in realEstateMarkersStateItem) {
+            val marker = mMap.addMarker(
+                MarkerOptions()
+                    .position(LatLng(markerInfos.coordinates.latitude, markerInfos.coordinates.longitude))
+                    .title(markerInfos.realEstateName)
+                    .snippet(markerInfos.realEstatePrice)
+                    .icon(
+                        vectorToBitmap(
+                            R.drawable.vc_apartment_white_72dp,
+                            if (markerInfos.isSold) resources.getColor(R.color.black) else resources.getColor(
+                                R.color.colorAccent
+                            )
+                        )
+                    )
+                    .infoWindowAnchor(0.5f, 0.5f)
+            )
+            builderBounds.include(marker!!.position)
+            marker.tag = markerInfos.id
+            realEstateMarkers.add(marker)
+        }
+
+        // Set a listener for marker click.
+        mMap.setOnInfoWindowClickListener(this)
+
+        //Bound camera around all cursors
+        boundsCameraAroundMarkers(builderBounds)
+    }
+
+    private fun boundsCameraAroundMarkers(builderBounds: LatLngBounds.Builder) {
+        val bounds = builderBounds.build()
+        if (mBounds != bounds) { //when bounds are new we animate the camera
+            mBounds = bounds
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50))
+        } else { //when it's a "on resume" case we don't
+            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50))
+        }
+        //mMap.setLatLngBoundsForCameraTarget(mBounds) //This set a move camera limit
+    }
+
+    private fun vectorToBitmap(@DrawableRes id: Int, @ColorInt color: Int): BitmapDescriptor? {
+        val vectorDrawable = ResourcesCompat.getDrawable(resources, id, null)
+        val bitmap = Bitmap.createBitmap(
+            vectorDrawable!!.intrinsicWidth,
+            vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bitmap)
+        vectorDrawable.setBounds(0, 0, canvas.width, canvas.height)
+        DrawableCompat.setTint(vectorDrawable, color)
+        vectorDrawable.draw(canvas)
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
+    }
+
+    private fun addMyLocationMarker(latLng: LatLng) {
         if (myPositionMaker != null) {
             myPositionMaker!!.remove() //To avoid duplicate marker
         }
 
-        myPositionMaker = googleMap.addMarker(
+        myPositionMaker = mMap.addMarker(
             MarkerOptions()
                 .position(latLng).icon(
                     BitmapDescriptorFactory
@@ -132,8 +195,8 @@ class RealEstateMapFrag : Fragment(R.layout.fragment_real_estate_map),
         )
 
         // and move the map's camera to the same location with a zoom of 15.
-        if (realEstatesMarker.isEmpty()) {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+        if (realEstateMarkers.isEmpty()) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
         }
     }
 }

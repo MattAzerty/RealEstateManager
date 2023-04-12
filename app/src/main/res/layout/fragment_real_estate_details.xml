@@ -636,7 +636,6 @@
                     android:id="@+id/real_estate_details_infos_tv_bedroom"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintWidth_min="100dp"
                     android:layout_marginRight="20dp"
                     android:paddingStart="12dp"
                     android:text="1"

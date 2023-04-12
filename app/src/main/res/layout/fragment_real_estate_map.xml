@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorAccent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout">
+    android:id="@+id/fragment_real_estate_map_cl_root">
 
     <com.google.android.gms.maps.MapView
         xmlns:tools="http://schemas.android.com/tools"

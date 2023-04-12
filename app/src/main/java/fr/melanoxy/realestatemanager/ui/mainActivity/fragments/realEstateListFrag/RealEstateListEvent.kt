@@ -3,8 +3,8 @@ package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFr
 import fr.melanoxy.realestatemanager.ui.utils.NativeText
 
 sealed class RealEstateListEvent {
-    data class ReplaceCurrentFragment(val fragmentId: Int) : RealEstateListEvent()
+    data class ReplaceCurrentFragment(val layoutId: Int) : RealEstateListEvent()
     data class DisplaySnackBarMessage(val message: NativeText) : RealEstateListEvent()
-    object ReplaceSecondPaneFragment : RealEstateListEvent()
+    data class ReplaceSecondPaneFragment(val layoutId: Int) : RealEstateListEvent()
     object RequestLocationPermission : RealEstateListEvent()
 }

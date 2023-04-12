@@ -60,8 +60,8 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
 
         viewModel.singleLiveRealEstateListEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
-                is RealEstateListEvent.ReplaceCurrentFragment -> switchFragment(event.fragmentId)
-                RealEstateListEvent.ReplaceSecondPaneFragment -> replaceSecondPane()
+                is RealEstateListEvent.ReplaceCurrentFragment -> eventListener.switchMainPane(event.layoutId)
+                is RealEstateListEvent.ReplaceSecondPaneFragment -> eventListener.switchSecondPane(event.layoutId)
                 RealEstateListEvent.RequestLocationPermission -> activityResultForLocationPermission.launch(
                     LOCATION_PERMISSION
                 )
@@ -72,12 +72,6 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
         }
 
 
-    }
-
-    private fun replaceSecondPane() {
-        val transaction = parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.main_FrameLayout_container_details, RealEstateMapFrag())
-        transaction.commit()
     }
 
     private fun isTablet() {
@@ -94,25 +88,12 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
         }
     }
 
-    private fun switchFragment(fragmentId: Int) {
-
-        val transaction = parentFragmentManager.beginTransaction()
-        when(fragmentId){
-            R.id.frag_real_estate_list_fab_add -> transaction.replace(R.id.activity_main_FrameLayout_container_real_estate_list, RealEstateAddOrEditFrag())
-            R.id.real_estate_details_cl_root -> transaction.replace(R.id.activity_main_FrameLayout_container_real_estate_list, RealEstateDetailsFrag())
-            R.id.frag_real_estate_list_fab_map -> transaction.replace(R.id.activity_main_FrameLayout_container_real_estate_list, RealEstateMapFrag())
-        }
-        //transaction.addToBackStack(null)
-        //transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        transaction.commit()
-    }
-
 
     private fun bindFab() {
         binding.fragRealEstateListFabAdd
-            .setOnClickListener {viewModel.onFabButtonClicked(R.id.frag_real_estate_list_fab_add)}//1000004
+            .setOnClickListener {viewModel.onFabButtonClicked(R.layout.fragment_real_estate_add)}
         binding.fragRealEstateListFabMap
-            .setOnClickListener {viewModel.onFabButtonClicked(R.id.frag_real_estate_list_fab_map)}//1000003
+            .setOnClickListener {viewModel.onFabButtonClicked(R.layout.fragment_real_estate_map)}
     }
 
     private fun bindSearchBar() {

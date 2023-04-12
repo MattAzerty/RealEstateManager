@@ -109,7 +109,7 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
 
         viewModel.realEstateAddFragSingleLiveEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
-                RealEstateAddOrEditEvent.CloseFragment -> closeFragment()
+                RealEstateAddOrEditEvent.CloseFragment -> eventListener.switchMainPane(R.layout.fragment_real_estate_list)
                 RealEstateAddOrEditEvent.RequestCameraPermission -> activityResultForCameraPermissions.launch(
                     CAMERA_PERMISSION
                 )
@@ -204,12 +204,6 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
         binding.createNewRealEstateBarInputText.text = barState.barText.toCharSequence(requireContext())
     }
 
-    private fun closeFragment() {
-        //requireActivity().supportFragmentManager.popBackStackImmediate()
-        val transaction = requireActivity().supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.activity_main_FrameLayout_container_real_estate_list, RealEstateListFrag())
-        transaction.commit()
-    }
 
     private fun pickMedia() {
         activityResultPickMultipleMediaFromGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
@@ -220,13 +214,13 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
         val adapter = RealEstatePictureAdapter()
         binding.createNewRealEstateRecyclerView.adapter = adapter
         viewModel.realEstateItemLiveData.observe(viewLifecycleOwner) {
-        if(it?.estateAgentId !=null) {
+            adapter.submitList(it?.pictureItemList)//rv
+            if(it?.estateAgentId !=null) {
             binding.createNewRealEstateAutoCompleteTextViewAgents.setText("${ESTATE_AGENTS[it.estateAgentId.toInt() - 1].firstName} ${ESTATE_AGENTS[it.estateAgentId.toInt() - 1].lastName}")//TODO with position?
             binding.createNewRealEstateAutoCompleteTextViewType.setText(it.propertyType)
             //binding.createNewRealEstateAutoCompleteTextViewType.performCompletion()
             it.pointsOfInterest?.let { poi -> checkChips(poi) }
             binding.createNewRealEstateInputDescription.setText(it.description, TextView.BufferType.EDITABLE)//TODO infinite loop
-            adapter.submitList(it.pictureItemList)//rv
             binding.createNewRealEstateButtonMarketEntryDate.text =
                 it.marketEntryDate ?: resources.getText(R.string.entryDate)//entryDate
             binding.createNewRealEstateButtonSaleDate.text =

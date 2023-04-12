@@ -40,5 +40,5 @@ data class RealEstateEntity(
     val coordinates:String,
     val pointsOfInterest:ArrayList<String>,
     val marketEntryDate: Date,
-    val saleDate: Date,
+    val saleDate: Date?,
 )

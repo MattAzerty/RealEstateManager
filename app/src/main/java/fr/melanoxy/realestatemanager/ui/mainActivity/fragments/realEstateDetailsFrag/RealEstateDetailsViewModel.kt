@@ -12,6 +12,7 @@ import fr.melanoxy.realestatemanager.domain.realEstateWithPictureEntity.GetRealE
 import fr.melanoxy.realestatemanager.domain.searchBar.GetCurrentFilterUseCase
 import fr.melanoxy.realestatemanager.domain.searchBar.GetFilterListTagUseCase
 import fr.melanoxy.realestatemanager.domain.searchBar.SetCurrentFilterListUseCase
+import fr.melanoxy.realestatemanager.ui.mainActivity.NavigationEvent
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstatePictureRv.RealEstatePictureViewStateItem
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateSearchBar.RealEstateSearchBarStateItem
 import fr.melanoxy.realestatemanager.ui.utils.*
@@ -20,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RealEstateDetailsViewModel @Inject constructor(
-    sharedRepository: SharedRepository,
+    private val sharedRepository: SharedRepository,
     private val realEstateRepository: RealEstateRepository,
     getFilterListTagUseCase: GetFilterListTagUseCase,
     getCurrentFilterUseCase: GetCurrentFilterUseCase,
@@ -149,5 +150,9 @@ class RealEstateDetailsViewModel @Inject constructor(
 
     fun onCloseFragmentClicked() {
         realEstateRepository.setSelectedRealEstateId(null)
+        if (!sharedRepository.isTabletStateFlow.value && sharedRepository.fragmentStateFlow.value==NavigationEvent.RealEstateDetailsFragment){
+            singleLiveRealEstateDetailsEvent.value = RealEstateDetailsEvent.PopToBackStack
+        }else{singleLiveRealEstateDetailsEvent.value = RealEstateDetailsEvent.CloseFragment(R.layout.fragment_real_estate_list)}
     }
+
 }

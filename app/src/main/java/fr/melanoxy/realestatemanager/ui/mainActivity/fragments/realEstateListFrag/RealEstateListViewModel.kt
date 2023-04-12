@@ -52,7 +52,7 @@ class RealEstateListViewModel @Inject constructor(
                     onRealEstateLongClick = {
                     realEstateRepository.setSelectedRealEstateId(it.realEstateEntity.id)
                     //same fragment and same behavior phone/tablet
-                    singleLiveRealEstateListEvent.value = RealEstateListEvent.ReplaceCurrentFragment(R.id.frag_real_estate_list_fab_add)
+                    singleLiveRealEstateListEvent.value = RealEstateListEvent.ReplaceCurrentFragment(R.layout.fragment_real_estate_add)
                 },
                 )
             }
@@ -64,7 +64,7 @@ class RealEstateListViewModel @Inject constructor(
 
     private fun onItemClicked() {
         if(!sharedRepository.isTabletStateFlow.value)
-            singleLiveRealEstateListEvent.value = RealEstateListEvent.ReplaceCurrentFragment(R.id.real_estate_details_cl_root)
+            singleLiveRealEstateListEvent.value = RealEstateListEvent.ReplaceCurrentFragment(R.layout.fragment_real_estate_details)
     }
 
     val realEstateListLiveData: LiveData<List<RealEstateViewStateItem>>
@@ -74,19 +74,19 @@ class RealEstateListViewModel @Inject constructor(
     val isTabletLiveData = sharedRepository.isTabletStateFlow.asLiveData()
     val singleLiveRealEstateListEvent = SingleLiveEvent<RealEstateListEvent>()
 
-    fun onFabButtonClicked(fabButtonId: Int) {
-        when(fabButtonId) {
-            R.id.frag_real_estate_list_fab_add -> singleLiveRealEstateListEvent.value = RealEstateListEvent.ReplaceCurrentFragment(fabButtonId)
-            R.id.frag_real_estate_list_fab_map -> {
-                if(permissionChecker.hasLocationPermission()){ showMapFragment(fabButtonId)
+    fun onFabButtonClicked(layoutId: Int) {
+        when(layoutId) {
+            R.layout.fragment_real_estate_add -> singleLiveRealEstateListEvent.value = RealEstateListEvent.ReplaceCurrentFragment(layoutId)
+            R.layout.fragment_real_estate_map -> {
+                if(permissionChecker.hasLocationPermission()){ showMapFragment(layoutId)
                 }else singleLiveRealEstateListEvent.value = RealEstateListEvent.RequestLocationPermission
             }
         }
     }
 
-    private fun showMapFragment(fabButtonId: Int) {
-        if(sharedRepository.isTabletStateFlow.value) singleLiveRealEstateListEvent.value= RealEstateListEvent.ReplaceSecondPaneFragment
-        else singleLiveRealEstateListEvent.value = RealEstateListEvent.ReplaceCurrentFragment(fabButtonId)
+    private fun showMapFragment(layoutId: Int) {
+        if(sharedRepository.isTabletStateFlow.value) singleLiveRealEstateListEvent.value= RealEstateListEvent.ReplaceSecondPaneFragment(layoutId)
+        else singleLiveRealEstateListEvent.value = RealEstateListEvent.ReplaceCurrentFragment(layoutId)
     }
 
     fun notifyFragmentNav() {
@@ -94,7 +94,7 @@ class RealEstateListViewModel @Inject constructor(
     }
 
     fun onLocationPermissionResult(permission: Boolean?) {
-        if(permission == true) showMapFragment(R.id.frag_real_estate_list_fab_map)
+        if(permission == true) showMapFragment(R.layout.fragment_real_estate_map)
         else singleLiveRealEstateListEvent.value = RealEstateListEvent.DisplaySnackBarMessage(
             NativeText.Resource(
             R.string.error_location_permission))

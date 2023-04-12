@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import fr.melanoxy.realestatemanager.domain.estateAgent.EstateAgentEntity
 import fr.melanoxy.realestatemanager.domain.realEstate.RealEstateEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -16,6 +15,9 @@ interface RealEstateDao {
 
     @Update
     suspend fun update(realEstateEntity: RealEstateEntity)
+
+    @Query("SELECT * FROM realEstate")
+    fun getAll(): Flow<List<RealEstateEntity>>
 
     @Query("SELECT * FROM realEstate WHERE id= :estateId")
     fun getRealEstateFromId(estateId:Long): Flow<RealEstateEntity>
