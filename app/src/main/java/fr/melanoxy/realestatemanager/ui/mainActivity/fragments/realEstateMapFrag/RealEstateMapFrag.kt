@@ -15,6 +15,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener
+import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
 import dagger.hilt.android.AndroidEntryPoint
@@ -78,15 +79,19 @@ class RealEstateMapFrag : Fragment(R.layout.fragment_real_estate_map),
 
     override fun onPause() {
         super.onPause()
-        binding.googleMapView.onPause()
+        binding.googleMapView.onPause()//TODO on rotation screen to avoid leaks
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+            .remove(this)
+            .commit()
     }
 
     /*override fun onDestroy() {
         super.onDestroy()
-        viewModel.stop
-    }
+        mapView?.onDestroy()
+    }*/
 
-    override fun onSaveInstanceState(outState: Bundle) {
+    /*override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         binding.googleMapView.onSaveInstanceState(outState)
     }*/
@@ -108,7 +113,6 @@ class RealEstateMapFrag : Fragment(R.layout.fragment_real_estate_map),
             if(it!=null){
                 val latLng = LatLng(it.latitude, it.longitude)
                 addMyLocationMarker(latLng) //place on the map the userCurrentPosition
-
             }
         }
 
@@ -150,7 +154,6 @@ class RealEstateMapFrag : Fragment(R.layout.fragment_real_estate_map),
 
         // Set a listener for marker click.
         mMap.setOnInfoWindowClickListener(this)
-
         //Bound camera around all cursors
         boundsCameraAroundMarkers(builderBounds)
     }
@@ -166,7 +169,7 @@ class RealEstateMapFrag : Fragment(R.layout.fragment_real_estate_map),
         //mMap.setLatLngBoundsForCameraTarget(mBounds) //This set a move camera limit
     }
 
-    private fun vectorToBitmap(@DrawableRes id: Int, @ColorInt color: Int): BitmapDescriptor? {
+    private fun vectorToBitmap(@DrawableRes id: Int, @ColorInt color: Int): BitmapDescriptor {
         val vectorDrawable = ResourcesCompat.getDrawable(resources, id, null)
         val bitmap = Bitmap.createBitmap(
             vectorDrawable!!.intrinsicWidth,

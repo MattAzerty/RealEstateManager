@@ -1,6 +1,7 @@
 package fr.melanoxy.realestatemanager.ui.mainActivity
 
 import android.content.Context
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -41,8 +42,8 @@ class MainActivity : AppCompatActivity(), MainEventListener {
                 .replace(containerDetailsId, RealEstateDetailsFrag())
                 .commitNow()
         }
-        //To avoid duplicated DetailsFragment
-        val containerMainId =binding.activityMainFrameLayoutContainerRealEstateList.id
+        //To avoid duplicated DetailsFragment or mapFragment
+        val containerMainId = binding.activityMainFrameLayoutContainerRealEstateList.id
         if (containerDetailsId != null && (supportFragmentManager.findFragmentById(containerMainId) is RealEstateDetailsFrag ||
                     supportFragmentManager.findFragmentById(containerMainId) is RealEstateMapFrag)) {
             supportFragmentManager.beginTransaction()
@@ -91,7 +92,7 @@ class MainActivity : AppCompatActivity(), MainEventListener {
             R.layout.fragment_real_estate_map -> fragTransaction.replace(binding.activityMainFrameLayoutContainerRealEstateList.id, RealEstateMapFrag())
             R.layout.fragment_real_estate_details -> {
                 fragTransaction.replace(binding.activityMainFrameLayoutContainerRealEstateList.id, RealEstateDetailsFrag())
-                fragTransaction.addToBackStack(null)//TODO add at each call?
+                fragTransaction.addToBackStack("map")//TODO add at each call?
             }
         }
         fragTransaction.commit()

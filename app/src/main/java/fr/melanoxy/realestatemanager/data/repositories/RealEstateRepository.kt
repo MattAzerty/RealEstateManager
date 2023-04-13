@@ -101,8 +101,7 @@ class RealEstateRepository @Inject constructor(
     }
 
     fun setSelectedRealEstateId(id: Long?) {
-        if(selectedRealEstateIdMutableStateFlow.value!= id) selectedRealEstateIdMutableStateFlow.value = id
-        else selectedRealEstateIdMutableStateFlow.value = null
+        selectedRealEstateIdMutableStateFlow.value = id
     }
 
 }

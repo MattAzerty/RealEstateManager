@@ -185,15 +185,15 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
     }
 
     private fun closeEditPictureName() {
-        binding.createNewRealEstateTvChangePictureName.hideKeyboard()
+        eventListener.hideKeyboard(binding.createNewRealEstateTvChangePictureName)
         binding.createNewRealEstateTvChangePictureName.text?.clear()
         binding.createNewRealEstateTlChangePictureName.visibility = View.GONE
     }
 
-    private fun View.hideKeyboard() {
+    /*private fun View.hideKeyboard() {
         val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
-    }
+    }*/
 
 
     private fun updateBarView(barState: RealEstateAddOrEditPictureBarViewState) {
@@ -260,7 +260,7 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
         binding.createNewRealEstateBarPictureAddPictureIcon.setOnClickListener {
             val view = activity?.currentFocus
             view?.clearFocus()
-            view?.hideKeyboard()
+            view?.let{eventListener.hideKeyboard(it)}
             //viewModel.onAddPictureClicked()
             if (isOpen) collapse() else expand()
             animateFab()

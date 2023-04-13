@@ -35,6 +35,7 @@ data class RealEstateEntity(
     val numberOfBedrooms: Int,
     val description: String,
     val thumbnail: Bitmap,
+    val numberOfPictures:Int,
     @Embedded
     val address: Address,
     val coordinates:String,

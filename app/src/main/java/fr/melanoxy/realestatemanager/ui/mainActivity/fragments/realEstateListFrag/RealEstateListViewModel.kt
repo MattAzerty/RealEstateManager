@@ -2,11 +2,13 @@ package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFr
 
 import android.net.Uri
 import androidx.lifecycle.*
+import androidx.sqlite.db.SimpleSQLiteQuery
 import dagger.hilt.android.lifecycle.HiltViewModel
 import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.data.PermissionChecker
 import fr.melanoxy.realestatemanager.data.repositories.RealEstateRepository
 import fr.melanoxy.realestatemanager.data.repositories.SharedRepository
+import fr.melanoxy.realestatemanager.domain.realEstateWithPictureEntity.GetRealEstateWithPicturesFilteredUseCase
 import fr.melanoxy.realestatemanager.domain.realEstateWithPictureEntity.GetRealEstateWithPicturesUseCase
 import fr.melanoxy.realestatemanager.domain.realEstateWithPictureEntity.RealEstateWithPictureEntity
 import fr.melanoxy.realestatemanager.ui.mainActivity.NavigationEvent
@@ -21,23 +23,26 @@ class RealEstateListViewModel @Inject constructor(
     private val sharedRepository: SharedRepository,
     private val permissionChecker: PermissionChecker,
     getRealEstateWithPicturesUseCase: GetRealEstateWithPicturesUseCase,
+    getRealEstateWithPicturesFilteredUseCase:GetRealEstateWithPicturesFilteredUseCase,
 ) : ViewModel() {
 
-    private val realEstateWithPicturesListLiveData = getRealEstateWithPicturesUseCase.invoke().asLiveData()
+    //private val realEstateWithPicturesListLiveData = getRealEstateWithPicturesUseCase.invoke().asLiveData()
     private val selectedEstateIdLiveData = realEstateRepository.selectedRealEstateIdStateFlow.asLiveData()
+    private val filteredRealEstateListLiveData = getRealEstateWithPicturesFilteredUseCase.invoke().asLiveData()
 
     private val mediatorLiveData = MediatorLiveData<List<RealEstateViewStateItem>>()
     init {
-        mediatorLiveData.addSource(realEstateWithPicturesListLiveData) { realEstateWithPicturesList -> combine(realEstateWithPicturesList, selectedEstateIdLiveData.value)}
-        mediatorLiveData.addSource(selectedEstateIdLiveData) { selectedEstateId -> combine(realEstateWithPicturesListLiveData.value, selectedEstateId)}
+        //mediatorLiveData.addSource(realEstateWithPicturesListLiveData) { realEstateWithPicturesList -> combine(realEstateWithPicturesList, selectedEstateIdLiveData.value, filteredRealEstateListLiveData.value)}
+        mediatorLiveData.addSource(selectedEstateIdLiveData) { selectedEstateId -> combine(selectedEstateId, filteredRealEstateListLiveData.value)}
+        mediatorLiveData.addSource(filteredRealEstateListLiveData) { filteredRealEstateList -> combine(selectedEstateIdLiveData.value, filteredRealEstateList)}
     }
 
-    private fun combine(realEstateWithPicturesList: List<RealEstateWithPictureEntity>?, selectedEstateId: Long?) {
+    private fun combine(selectedEstateId: Long?, filteredRealEstateList: List<RealEstateWithPictureEntity>?) {
 
         var listOfRealEstateViewStateItem:List<RealEstateViewStateItem> = emptyList()
 
-        if(!realEstateWithPicturesList.isNullOrEmpty()) {
-            listOfRealEstateViewStateItem = realEstateWithPicturesList.map {
+        if(!filteredRealEstateList.isNullOrEmpty()) {
+            listOfRealEstateViewStateItem = filteredRealEstateList.map {
                 RealEstateViewStateItem(
                     realEstateId= it.realEstateEntity.id,
                     pictureUri= Uri.parse("file://${it.estatePictureEntities[0].path}"),
@@ -76,7 +81,10 @@ class RealEstateListViewModel @Inject constructor(
 
     fun onFabButtonClicked(layoutId: Int) {
         when(layoutId) {
-            R.layout.fragment_real_estate_add -> singleLiveRealEstateListEvent.value = RealEstateListEvent.ReplaceCurrentFragment(layoutId)
+            R.layout.fragment_real_estate_add -> {
+                realEstateRepository.setSelectedRealEstateId(null)
+                singleLiveRealEstateListEvent.value = RealEstateListEvent.ReplaceCurrentFragment(layoutId)
+            }
             R.layout.fragment_real_estate_map -> {
                 if(permissionChecker.hasLocationPermission()){ showMapFragment(layoutId)
                 }else singleLiveRealEstateListEvent.value = RealEstateListEvent.RequestLocationPermission

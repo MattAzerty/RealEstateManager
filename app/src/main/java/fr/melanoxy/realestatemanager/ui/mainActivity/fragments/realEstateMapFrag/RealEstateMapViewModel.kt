@@ -1,19 +1,20 @@
 package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateMapFrag
 
 import android.location.Location
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.map
+import androidx.lifecycle.*
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.data.repositories.LocationRepository
 import fr.melanoxy.realestatemanager.data.repositories.RealEstateRepository
 import fr.melanoxy.realestatemanager.data.repositories.SharedRepository
+import fr.melanoxy.realestatemanager.data.utils.CoroutineDispatcherProvider
 import fr.melanoxy.realestatemanager.domain.realEstate.GetAllRealEstateUseCase
 import fr.melanoxy.realestatemanager.ui.mainActivity.NavigationEvent
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.viewPagerInfos.RealEstateViewPagerInfosStateItem
 import fr.melanoxy.realestatemanager.ui.utils.SingleLiveEvent
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,6 +22,7 @@ class RealEstateMapViewModel @Inject constructor(
     locationRepository: LocationRepository,
     private val sharedRepository: SharedRepository,
     private val realEstateRepository: RealEstateRepository,
+    coroutineDispatcherProvider: CoroutineDispatcherProvider,
     getAllRealEstateUseCase: GetAllRealEstateUseCase
 ) : ViewModel() {
 
@@ -65,5 +67,31 @@ class RealEstateMapViewModel @Inject constructor(
             )
         }
     }
+
+
+/*val realEstatesPositionsLiveData:MutableLiveData<List<RealEstateMarkerStateItem>> = MutableLiveData()
+    init {
+        val id = realEstateRepository.selectedRealEstateIdStateFlow.value
+        if(id!=null){
+            viewModelScope.launch(coroutineDispatcherProvider.io) {
+                getAllRealEstateUseCase.invoke().collect { list ->
+                    withContext(coroutineDispatcherProvider.main) {
+                        realEstatesPositionsLiveData.value =
+                            list.map {
+                                RealEstateMarkerStateItem(
+                                    id= it.id,
+                                    realEstateName=it.propertyType,
+                                    realEstatePrice="${it.price}$",
+                                    coordinates=  LatLng(it.coordinates.split(",")[0].toDouble(), it.coordinates.split(",")[1].toDouble()),
+                                    isSold= it.saleDate!=null,
+                                )
+                            }
+                    }
+                }
+            }
+
+        }
+    }*/
+
 
 }

@@ -511,6 +511,7 @@ class RealEstateAddOrEditViewModel @Inject constructor(
                                 description = realEstateAddOrEditViewStateLiveData.value?.description
                                     ?: "No Description.",
                                 thumbnail = thumbnail,
+                                numberOfPictures = picList?.size ?:0,
                                 address = realEstateAddress,
                                 coordinates = "${realEstateCoordinate.latitude},${realEstateCoordinate.longitude}",
                                 pointsOfInterest = realEstateAddOrEditViewStateLiveData.value?.pointsOfInterest
@@ -538,6 +539,7 @@ class RealEstateAddOrEditViewModel @Inject constructor(
                                 description = realEstateAddOrEditViewStateLiveData.value?.description
                                     ?: "No Description.",
                                 thumbnail = thumbnail ?: oldRealEstateWithPictureEntity?.realEstateEntity!!.thumbnail,
+                                numberOfPictures = picList?.size ?:0,
                                 address = realEstateAddress,
                                 coordinates = "$lat,$long",
                                 pointsOfInterest = realEstateAddOrEditViewStateLiveData.value?.pointsOfInterest
