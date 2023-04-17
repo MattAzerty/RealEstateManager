@@ -8,13 +8,20 @@ import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.data.PermissionChecker
 import fr.melanoxy.realestatemanager.data.repositories.RealEstateRepository
 import fr.melanoxy.realestatemanager.data.repositories.SharedRepository
+import fr.melanoxy.realestatemanager.data.utils.CoroutineDispatcherProvider
 import fr.melanoxy.realestatemanager.domain.realEstateWithPictureEntity.GetRealEstateWithPicturesFilteredUseCase
 import fr.melanoxy.realestatemanager.domain.realEstateWithPictureEntity.GetRealEstateWithPicturesUseCase
 import fr.melanoxy.realestatemanager.domain.realEstateWithPictureEntity.RealEstateWithPictureEntity
+import fr.melanoxy.realestatemanager.domain.searchBar.GetCurrentFilterListUseCase
+import fr.melanoxy.realestatemanager.domain.searchBar.SetCurrentFilterListUseCase
 import fr.melanoxy.realestatemanager.ui.mainActivity.NavigationEvent
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateDetailsFrag.RealEstateDetailsEvent
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.realEstateRv.RealEstateViewStateItem
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateSearchBar.RealEstateSearchBarStateItem
+import fr.melanoxy.realestatemanager.ui.utils.Event
 import fr.melanoxy.realestatemanager.ui.utils.NativeText
 import fr.melanoxy.realestatemanager.ui.utils.SingleLiveEvent
+import fr.melanoxy.realestatemanager.ui.utils.asLiveDataEvent
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,11 +29,15 @@ class RealEstateListViewModel @Inject constructor(
     private val realEstateRepository: RealEstateRepository,
     private val sharedRepository: SharedRepository,
     private val permissionChecker: PermissionChecker,
-    getRealEstateWithPicturesUseCase: GetRealEstateWithPicturesUseCase,
+    private val setCurrentFilterListUseCase: SetCurrentFilterListUseCase,
+    coroutineDispatcherProvider: CoroutineDispatcherProvider,
+    getCurrentFilterListUseCase: GetCurrentFilterListUseCase,
     getRealEstateWithPicturesFilteredUseCase:GetRealEstateWithPicturesFilteredUseCase,
 ) : ViewModel() {
 
-    //private val realEstateWithPicturesListLiveData = getRealEstateWithPicturesUseCase.invoke().asLiveData()
+    val filterListLiveData: LiveData<List<RealEstateSearchBarStateItem>> =
+        getCurrentFilterListUseCase.invoke().asLiveData()
+
     private val selectedEstateIdLiveData = realEstateRepository.selectedRealEstateIdStateFlow.asLiveData()
     private val filteredRealEstateListLiveData = getRealEstateWithPicturesFilteredUseCase.invoke().asLiveData()
 
@@ -107,5 +118,55 @@ class RealEstateListViewModel @Inject constructor(
             NativeText.Resource(
             R.string.error_location_permission))
     }
+
+    fun onTagSelected(tag: String) {
+        when (tag.trim()) {
+            "[SD>]:" -> singleLiveRealEstateListEvent.value =
+                RealEstateListEvent.ShowSaleDatePicker
+            "[SD<]:" -> singleLiveRealEstateListEvent.value =
+                RealEstateListEvent.ShowSaleDatePicker
+            "[MED>]:" -> singleLiveRealEstateListEvent.value =
+                RealEstateListEvent.ShowMarketEntryDatePicker
+            "[MED<]:" -> singleLiveRealEstateListEvent.value =
+                RealEstateListEvent.ShowMarketEntryDatePicker
+            "[POI]:" -> singleLiveRealEstateListEvent.value =
+                RealEstateListEvent.ShowPOISelector
+            else -> singleLiveRealEstateListEvent.value =
+                RealEstateListEvent.ShowSearchBarKeyboard
+        }
+    }
+
+    fun onAddChipCriteria(criteria: String) {
+
+
+        if (criteria.isEmpty()||criteria.split(":")[1].isEmpty()) {
+            singleLiveRealEstateListEvent.value = RealEstateListEvent.DisplaySnackBarMessage(
+                NativeText.Resource(
+                    R.string.error_search_empty
+                )
+            )
+        } else {
+            singleLiveRealEstateListEvent.value = RealEstateListEvent.AddChip(criteria)
+        }
+
+    }
+
+    fun onChipGroupUpdate(tagList: MutableList<String>) {
+        setCurrentFilterListUseCase.invoke(tagList)
+    }
+
+    val entryDatePickedLiveData: LiveData<Event<String>> =
+        sharedRepository.entryDatePickedChannelFromSearchBar.asLiveDataEvent(
+            coroutineDispatcherProvider.io
+        ) {
+            emit(it)
+        }
+
+    val saleDatePickedLiveData: LiveData<Event<String>> =
+        sharedRepository.saleDatePickedChannelFromSearchBar.asLiveDataEvent(
+            coroutineDispatcherProvider.io
+        ) {
+            emit(it)
+        }
 
 }

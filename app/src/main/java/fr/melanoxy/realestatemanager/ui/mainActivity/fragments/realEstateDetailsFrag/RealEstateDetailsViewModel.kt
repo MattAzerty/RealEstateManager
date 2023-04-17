@@ -81,14 +81,14 @@ class RealEstateDetailsViewModel @Inject constructor(
     val singleLiveRealEstateDetailsEvent = SingleLiveEvent<RealEstateDetailsEvent>()
 
     val entryDatePickedLiveData: LiveData<Event<String>> =
-        sharedRepository.entryDatePickedChannelFromSearchBar.asLiveDataEvent(
+        sharedRepository.entryDatePickedChannelFromSearchBarTablet.asLiveDataEvent(
             coroutineDispatcherProvider.io
         ) {
             emit(it)
         }
 
     val saleDatePickedLiveData: LiveData<Event<String>> =
-        sharedRepository.saleDatePickedChannelFromSearchBar.asLiveDataEvent(
+        sharedRepository.saleDatePickedChannelFromSearchBarTablet.asLiveDataEvent(
             coroutineDispatcherProvider.io
         ) {
             emit(it)

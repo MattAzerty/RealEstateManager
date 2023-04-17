@@ -1,6 +1,7 @@
 package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.transition.ChangeBounds
 import android.transition.Transition
@@ -11,7 +12,10 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.core.view.marginTop
 import androidx.fragment.app.viewModels
+import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.hilt.android.AndroidEntryPoint
 import fr.melanoxy.realestatemanager.R
@@ -19,13 +23,12 @@ import fr.melanoxy.realestatemanager.databinding.FragmentRealEstateListBinding
 import fr.melanoxy.realestatemanager.ui.mainActivity.MainEventListener
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.RealEstateAddOrEditEvent
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.RealEstateAddOrEditFrag
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateDetailsFrag.RealEstateDetailsEvent
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateDetailsFrag.RealEstateDetailsFrag
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.realEstateRv.RealEstateAdapter
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateMapFrag.RealEstateMapFrag
-import fr.melanoxy.realestatemanager.ui.utils.CAMERA_PERMISSION
-import fr.melanoxy.realestatemanager.ui.utils.LOCATION_PERMISSION
-import fr.melanoxy.realestatemanager.ui.utils.exhaustive
-import fr.melanoxy.realestatemanager.ui.utils.viewBinding
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateSearchBar.RealEstateSearchBarSpinnerAdapter
+import fr.melanoxy.realestatemanager.ui.utils.*
 
 @AndroidEntryPoint
 class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
@@ -60,6 +63,7 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
 
         viewModel.singleLiveRealEstateListEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
+                is RealEstateListEvent.AddChip -> addChipToGroup(event.tag)
                 is RealEstateListEvent.ReplaceCurrentFragment -> eventListener.switchMainPane(event.layoutId)
                 is RealEstateListEvent.ReplaceSecondPaneFragment -> eventListener.switchSecondPane(event.layoutId)
                 RealEstateListEvent.RequestLocationPermission -> activityResultForLocationPermission.launch(
@@ -68,21 +72,38 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
                 is RealEstateListEvent.DisplaySnackBarMessage -> eventListener.displaySnackBarMessage(
                     event.message.toCharSequence(requireContext())
                 )
+                RealEstateListEvent.ShowSaleDatePicker -> eventListener.showDatePicker(R.string.saleDate)
+                RealEstateListEvent.ShowMarketEntryDatePicker -> eventListener.showDatePicker(R.string.entryDate)
+                RealEstateListEvent.ShowSearchBarKeyboard -> showSearchBarKeyboard()
+                RealEstateListEvent.ShowPOISelector -> binding.searchBarChipGroupHvPoi.visibility = View.VISIBLE
             }.exhaustive
         }
 
 
     }
 
+    private fun showSearchBarKeyboard() {
+        binding.searchBarInputText.requestFocus()
+        eventListener.showKeyboard(binding.searchBarInputText)
+    }
+
     private fun isTablet() {
         viewModel.isTabletLiveData.observe(viewLifecycleOwner) {
             if (it) {
+                binding.fragRealEstateListClRoot.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
                 binding.searchBarRoot.visibility = View.GONE
-                //binding.fragRealEstateListFabAdd.size = FloatingActionButton.SIZE_MINI
+                binding.realEstateListDivider1.dividerColor = ContextCompat.getColor(requireContext(), R.color.white)
+                binding.fragRealEstateListRecyclerView.setMargins(left = null, right = null, top = 70)
+                binding.fragRealEstateListFabAdd.setMargins( top = 20)
+                binding.fragRealEstateListFabMap.setMargins( top = 20)
                 binding.fragRealEstateListFabMap.size= FloatingActionButton.SIZE_MINI
             }else{
+                binding.fragRealEstateListClRoot.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.black))
                 binding.searchBarRoot.visibility = View.VISIBLE
-                //binding.fragRealEstateListFabAdd.size = FloatingActionButton.SIZE_NORMAL
+                binding.realEstateListDivider1.dividerColor = ContextCompat.getColor(requireContext(), R.color.colorAccent)
+                binding.fragRealEstateListRecyclerView.setMargins(left = null, right = null, top = 70)
+                binding.fragRealEstateListFabAdd.setMargins( top = 0)
+                binding.fragRealEstateListFabMap.setMargins( top = 0)
                 binding.fragRealEstateListFabMap.size= FloatingActionButton.SIZE_NORMAL
             }
         }
@@ -126,12 +147,68 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
             }
         }
 
+        //Dropdown menu
+        val adapterForTags = RealEstateSearchBarSpinnerAdapter()
+        binding.searchBarInputText.setAdapter(adapterForTags)
+        viewModel.filterListLiveData.observe(viewLifecycleOwner) {
+            adapterForTags.setData(it)
+        }
+        binding.searchBarInputText.setOnItemClickListener { _, v, position, _ ->
+            adapterForTags.getItem(position)?.let {
+                viewModel.onTagSelected(it.tag)
+            }
+        }
+        //onInputTextForQuery selected
+        binding.searchBarInputText.setOnFocusChangeListener { _, hasFocus ->
+            if(hasFocus && binding.searchBarInputText.text.isEmpty()){
+                binding.searchBarInputText.clearFocus()
+                binding.searchBarInputText.showDropDown()
+            }
+        }
+        //Add chip on icon click
+        binding.searchBarChipIcon.setOnClickListener {
+            binding.searchBarInputText.clearFocus()
+            viewModel.onAddChipCriteria(binding.searchBarInputText.text.trim().toString())
+        }
+        //Add chip on searchKeyboard click
+        binding.searchBarInputText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                binding.searchBarInputText.clearFocus()
+                viewModel.onAddChipCriteria(binding.searchBarInputText.text.trim().toString())
+                true
+            } else {
+                false
+            }
+        }
+        //CHIPS for POI
+        binding.chipClose.setOnClickListener {
+            binding.searchBarChipGroupHvPoi.visibility = View.GONE
+        }
+        binding.chipPark.setOnClickListener {binding.searchBarInputText.text.append("Park|")}
+        binding.chipSchool.setOnClickListener {binding.searchBarInputText.text.append("School|")}
+        binding.chipStore.setOnClickListener {binding.searchBarInputText.text.append("Store|")}
+        binding.chipMall.setOnClickListener {binding.searchBarInputText.text.append("Mall|")}
+        binding.chipHospital.setOnClickListener {binding.searchBarInputText.text.append("Hospital|")}
+        //DATE Picker
+        viewModel.entryDatePickedLiveData.observe(viewLifecycleOwner) { event ->
+            event.handleContent {
+                binding.searchBarInputText.text.append(it)
+                viewModel.onAddChipCriteria(binding.searchBarInputText.text.trim().toString())
+            }}
+        viewModel.saleDatePickedLiveData.observe(viewLifecycleOwner) { event ->
+            event.handleContent {
+                binding.searchBarInputText.text.append(it)
+                viewModel.onAddChipCriteria(binding.searchBarInputText.text.trim().toString())
+            }}
     }
 
     private fun expand() {
+        binding.fragRealEstateListRecyclerView.setMargins(left = null, right = null, top = 220)
+        //binding.fragRealEstateListClRoot.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.black))
+        binding.searchBarCardContainer.strokeWidth = 4
+        binding.realEstateListDivider1.dividerColor = ContextCompat.getColor(requireContext(), R.color.black)
         TransitionManager.beginDelayedTransition(binding.searchBarCardContainer, transition)
         binding.searchBarCardContainer.layoutParams.width = 0
-        //binding.searchBarCardContainer.setCardBackgroundColor(searchBarBackgroundColorFocused)
         binding.searchBarSearchIcon.visibility = View.GONE
         binding.searchBarInputContainer.visibility = View.VISIBLE
 
@@ -140,6 +217,10 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
     }
 
     private fun collapse() {
+        binding.fragRealEstateListRecyclerView.setMargins(left = null, right = null, top = 70)
+        //binding.fragRealEstateListClRoot.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+        binding.searchBarCardContainer.strokeWidth = 0
+        binding.realEstateListDivider1.dividerColor = ContextCompat.getColor(requireContext(), R.color.colorAccent)
         TransitionManager.beginDelayedTransition(binding.searchBarCardContainer, transition)
         binding.searchBarInputText.text.clear()
         binding.searchBarCardContainer.layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT
@@ -157,8 +238,8 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
         addListener(object : Transition.TransitionListener {
             override fun onTransitionEnd(transition: Transition?) {
                 if (isExpanded) {
-                    binding.searchBarInputText.requestFocus()
-                    eventListener.showKeyboard(binding.searchBarInputText)
+                    //binding.searchBarInputText.requestFocus()
+                    //eventListener.showKeyboard(binding.searchBarInputText)
                 } else  {
                     eventListener.hideKeyboard(binding.searchBarInputText)
                 }
@@ -179,5 +260,42 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
        viewModel.realEstateListLiveData.observe(viewLifecycleOwner) {
            adapter.submitList(it)
        }
+    }
+
+    private fun addChipToGroup(tag: String) {
+        val chip = Chip(context)
+        chip.text = tag
+        chip.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+        chip.setChipBackgroundColorResource(R.color.colorAccent)
+        chip.closeIconTint = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white))
+        chip.chipIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_launcher_background)
+        chip.isChipIconVisible = false
+        chip.isCloseIconVisible = true
+        // necessary to get single selection working
+        chip.isClickable = true
+        chip.isCheckable = false
+        binding.searchBarChipGroup.addView(chip as View)
+        chip.setOnCloseIconClickListener {
+            binding.searchBarChipGroup.removeView(chip as View)
+            updateChipList()
+        }
+        binding.searchBarInputText.text.clear()
+        binding.searchBarChipGroupHvPoi.visibility = View.GONE
+        eventListener.hideKeyboard(binding.searchBarInputText)
+        updateChipList()
+    }
+
+    private fun updateChipList() {
+        val tagList:MutableList<String> = mutableListOf()
+        for (i in 0 until binding.searchBarChipGroup.childCount) {
+            // Get the child view at the specified index
+            val childView = binding.searchBarChipGroup.getChildAt(i)
+            // Check if the child view is a Chip
+            if (childView is Chip) {
+                val chipName = childView.text.toString()
+                tagList.add(chipName)
+            }
+        }
+        viewModel.onChipGroupUpdate(tagList)
     }
 }

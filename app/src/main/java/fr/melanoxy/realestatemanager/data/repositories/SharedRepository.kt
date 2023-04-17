@@ -25,11 +25,14 @@ val fragmentStateFlow= MutableStateFlow<NavigationEvent>(NavigationEvent.RealEst
 
     val entryDatePickedChannelFromAddOrEdit = Channel<String>()
     val entryDatePickedChannelFromSearchBar = Channel<String>()
+    val entryDatePickedChannelFromSearchBarTablet = Channel<String>()
 
     fun setEntryDatePicked(entryDatePicked: String) {
         when (fragmentStateFlow.value) {
         NavigationEvent.AddOrEditRealEstateFragment -> entryDatePickedChannelFromAddOrEdit.trySend(entryDatePicked)
-        NavigationEvent.RealEstateListFragment -> entryDatePickedChannelFromSearchBar.trySend(entryDatePicked)
+        NavigationEvent.RealEstateListFragment ->
+            if(isTabletStateFlow.value) entryDatePickedChannelFromSearchBarTablet.trySend(entryDatePicked)
+            else entryDatePickedChannelFromSearchBar.trySend(entryDatePicked)
         else -> {}
         }
     }
@@ -37,15 +40,16 @@ val fragmentStateFlow= MutableStateFlow<NavigationEvent>(NavigationEvent.RealEst
     //SALE DATE PICKER
     val saleDatePickedChannelFromAddOrEdit = Channel<String>()
     val saleDatePickedChannelFromSearchBar = Channel<String>()
+    val saleDatePickedChannelFromSearchBarTablet = Channel<String>()
 
     fun setSaleDatePicked(saleDatePicked: String) {
         when (fragmentStateFlow.value) {
             NavigationEvent.AddOrEditRealEstateFragment -> saleDatePickedChannelFromAddOrEdit.trySend(
                 saleDatePicked
             )
-            NavigationEvent.RealEstateListFragment -> saleDatePickedChannelFromSearchBar.trySend(
-                saleDatePicked
-            )
+            NavigationEvent.RealEstateListFragment ->
+                if(isTabletStateFlow.value) saleDatePickedChannelFromSearchBarTablet.trySend(saleDatePicked)
+                else saleDatePickedChannelFromSearchBar.trySend(saleDatePicked)
             else -> {}
         }
     }

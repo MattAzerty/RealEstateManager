@@ -1,10 +1,12 @@
 package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateDetailsFrag
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.transition.ChangeBounds
 import android.transition.Transition
+import android.transition.TransitionInflater
 import android.transition.TransitionManager
 import android.view.Gravity
 import android.view.View
@@ -35,6 +37,14 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
     private val viewModel by viewModels<RealEstateDetailsViewModel>()
     private lateinit var eventListener: MainEventListener
     private var isExpanded = true
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val inflater = TransitionInflater.from(requireContext())
+        enterTransition = inflater.inflateTransition(R.transition.slide_right)
+        exitTransition = inflater.inflateTransition(R.transition.fade)
+
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -69,19 +79,24 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
         }
 
     private fun adaptDetailsView() {
-        binding.realEstateDetailsClRoot.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.black))
+        binding.realEstateDetailsClRoot.setMargins(top=20, left = 20)
+        binding.realEstateDetailsCoordRoot.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
         binding.onePaneLayout.visibility= View.VISIBLE
         binding.realEstateDetailsDivider1.setMargins(top=null)
-        binding.searchBarCardContainer.setMargins(left = null)
-        binding.searchBarCardContainer.strokeColor = ContextCompat.getColor(requireContext(), R.color.colorAccent)
+        binding.searchBarCardContainer.setMargins(left = 0, right = 0)
+        binding.searchBarCardContainer2.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+        binding.searchBarCardContainer2.elevation=0F
+        binding.searchBarCardContainer2.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
+        binding.searchBarCardContainer.strokeColor = ContextCompat.getColor(requireContext(), R.color.shadow)
         binding.searchBarDropdownMenu.setImageResource(R.drawable.vc_arrow_back_white_24dp)
         binding.searchBarChipIcon.setImageResource(R.drawable.vc_align_vertical_bottom_white_24dp)
         binding.searchBarInputText.setText("REAL ESTATE DETAILS ")
         binding.searchBarInputText.setTypeface(null, Typeface.BOLD)
         binding.searchBarInputText.gravity = Gravity.CENTER
-        binding.searchBarInputText.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorAccent))
+        binding.searchBarInputText.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
         binding.searchBarInputText.textSize = 20F
         binding.searchBarInputText.isEnabled = false
+        binding.searchBarInputText.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorAccent))
 
         binding.searchBarDropdownMenu.setOnClickListener {
             viewModel.onCloseFragmentClicked()
@@ -117,11 +132,14 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
     }
 
     private fun bindSearchBarForTabletMode() {
-        binding.realEstateDetailsClRoot.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+        binding.realEstateDetailsCoordRoot.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+        binding.realEstateDetailsClRoot.setMargins(top=20, left = 20)
         binding.onePaneLayout.visibility= View.GONE
         binding.realEstateDetailsDivider1.setMargins(top=20)
-        binding.searchBarCardContainer.setMargins(left = 200)
+        binding.searchBarCardContainer.setMargins(left = 200, right = 50)
         binding.searchBarCardContainer.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
+        binding.searchBarCardContainer2.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorAccent))
+        binding.searchBarCardContainer2.strokeColor = ContextCompat.getColor(requireContext(), R.color.colorAccentDark)
         binding.searchBarDropdownMenu.setImageResource(R.drawable.vc_keyboard_arrow_down_white_24dp)
         binding.searchBarChipIcon.setImageResource(R.drawable.vc_manage_search_white_24dp)
         binding.searchBarInputText.text.clear()
@@ -130,6 +148,7 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
         binding.searchBarInputText.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
         binding.searchBarInputText.textSize = 20F
         binding.searchBarInputText.isEnabled = true
+        binding.searchBarInputText.background = ContextCompat.getDrawable(requireContext(),R.drawable.shape_edittext_rounded_corner)
 
         viewModel.fragmentNavigationLiveData.observe(viewLifecycleOwner) {event ->
             when (event) {
