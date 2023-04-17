@@ -25,12 +25,11 @@ class MainActivityViewModel @Inject constructor(
         sharedRepository.isTablet(isTablet)
         this.isTablet = isTablet
         //StartLocation on permission granted
-        if (permissionChecker.hasLocationPermission() && sharedRepository.fragmentStateFlow.value == NavigationEvent.RealEstateMapFragment) {
+        if (permissionChecker.hasLocationPermission()) {
             locationRepository.startLocationRequest()
         } else {
             locationRepository.stopLocationRequest()
         }
-
     }
 
     fun onDateSelected(type: Int, formattedDate: String) {

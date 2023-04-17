@@ -190,11 +190,6 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
         binding.createNewRealEstateTlChangePictureName.visibility = View.GONE
     }
 
-    /*private fun View.hideKeyboard() {
-        val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
-    }*/
-
 
     private fun updateBarView(barState: RealEstateAddOrEditPictureBarViewState) {
         val bitmap = barState.barIconTip ?: AppCompatResources.getDrawable(requireContext(), R.drawable.vc_keyboard_arrow_left_white_24dp)

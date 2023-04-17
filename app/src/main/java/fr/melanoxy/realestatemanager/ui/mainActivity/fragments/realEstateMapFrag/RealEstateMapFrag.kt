@@ -35,6 +35,7 @@ class RealEstateMapFrag : Fragment(R.layout.fragment_real_estate_map),
     private val viewModel by viewModels<RealEstateMapViewModel>()
     private lateinit var eventListener: MainEventListener
     private var myPositionMaker: Marker? = null
+    private var mSelectedId: Long? = null
     private val realEstateMarkers: MutableList<Marker> = mutableListOf()
     private var mBounds: LatLngBounds? = null
     private lateinit var mMap: GoogleMap
@@ -121,6 +122,22 @@ class RealEstateMapFrag : Fragment(R.layout.fragment_real_estate_map),
                 addRealEstateMarkers(realEstateMarkers)
             }
         }
+
+        viewModel.selectedRealEstatePositionLiveData.observe(viewLifecycleOwner) { estateId ->
+            mSelectedId = estateId
+            boundAroundSelectedId(estateId)
+        }
+    }
+
+    private fun boundAroundSelectedId(estateId:Long?) {
+        if(estateId!=null){
+        realEstateMarkers.find { it.tag == estateId}
+            ?.let { CameraUpdateFactory.newLatLngZoom(it.position, 15f) }
+            ?.let { mMap.moveCamera(it) }
+        }else{
+            mBounds?.let { CameraUpdateFactory.newLatLngBounds(it, 50) }
+                ?.let { mMap.moveCamera(it) }
+        }
     }
 
     private fun addRealEstateMarkers(realEstateMarkersStateItem: List<RealEstateMarkerStateItem>) {
@@ -160,13 +177,14 @@ class RealEstateMapFrag : Fragment(R.layout.fragment_real_estate_map),
 
     private fun boundsCameraAroundMarkers(builderBounds: LatLngBounds.Builder) {
         val bounds = builderBounds.build()
-        if (mBounds != bounds) { //when bounds are new we animate the camera
-            mBounds = bounds
-            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50))
-        } else { //when it's a "on resume" case we don't
-            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50))
-        }
-        //mMap.setLatLngBoundsForCameraTarget(mBounds) //This set a move camera limit
+        if(mSelectedId==null) {
+            if (mBounds != bounds) { //when bounds are new we animate the camera
+                mBounds = bounds
+                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50))
+            } else { //when it's a "on resume" case we don't
+                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50))
+            }
+        }else{mSelectedId?.let { boundAroundSelectedId(it) }}
     }
 
     private fun vectorToBitmap(@DrawableRes id: Int, @ColorInt color: Int): BitmapDescriptor {

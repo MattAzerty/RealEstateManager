@@ -22,11 +22,11 @@ class RealEstateMapViewModel @Inject constructor(
     locationRepository: LocationRepository,
     private val sharedRepository: SharedRepository,
     private val realEstateRepository: RealEstateRepository,
-    coroutineDispatcherProvider: CoroutineDispatcherProvider,
     getAllRealEstateUseCase: GetAllRealEstateUseCase
 ) : ViewModel() {
 
     val singleLiveRealEstateMapEvent = SingleLiveEvent<RealEstateMapEvent>()
+    val selectedRealEstatePositionLiveData = realEstateRepository.selectedRealEstateIdStateFlow.asLiveData()
 
     fun onFabButtonClicked(fabId: Int) {
         when(fabId) {
@@ -35,7 +35,9 @@ class RealEstateMapViewModel @Inject constructor(
                 if(sharedRepository.isTabletStateFlow.value){
                     sharedRepository.fragmentStateFlow.value = NavigationEvent.RealEstateListFragment
                     singleLiveRealEstateMapEvent.value = RealEstateMapEvent.CloseSecondPaneFragment
-                }else singleLiveRealEstateMapEvent.value = RealEstateMapEvent.CloseFragment
+                }else {
+                    realEstateRepository.setSelectedRealEstateId(null)
+                    singleLiveRealEstateMapEvent.value = RealEstateMapEvent.CloseFragment}
             }
         }
     }
@@ -67,31 +69,4 @@ class RealEstateMapViewModel @Inject constructor(
             )
         }
     }
-
-
-/*val realEstatesPositionsLiveData:MutableLiveData<List<RealEstateMarkerStateItem>> = MutableLiveData()
-    init {
-        val id = realEstateRepository.selectedRealEstateIdStateFlow.value
-        if(id!=null){
-            viewModelScope.launch(coroutineDispatcherProvider.io) {
-                getAllRealEstateUseCase.invoke().collect { list ->
-                    withContext(coroutineDispatcherProvider.main) {
-                        realEstatesPositionsLiveData.value =
-                            list.map {
-                                RealEstateMarkerStateItem(
-                                    id= it.id,
-                                    realEstateName=it.propertyType,
-                                    realEstatePrice="${it.price}$",
-                                    coordinates=  LatLng(it.coordinates.split(",")[0].toDouble(), it.coordinates.split(",")[1].toDouble()),
-                                    isSold= it.saleDate!=null,
-                                )
-                            }
-                    }
-                }
-            }
-
-        }
-    }*/
-
-
 }

@@ -141,4 +141,8 @@ class RealEstateDetailsViewModel @Inject constructor(
         }else{singleLiveRealEstateDetailsEvent.value = RealEstateDetailsEvent.CloseFragment(R.layout.fragment_real_estate_list)}
     }
 
+    fun onLocateRealEstateClicked() {
+        singleLiveRealEstateDetailsEvent.value = RealEstateDetailsEvent.CloseFragment(R.layout.fragment_real_estate_map)
+    }
+
 }

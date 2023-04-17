@@ -101,6 +101,10 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
         binding.searchBarDropdownMenu.setOnClickListener {
             viewModel.onCloseFragmentClicked()
         }
+
+        binding.realEstateDetailsFabLocation.setOnClickListener {
+            viewModel.onLocateRealEstateClicked()
+        }
     }
 
     private fun bindView() {
