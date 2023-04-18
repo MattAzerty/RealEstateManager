@@ -149,4 +149,8 @@ class RealEstateDetailsViewModel @Inject constructor(
         singleLiveRealEstateDetailsEvent.value = RealEstateDetailsEvent.CloseFragment(R.layout.fragment_real_estate_loan)
     }
 
+    fun getCurrentChips(): List<String> {
+        return sharedRepository.currentFilterTagListMutableStateFlow.value
+    }
+
 }

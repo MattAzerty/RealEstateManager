@@ -41,6 +41,7 @@ class RealEstateListViewModel @Inject constructor(
     private val selectedEstateIdLiveData = realEstateRepository.selectedRealEstateIdStateFlow.asLiveData()
     private val filteredRealEstateListLiveData = getRealEstateWithPicturesFilteredUseCase.invoke().asLiveData()
 
+
     private val mediatorLiveData = MediatorLiveData<List<RealEstateViewStateItem>>()
     init {
         //mediatorLiveData.addSource(realEstateWithPicturesListLiveData) { realEstateWithPicturesList -> combine(realEstateWithPicturesList, selectedEstateIdLiveData.value, filteredRealEstateListLiveData.value)}
@@ -153,6 +154,14 @@ class RealEstateListViewModel @Inject constructor(
 
     fun onChipGroupUpdate(tagList: MutableList<String>) {
         setCurrentFilterListUseCase.invoke(tagList)
+    }
+
+    fun getCurrentChips(): List<String> {
+        return sharedRepository.currentFilterTagListMutableStateFlow.value
+    }
+
+    fun onCollapseClicked() {
+        sharedRepository.setCurrentFilterList(emptyList())
     }
 
     val entryDatePickedLiveData: LiveData<Event<String>> =

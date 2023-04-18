@@ -62,7 +62,7 @@ val fragmentStateFlow= MutableStateFlow<NavigationEvent>(NavigationEvent.RealEst
 
 //SEARCH DATA
     private val tagFilterListStateFlow = MutableStateFlow(FILTERING_CRITERIA_LIST)
-    private val currentFilterTagListMutableStateFlow:MutableStateFlow<List<String>> = MutableStateFlow(emptyList())
+    val currentFilterTagListMutableStateFlow:MutableStateFlow<List<String>> = MutableStateFlow(emptyList())
 
     fun getCurrentFilterTagList(): Flow<List<RealEstateSearchBarStateItem>> {
         return tagFilterListStateFlow

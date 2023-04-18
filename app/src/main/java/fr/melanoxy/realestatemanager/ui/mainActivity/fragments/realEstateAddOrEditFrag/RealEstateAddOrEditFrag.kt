@@ -211,7 +211,7 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
         viewModel.realEstateItemLiveData.observe(viewLifecycleOwner) {
             adapter.submitList(it?.pictureItemList)//rv
             if(it?.estateAgentId !=null) {
-            binding.createNewRealEstateAutoCompleteTextViewAgents.setText("${ESTATE_AGENTS[it.estateAgentId.toInt() - 1].firstName} ${ESTATE_AGENTS[it.estateAgentId.toInt() - 1].lastName}")//TODO with position?
+            binding.createNewRealEstateAutoCompleteTextViewAgents.setText("${ESTATE_AGENTS[it.estateAgentId.toInt() - 1].firstName} ${ESTATE_AGENTS[it.estateAgentId.toInt() - 1].lastName}")
             binding.createNewRealEstateAutoCompleteTextViewType.setText(it.propertyType)
             //binding.createNewRealEstateAutoCompleteTextViewType.performCompletion()
             it.pointsOfInterest?.let { poi -> checkChips(poi) }

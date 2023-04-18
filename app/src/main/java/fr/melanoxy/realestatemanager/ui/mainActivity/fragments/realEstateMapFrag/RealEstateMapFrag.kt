@@ -60,6 +60,7 @@ class RealEstateMapFrag : Fragment(R.layout.fragment_real_estate_map),
         viewModel.singleLiveRealEstateMapEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
                 RealEstateMapEvent.CloseFragment -> eventListener.switchMainPane(R.layout.fragment_real_estate_list)
+                RealEstateMapEvent.RemoveFragment -> closeFrag()
                 RealEstateMapEvent.CloseSecondPaneFragment -> eventListener.switchSecondPane(R.layout.fragment_real_estate_details)
                 RealEstateMapEvent.CenterCameraOnUserPosition -> centerCameraOnPosition()
                 RealEstateMapEvent.OpenDetailsFragment -> eventListener.switchMainPane(R.layout.fragment_real_estate_details)
@@ -80,22 +81,32 @@ class RealEstateMapFrag : Fragment(R.layout.fragment_real_estate_map),
 
     override fun onPause() {
         super.onPause()
-        binding.googleMapView.onPause()//TODO on rotation screen to avoid leaks
+        binding.googleMapView.onPause()
+        viewModel.onPause()
+    }
+
+    /*override fun onStop() {
+        super.onStop()
+        binding.googleMapView.onStop()
+
+    }*/
+
+    private fun closeFrag() {
         requireActivity().supportFragmentManager
             .beginTransaction()
             .remove(this)
             .commit()
-
     }
 
-    override fun onDestroy() {
+    /*override fun onDestroy() {
         super.onDestroy()
-        eventListener.switchMainPane(R.layout.fragment_real_estate_list)
-    }
+        viewModel.onPause()
+    }*/
 
     /*override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        binding.googleMapView.onSaveInstanceState(outState)
+        //binding.googleMapView.onSaveInstanceState(outState)
+
     }*/
 
     override fun onMarkerClick(marker: Marker): Boolean {

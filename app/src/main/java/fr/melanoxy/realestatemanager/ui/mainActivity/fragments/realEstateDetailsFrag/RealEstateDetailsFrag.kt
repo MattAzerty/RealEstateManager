@@ -53,7 +53,7 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        //View is a bit different when the device is at vertical/horizontal or tablet
         viewModel.isTabletLiveData.observe(viewLifecycleOwner) { isTablet ->
             when(isTablet){
                 false ->  adaptDetailsView()
@@ -158,6 +158,14 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
         binding.searchBarInputText.isEnabled = true
         binding.searchBarInputText.background = ContextCompat.getDrawable(requireContext(),R.drawable.shape_edittext_rounded_corner)
 
+        //Add filter tag if there is some:
+        val currentChipsTag = viewModel.getCurrentChips()
+        if(currentChipsTag.isNotEmpty()){
+            expand()
+            isExpanded = true
+            currentChipsTag.forEach { addChipToGroup(it) }
+        }
+
         viewModel.fragmentNavigationLiveData.observe(viewLifecycleOwner) {event ->
             when (event) {
                 NavigationEvent.RealEstateListFragment -> expand()
@@ -242,7 +250,6 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
         binding.searchBarChipGroup.visibility = View.VISIBLE
         binding.searchBarCardContainer.layoutParams.width = 0
         binding.searchBarCardContainer2.layoutParams.width = 700
-        //binding.searchBarCardContainer.setCardBackgroundColor(searchBarBackgroundColorFocused)
         binding.searchBarSearchIcon.visibility = View.GONE
         binding.searchBarInputContainer.visibility = View.VISIBLE
     }
@@ -256,7 +263,6 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
         binding.searchBarChipGroup.visibility = View.INVISIBLE
         binding.searchBarInputText.text.clear()
         binding.searchBarCardContainer.layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT
-        //binding.searchBarCardContainer.setCardBackgroundColor(searchBarBackgroundColor)
         binding.searchBarSearchIcon.visibility = View.VISIBLE
         binding.searchBarInputContainer.visibility = View.GONE
     }

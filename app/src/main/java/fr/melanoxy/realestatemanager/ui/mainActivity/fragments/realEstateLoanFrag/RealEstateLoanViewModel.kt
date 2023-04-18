@@ -23,7 +23,7 @@ import kotlin.properties.Delegates
 
 @HiltViewModel
 class RealEstateLoanViewModel @Inject constructor(
-    private val realEstateRepository: RealEstateRepository,
+    realEstateRepository: RealEstateRepository,
     private val getRealEstateFromIdUseCase: GetRealEstateFromIdUseCase,
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
@@ -45,7 +45,6 @@ class RealEstateLoanViewModel @Inject constructor(
         }
     }
     val singleLiveRealEstateDetailsEvent = SingleLiveEvent<RealEstateLoanEvent>()
-    //val realEstateSelected = getRealEstateFromIdUseCase.invoke(realEstateRepository.selectedRealEstateIdStateFlow.value!!).asLiveData()
 
     fun onSimulateButtonClicked(loanInfos: RealEstateLoanSimulationParamStateItem) {
         if(allFieldsNonNull(loanInfos)){
@@ -57,11 +56,14 @@ class RealEstateLoanViewModel @Inject constructor(
             val monthlyInterestRate = (interestRate/100).div(12)
             val monthlyPayment = (principal * monthlyInterestRate) / (1 - (1 + monthlyInterestRate).pow(-termMonths))
             val totalPayment = monthlyPayment * termMonths
+            val interest = totalPayment-(realEstatePrice-contribution)
             resultReceivedLiveData.value =
-                "Loan Details:\n------------------------\nContribution amount: $$contribution\nPrincipal amount: $$principal\n"+
+                "Loan Details:\n------------------------\nReal estate price:$$realEstatePrice\n"+
+                "Contribution amount: $$contribution\nPrincipal amount: $$principal\n"+
                 "Interest rate: $interestRate\nLoan term: $termYears years\n"+
                 "Monthly payment: $${String.format("%.2f", monthlyPayment)}\n"+
-                "Total payment: \$${String.format("%.2f", totalPayment)}\n"
+                "Total payment: $${String.format("%.2f", totalPayment)}\n"+
+                "Total interest: $${String.format("%.2f", interest)}"
 
         }
         else{singleLiveRealEstateDetailsEvent.value = RealEstateLoanEvent.DisplaySnackBarMessage(

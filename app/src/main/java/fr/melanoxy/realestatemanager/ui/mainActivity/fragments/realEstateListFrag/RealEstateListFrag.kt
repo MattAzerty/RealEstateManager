@@ -88,23 +88,34 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
     }
 
     private fun isTablet() {
-        viewModel.isTabletLiveData.observe(viewLifecycleOwner) {
-            if (it) {
+        viewModel.isTabletLiveData.observe(viewLifecycleOwner) { isTablet ->
+            if (isTablet) {//CASE IN TABLET MODE
                 binding.fragRealEstateListClRoot.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
                 binding.searchBarRoot.visibility = View.GONE
+                binding.searchBarChipGroupHv.visibility = View.GONE
                 binding.realEstateListDivider1.dividerColor = ContextCompat.getColor(requireContext(), R.color.white)
                 binding.fragRealEstateListRecyclerView.setMargins(left = null, right = null, top = 70)
                 binding.fragRealEstateListFabAdd.setMargins( top = 20)
                 binding.fragRealEstateListFabMap.setMargins( top = 20)
                 binding.fragRealEstateListFabMap.size= FloatingActionButton.SIZE_MINI
-            }else{
+                binding.fragRealEstateListFabAdd.show()
+                binding.fragRealEstateListFabMap.show()
+            }else{//CASE VERTICAL
                 binding.fragRealEstateListClRoot.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.black))
                 binding.searchBarRoot.visibility = View.VISIBLE
+                binding.searchBarChipGroupHv.visibility = View.VISIBLE
                 binding.realEstateListDivider1.dividerColor = ContextCompat.getColor(requireContext(), R.color.colorAccent)
                 binding.fragRealEstateListRecyclerView.setMargins(left = null, right = null, top = 70)
                 binding.fragRealEstateListFabAdd.setMargins( top = 0)
                 binding.fragRealEstateListFabMap.setMargins( top = 0)
                 binding.fragRealEstateListFabMap.size= FloatingActionButton.SIZE_NORMAL
+                //Add filter tag if there is some:
+                val currentChipsTag = viewModel.getCurrentChips()
+                if(currentChipsTag.isNotEmpty()){
+                    expand()
+                    isExpanded = true
+                    currentChipsTag.forEach { addChipToGroup(it) }
+                }
             }
         }
     }
@@ -118,6 +129,7 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
     }
 
     private fun bindSearchBar() {
+
         //LISTENER
         binding.searchBarSearchIcon.setOnClickListener {
             if (!isExpanded) {
@@ -127,6 +139,8 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
         }
         binding.searchBarBackIcon.setOnClickListener {
             if (isExpanded) {
+                viewModel.onCollapseClicked()
+                binding.searchBarChipGroup.removeAllViews()
                 collapse()
                 isExpanded = false
             }
@@ -204,7 +218,6 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
 
     private fun expand() {
         binding.fragRealEstateListRecyclerView.setMargins(left = null, right = null, top = 220)
-        //binding.fragRealEstateListClRoot.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.black))
         binding.searchBarCardContainer.strokeWidth = 4
         binding.realEstateListDivider1.dividerColor = ContextCompat.getColor(requireContext(), R.color.black)
         TransitionManager.beginDelayedTransition(binding.searchBarCardContainer, transition)
@@ -218,13 +231,11 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
 
     private fun collapse() {
         binding.fragRealEstateListRecyclerView.setMargins(left = null, right = null, top = 70)
-        //binding.fragRealEstateListClRoot.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
         binding.searchBarCardContainer.strokeWidth = 0
         binding.realEstateListDivider1.dividerColor = ContextCompat.getColor(requireContext(), R.color.colorAccent)
         TransitionManager.beginDelayedTransition(binding.searchBarCardContainer, transition)
         binding.searchBarInputText.text.clear()
         binding.searchBarCardContainer.layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT
-        //binding.searchBarCardContainer.setCardBackgroundColor(searchBarBackgroundColor)
         binding.searchBarSearchIcon.visibility = View.VISIBLE
         binding.searchBarInputContainer.visibility = View.GONE
 

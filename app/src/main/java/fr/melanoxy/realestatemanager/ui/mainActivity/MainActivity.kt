@@ -34,15 +34,16 @@ class MainActivity : AppCompatActivity(), MainEventListener {
 
         val containerMainId = binding.activityMainFrameLayoutContainerRealEstateList.id
         val containerDetailsId = binding.mainFrameLayoutContainerDetails?.id
-        if (savedInstanceState == null) {
+
+        if (savedInstanceState == null || supportFragmentManager.findFragmentById(containerMainId) == null) {
             supportFragmentManager.beginTransaction()
                 .replace(binding.activityMainFrameLayoutContainerRealEstateList.id, RealEstateListFrag())
-                .commit()
+                .commitNow()
         }
         if (containerDetailsId != null && supportFragmentManager.findFragmentById(containerDetailsId) == null) {
             supportFragmentManager.beginTransaction()
                 .replace(containerDetailsId, RealEstateDetailsFrag())
-                .commit()
+                .commitNow()
         }
         //To avoid duplicated DetailsFragment or mapFragment
 
@@ -50,7 +51,7 @@ class MainActivity : AppCompatActivity(), MainEventListener {
                     supportFragmentManager.findFragmentById(containerMainId) is RealEstateMapFrag) {
             supportFragmentManager.beginTransaction()
                 .replace(containerMainId, RealEstateListFrag())
-                .commit()
+                .commitNow()
         }
     }
 
@@ -119,5 +120,11 @@ class MainActivity : AppCompatActivity(), MainEventListener {
     override fun onResume() {
         super.onResume()
         viewModel.onResume(resources.getBoolean(R.bool.isTablet))
+        val containerDetailsId = binding.mainFrameLayoutContainerDetails?.id
+        if (containerDetailsId != null && supportFragmentManager.findFragmentById(containerDetailsId) == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(containerDetailsId, RealEstateDetailsFrag())
+                .commitNow()
+        }
     }
 }
