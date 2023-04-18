@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:theme="@style/Theme.MaterialComponents.Light.DarkActionBar"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.mainActivity.MainActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:fillViewport="true"
+        tools:layout_editor_absoluteX="198dp"
+        tools:layout_editor_absoluteY="36dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="@dimen/textview_8dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_corner_background">
+
+            <TextView
+                android:id="@+id/fragment_loan_tv_title"
+                style="?attr/textAppearanceHeadline6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/fab_margin"
+                android:layout_marginTop="50dp"
+                android:layout_marginRight="@dimen/fab_margin"
+                android:gravity="start"
+                android:importantForAccessibility="no"
+                android:text="@string/simulateYourLoan"
+                android:textColor="@color/black"
+                android:textSize="@dimen/title_textSize"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/fragment_loan_field_til_contribution"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/fab_margin"
+                android:layout_marginTop="20dp"
+                android:textColorHint="@color/black"
+                app:boxStrokeWidth="@dimen/stroke"
+                app:boxStrokeWidthFocused="@dimen/stroke2"
+                app:boxStrokeColor="@color/textinputlayout_tint_selector"
+                app:hintTextColor="@color/textinputlayout_tint_selector"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/fab_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_loan_tv_title">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/fragment_loan_field_et_contribution"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textCursorDrawable="@drawable/cursor"
+                    android:hint="@string/contribution"
+                    android:gravity="center"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/fragment_loan_field_til_interest"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/fab_margin"
+                android:layout_marginTop="@dimen/textview_8dp"
+                android:textColorHint="@color/black"
+                app:boxStrokeWidth="@dimen/stroke"
+                app:boxStrokeWidthFocused="@dimen/stroke2"
+                app:boxStrokeColor="@color/textinputlayout_tint_selector"
+                app:hintTextColor="@color/textinputlayout_tint_selector"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/fab_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_loan_field_til_contribution">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/fragment_loan_field_et_interest"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textCursorDrawable="@drawable/cursor"
+                    android:hint="@string/interestRate"
+                    android:gravity="center"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/fragment_loan_field_til_loan_term"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/fab_margin"
+                android:layout_marginTop="@dimen/textview_8dp"
+                android:textColorHint="@color/black"
+                app:boxStrokeWidth="@dimen/stroke"
+                app:boxStrokeWidthFocused="@dimen/stroke2"
+                app:boxStrokeColor="@color/textinputlayout_tint_selector"
+                app:hintTextColor="@color/textinputlayout_tint_selector"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/fab_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_loan_field_til_interest">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/fragment_loan_field_et_loan_term"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textCursorDrawable="@drawable/cursor"
+                    android:hint="@string/loanTerm"
+                    android:gravity="center"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <ImageView
+                android:id="@+id/fragment_loan_header_l1"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="40dp"
+                android:background="@color/black"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_loan_field_til_loan_term"
+                tools:ignore="ContentDescription" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/fragment_loan_til_result_box"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/fab_margin"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="@dimen/fab_margin"
+                android:layout_marginBottom="20dp"
+                android:textColorHint="@color/black"
+                app:boxStrokeColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_loan_header_l1">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/fragment_loan_result_box"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:focusable="false"
+                    android:textStyle="bold"
+                    android:gravity="start"
+                    android:text="@string/pressIcon"
+                    android:imeOptions="actionDone"
+                    android:inputType="textMultiLine" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fragment_loan_fab_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="14dp"
+                android:elevation="0dp"
+                android:src="@drawable/vc_close_white_24dp"
+                app:backgroundTint="@color/colorAccent"
+                app:elevation="0dp"
+                app:fabSize="mini"
+                app:layout_anchorGravity="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:maxImageSize="30dp"
+                app:rippleColor="@color/white"
+                app:tint="@color/white"
+                tools:ignore="ContentDescription" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fragment_loan_fab_calculate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:src="@drawable/vc_calculate_white_24dp"
+                app:backgroundTint="@color/black"
+                app:fabSize="auto"
+                app:layout_anchorGravity="center"
+                app:layout_constraintBottom_toBottomOf="@id/fragment_loan_header_l1"
+                app:layout_constraintLeft_toLeftOf="@id/fragment_loan_header_l1"
+                app:layout_constraintRight_toRightOf="@id/fragment_loan_header_l1"
+                app:maxImageSize="34dp"
+                app:rippleColor="@color/black"
+                app:tint="@color/white"
+                tools:ignore="ContentDescription" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

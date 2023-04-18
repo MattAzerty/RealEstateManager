@@ -41,7 +41,7 @@
     <string name="save">SAVE</string>
     <string name="please_provide_all_infos">Please provide all needed infos.</string>
     <string name="cant_insert_real_estate">Unable to add or update the real estate.</string>
-    <string name="search">Search...</string>
+    <string name="search">Search…</string>
     <string name="error_search_empty">Nothing to search.</string>
     <string name="entryDate">SELECT MARKET ENTRY DATE</string>
     <string name="saleDate">SELECT SALE DATE</string>
@@ -56,4 +56,9 @@
     <string name="infos">\u0020 Infos \u0020</string>
     <string name="error_location_permission">Location permission denied.</string>
     <string name="my_position_marker">Current position</string>
+    <string name="simulateYourLoan">SIMULATE YOUR LOAN:</string>
+    <string name="contribution">Enter contribution amount (in dollars)</string>
+    <string name="interestRate">Enter interest rate (in %)</string>
+    <string name="loanTerm">Enter loan term (in years)</string>
+    <string name="pressIcon">Press the icon to simulate the loan.</string>
 </resources>

@@ -31,12 +31,19 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        //jvmTarget = '17'
+        tasks.withType(org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask).configureEach {
+            //kotlinOptions.jvmTarget = '17'
+        }
     }
+    kotlin {
+        jvmToolchain(17)
+    }
+
     //https://developer.android.com/topic/libraries/view-binding
     buildFeatures {
         viewBinding true
@@ -45,7 +52,7 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.core:core-ktx:1.10.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation "androidx.cardview:cardview:1.0.0"
@@ -63,10 +70,10 @@ dependencies {
     // When using Kotlin.
     kapt 'androidx.hilt:hilt-compiler:1.0.0'
 //FRAGMENT
-    implementation "androidx.fragment:fragment-ktx:1.5.5"
+    implementation "androidx.fragment:fragment-ktx:1.5.6"
 //ViewModel, LiveData
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
 //Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
@@ -77,7 +84,7 @@ dependencies {
     implementation("androidx.room:room-paging:2.5.1")
     kapt("androidx.room:room-compiler:2.5.1")
 //WorkManager
-    implementation "androidx.work:work-runtime-ktx:2.7.1"
+    implementation "androidx.work:work-runtime-ktx:2.8.1"
 //GSON
     implementation 'com.google.code.gson:gson:2.10.1'
 //GLIDE

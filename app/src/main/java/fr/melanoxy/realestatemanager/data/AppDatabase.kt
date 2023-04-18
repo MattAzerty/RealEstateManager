@@ -5,11 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import androidx.viewbinding.BuildConfig
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.google.gson.Gson
+import fr.melanoxy.realestatemanager.BuildConfig
 import fr.melanoxy.realestatemanager.data.dao.EstateAgentDao
 import fr.melanoxy.realestatemanager.data.dao.EstatePictureDao
 import fr.melanoxy.realestatemanager.data.dao.RealEstateDao

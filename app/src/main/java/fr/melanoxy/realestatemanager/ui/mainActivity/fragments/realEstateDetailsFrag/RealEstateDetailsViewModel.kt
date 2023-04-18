@@ -145,4 +145,8 @@ class RealEstateDetailsViewModel @Inject constructor(
         singleLiveRealEstateDetailsEvent.value = RealEstateDetailsEvent.CloseFragment(R.layout.fragment_real_estate_map)
     }
 
+    fun onLoanButtonClicked() {
+        singleLiveRealEstateDetailsEvent.value = RealEstateDetailsEvent.CloseFragment(R.layout.fragment_real_estate_loan)
+    }
+
 }

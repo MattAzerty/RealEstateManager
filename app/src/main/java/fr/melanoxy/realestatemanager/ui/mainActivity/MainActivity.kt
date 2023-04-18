@@ -15,6 +15,7 @@ import fr.melanoxy.realestatemanager.databinding.ActivityMainBinding
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.RealEstateAddOrEditFrag
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateDetailsFrag.RealEstateDetailsFrag
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.RealEstateListFrag
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateLoanFrag.RealEstateLoanFrag
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateMapFrag.RealEstateMapFrag
 import fr.melanoxy.realestatemanager.ui.utils.viewBinding
 import java.text.SimpleDateFormat
@@ -31,24 +32,25 @@ class MainActivity : AppCompatActivity(), MainEventListener {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        val containerMainId = binding.activityMainFrameLayoutContainerRealEstateList.id
+        val containerDetailsId = binding.mainFrameLayoutContainerDetails?.id
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(binding.activityMainFrameLayoutContainerRealEstateList.id, RealEstateListFrag())
-                .commitNow()
+                .commit()
         }
-        val containerDetailsId = binding.mainFrameLayoutContainerDetails?.id
         if (containerDetailsId != null && supportFragmentManager.findFragmentById(containerDetailsId) == null) {
             supportFragmentManager.beginTransaction()
                 .replace(containerDetailsId, RealEstateDetailsFrag())
-                .commitNow()
+                .commit()
         }
         //To avoid duplicated DetailsFragment or mapFragment
-        val containerMainId = binding.activityMainFrameLayoutContainerRealEstateList.id
-        if (containerDetailsId != null && (supportFragmentManager.findFragmentById(containerMainId) is RealEstateDetailsFrag ||
-                    supportFragmentManager.findFragmentById(containerMainId) is RealEstateMapFrag)) {
+
+        if (containerDetailsId != null && supportFragmentManager.findFragmentById(containerMainId) is RealEstateDetailsFrag ||
+                    supportFragmentManager.findFragmentById(containerMainId) is RealEstateMapFrag) {
             supportFragmentManager.beginTransaction()
                 .replace(containerMainId, RealEstateListFrag())
-                .commitNow()
+                .commit()
         }
     }
 
@@ -92,8 +94,9 @@ class MainActivity : AppCompatActivity(), MainEventListener {
             R.layout.fragment_real_estate_map -> fragTransaction.replace(binding.activityMainFrameLayoutContainerRealEstateList.id, RealEstateMapFrag())
             R.layout.fragment_real_estate_details -> {
                 fragTransaction.replace(binding.activityMainFrameLayoutContainerRealEstateList.id, RealEstateDetailsFrag())
-                fragTransaction.addToBackStack("map")//TODO add at each call?
+                fragTransaction.addToBackStack("map")//TODO
             }
+            R.layout.fragment_real_estate_loan -> fragTransaction.replace(binding.activityMainFrameLayoutContainerRealEstateList.id, RealEstateLoanFrag())
         }
         fragTransaction.commit()
     }

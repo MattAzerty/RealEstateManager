@@ -85,12 +85,13 @@ class RealEstateMapFrag : Fragment(R.layout.fragment_real_estate_map),
             .beginTransaction()
             .remove(this)
             .commit()
+
     }
 
-    /*override fun onDestroy() {
+    override fun onDestroy() {
         super.onDestroy()
-        mapView?.onDestroy()
-    }*/
+        eventListener.switchMainPane(R.layout.fragment_real_estate_list)
+    }
 
     /*override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

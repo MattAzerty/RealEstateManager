@@ -102,6 +102,10 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
             viewModel.onCloseFragmentClicked()
         }
 
+        binding.searchBarChipIcon.setOnClickListener {
+            viewModel.onLoanButtonClicked()
+        }
+
         binding.realEstateDetailsFabLocation.setOnClickListener {
             viewModel.onLocateRealEstateClicked()
         }
