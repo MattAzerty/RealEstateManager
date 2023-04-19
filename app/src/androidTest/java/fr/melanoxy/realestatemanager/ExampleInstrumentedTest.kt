@@ -1,12 +1,14 @@
 package fr.melanoxy.realestatemanager
 
-import androidx.test.platform.app.InstrumentationRegistry
+import android.content.Context
+import android.net.ConnectivityManager
 import androidx.test.ext.junit.runners.AndroidJUnit4
-
+import androidx.test.platform.app.InstrumentationRegistry
+import fr.melanoxy.realestatemanager.ui.utils.Utils
+import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import org.junit.Assert.*
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -20,5 +22,12 @@ class ExampleInstrumentedTest {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         assertEquals("fr.melanoxy.realestatemanager", appContext.packageName)
+    }
+
+    @Test
+    fun testIsInternetAvailable() {
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        val isInternetAvailable = Utils.isInternetAvailable(appContext)
+        assertTrue(isInternetAvailable)
     }
 }
