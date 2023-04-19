@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstatePictureRv.RealEstatePictureViewStateItem
 
 data class RealEstateDetailsViewState (
+    val id:Long,
     val type:String,
     val city:String,
     val price:String,

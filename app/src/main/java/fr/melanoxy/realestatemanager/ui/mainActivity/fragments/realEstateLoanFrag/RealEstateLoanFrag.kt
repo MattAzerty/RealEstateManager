@@ -48,10 +48,13 @@ class RealEstateLoanFrag : Fragment(R.layout.fragment_real_estate_loan) {
                 is RealEstateLoanEvent.DisplaySnackBarMessage -> eventListener.displaySnackBarMessage(
                     event.message.toCharSequence(requireContext())
                 )
+                is RealEstateLoanEvent.SwitchMainPane -> eventListener.switchMainPane(event.layoutId)
             }.exhaustive
         }
 
-        binding.fragmentLoanFabClose.setOnClickListener { eventListener.switchMainPane(R.layout.fragment_real_estate_details) }
+        binding.fragmentLoanFabClose.setOnClickListener {
+        viewModel.onCloseClicked()
+        }
 
         binding.fragmentLoanFabCalculate.setOnClickListener {
             viewModel.onSimulateButtonClicked(RealEstateLoanSimulationParamStateItem(

@@ -1,5 +1,6 @@
 package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateDetailsFrag
 
+import android.Manifest
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
@@ -12,6 +13,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -43,7 +45,6 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
         val inflater = TransitionInflater.from(requireContext())
         enterTransition = inflater.inflateTransition(R.transition.slide_right)
         exitTransition = inflater.inflateTransition(R.transition.fade)
-
     }
 
     override fun onAttach(context: Context) {
@@ -82,6 +83,7 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
         binding.realEstateDetailsClRoot.setMargins(top=20, left = 20)
         binding.realEstateDetailsCoordRoot.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
         binding.onePaneLayout.visibility= View.VISIBLE
+        binding.realEstateDetailsFabLoan.visibility = View.GONE
         binding.realEstateDetailsDivider1.setMargins(top=null)
         binding.searchBarCardContainer.setMargins(left = 0, right = 0)
         binding.searchBarCardContainer2.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
@@ -107,12 +109,22 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
         }
 
         binding.realEstateDetailsFabLocation.setOnClickListener {
+            //GPS LOCATION PERMISSIONS
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ),
+                0
+            )
             viewModel.onLocateRealEstateClicked()
         }
     }
 
     private fun bindView() {
         viewModel.detailsOfRealEstateStateItemLiveData.observe(viewLifecycleOwner) {
+            binding.realEstateDetailsNsv.visibility = View.VISIBLE
             //Recap
             binding.realEstateItemTvType.text = it.type
             binding.realEstateItemTvCity.text = it.city
@@ -143,6 +155,7 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
         binding.realEstateDetailsCoordRoot.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
         binding.realEstateDetailsClRoot.setMargins(top=20, left = 20)
         binding.onePaneLayout.visibility= View.GONE
+        binding.realEstateDetailsFabLoan.visibility = View.VISIBLE
         binding.realEstateDetailsDivider1.setMargins(top=20)
         binding.searchBarCardContainer.setMargins(left = 200, right = 50)
         binding.searchBarCardContainer.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
@@ -165,6 +178,8 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
             isExpanded = true
             currentChipsTag.forEach { addChipToGroup(it) }
         }
+
+        binding.realEstateDetailsFabLoan.setOnClickListener { viewModel.onLoanButtonClicked() }
 
         viewModel.fragmentNavigationLiveData.observe(viewLifecycleOwner) {event ->
             when (event) {

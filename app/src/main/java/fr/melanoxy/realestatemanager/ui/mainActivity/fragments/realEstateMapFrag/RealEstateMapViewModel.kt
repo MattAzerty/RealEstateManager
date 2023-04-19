@@ -47,14 +47,16 @@ class RealEstateMapViewModel @Inject constructor(
     }
 
     fun onInfoWindowClicked(realEstateId: Long) {
+        if(realEstateId!=0L){
         realEstateRepository.setSelectedRealEstateId(realEstateId)
         if(sharedRepository.isTabletStateFlow.value && sharedRepository.fragmentStateFlow.value == NavigationEvent.RealEstateMapFragment){
         sharedRepository.fragmentStateFlow.value = NavigationEvent.RealEstateDetailsFragment
         singleLiveRealEstateMapEvent.value = RealEstateMapEvent.OpenDetailsFragment
-        }else{
+        }else {
             sharedRepository.fragmentStateFlow.value = NavigationEvent.RealEstateDetailsFragment
             singleLiveRealEstateMapEvent.value = RealEstateMapEvent.OpenDetailsFragment
         }
+        }//TODO ->ELSE OPEN ADD A REAL ESTATE AND FULFILL THE ADDRESS
     }
 
     fun onPause() {

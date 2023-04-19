@@ -37,6 +37,7 @@ class RealEstateDetailsViewModel @Inject constructor(
                     getRealEstateWithPicturesFromIdUseCase.invoke(selectedId).collect { entity ->
                         emit(
                             RealEstateDetailsViewState(
+                                id= selectedId,
                                 type = entity.realEstateEntity.propertyType,
                                 city = entity.realEstateEntity.address.city,
                                 price = "$${entity.realEstateEntity.price}",
@@ -146,6 +147,7 @@ class RealEstateDetailsViewModel @Inject constructor(
     }
 
     fun onLoanButtonClicked() {
+        realEstateRepository.setSelectedRealEstateId(detailsOfRealEstateStateItemLiveData.value?.id)
         singleLiveRealEstateDetailsEvent.value = RealEstateDetailsEvent.CloseFragment(R.layout.fragment_real_estate_loan)
     }
 

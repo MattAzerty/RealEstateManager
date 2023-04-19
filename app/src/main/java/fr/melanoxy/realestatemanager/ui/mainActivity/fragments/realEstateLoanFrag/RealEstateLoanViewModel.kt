@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.data.repositories.RealEstateRepository
+import fr.melanoxy.realestatemanager.data.repositories.SharedRepository
 import fr.melanoxy.realestatemanager.data.utils.CoroutineDispatcherProvider
 import fr.melanoxy.realestatemanager.domain.realEstate.GetRealEstateFromIdUseCase
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.viewPagerInfos.RealEstateViewPagerInfosStateItem
@@ -24,6 +25,7 @@ import kotlin.properties.Delegates
 @HiltViewModel
 class RealEstateLoanViewModel @Inject constructor(
     realEstateRepository: RealEstateRepository,
+    private val sharedRepository: SharedRepository,
     private val getRealEstateFromIdUseCase: GetRealEstateFromIdUseCase,
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
@@ -71,6 +73,12 @@ class RealEstateLoanViewModel @Inject constructor(
                 R.string.please_provide_all_infos
             )
         )}
+    }
+
+    fun onCloseClicked() {
+        if(sharedRepository.isTabletStateFlow.value) {
+            singleLiveRealEstateDetailsEvent.value = RealEstateLoanEvent.SwitchMainPane(R.layout.fragment_real_estate_list)
+        }else{singleLiveRealEstateDetailsEvent.value = RealEstateLoanEvent.SwitchMainPane(R.layout.fragment_real_estate_details)}
     }
 
 }
