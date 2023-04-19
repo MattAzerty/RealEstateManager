@@ -67,6 +67,7 @@ dependencies {
     implementation 'androidx.hilt:hilt-work:1.0.0'
     // When using Kotlin.
     kapt 'androidx.hilt:hilt-compiler:1.0.0'
+
 //FRAGMENT
     implementation "androidx.fragment:fragment-ktx:1.5.6"
 //ViewModel, LiveData
