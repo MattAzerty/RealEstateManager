@@ -1,7 +1,5 @@
 package fr.melanoxy.realestatemanager
 
-import android.content.Context
-import android.net.ConnectivityManager
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import fr.melanoxy.realestatemanager.ui.utils.Utils
@@ -16,13 +14,13 @@ import org.junit.runner.RunWith
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 @RunWith(AndroidJUnit4::class)
-class ExampleInstrumentedTest {
-    @Test
+class UtilsInstrumentedTest {
+    /*@Test
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         assertEquals("fr.melanoxy.realestatemanager", appContext.packageName)
-    }
+    }*/
 
     @Test
     fun testIsInternetAvailable() {

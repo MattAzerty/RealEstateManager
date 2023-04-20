@@ -72,8 +72,8 @@ class RealEstateDetailsViewModel @Inject constructor(
         return "$lat $long"
     }
 
-    private fun buildPOIList(pointsOfInterest: ArrayList<String>): String {
-        return pointsOfInterest.joinToString(separator = "|")
+    private fun buildPOIList(pointsOfInterest: ArrayList<String>?): String {
+        return pointsOfInterest?.joinToString(separator = "|") ?: "none"
     }
 
 
@@ -137,9 +137,7 @@ class RealEstateDetailsViewModel @Inject constructor(
 
     fun onCloseFragmentClicked() {
         realEstateRepository.setSelectedRealEstateId(null)
-        if (!sharedRepository.isTabletStateFlow.value && sharedRepository.fragmentStateFlow.value==NavigationEvent.RealEstateDetailsFragment){
-            singleLiveRealEstateDetailsEvent.value = RealEstateDetailsEvent.PopToBackStack
-        }else{singleLiveRealEstateDetailsEvent.value = RealEstateDetailsEvent.CloseFragment(R.layout.fragment_real_estate_list)}
+        singleLiveRealEstateDetailsEvent.value = RealEstateDetailsEvent.PopToBackStack
     }
 
     fun onLocateRealEstateClicked() {

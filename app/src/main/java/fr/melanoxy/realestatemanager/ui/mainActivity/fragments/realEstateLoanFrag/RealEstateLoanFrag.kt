@@ -48,7 +48,7 @@ class RealEstateLoanFrag : Fragment(R.layout.fragment_real_estate_loan) {
                 is RealEstateLoanEvent.DisplaySnackBarMessage -> eventListener.displaySnackBarMessage(
                     event.message.toCharSequence(requireContext())
                 )
-                is RealEstateLoanEvent.SwitchMainPane -> eventListener.switchMainPane(event.layoutId)
+                is RealEstateLoanEvent.SwitchMainPane -> closeFrag()
             }.exhaustive
         }
 
@@ -83,6 +83,14 @@ class RealEstateLoanFrag : Fragment(R.layout.fragment_real_estate_loan) {
             }
         }
 
+    }
+
+    private fun closeFrag() {
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+            .remove(this)
+            .commit()
+        requireActivity().onBackPressedDispatcher.onBackPressed()
     }
 
     private fun TextView.typeWrite(lifecycleOwner: LifecycleOwner, text: String, intervalMs: Long) {

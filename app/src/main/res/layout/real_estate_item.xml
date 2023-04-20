@@ -12,6 +12,8 @@
         android:id="@+id/real_estate_item_iv_pic1"
         android:layout_width="150dp"
         android:layout_height="100dp"
+        android:layout_marginTop="4dp"
+        android:elevation="4dp"
         android:importantForAccessibility="no"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,6 +65,7 @@
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/real_estate_item_divider1"
         android:layout_width="match_parent"
+        app:layout_constraintStart_toEndOf="@id/real_estate_item_iv_pic1"
         app:layout_constraintTop_toBottomOf="@+id/real_estate_item_iv_pic1"
         app:dividerColor="@color/colorSecondary"
         android:layout_height="2dp"/>

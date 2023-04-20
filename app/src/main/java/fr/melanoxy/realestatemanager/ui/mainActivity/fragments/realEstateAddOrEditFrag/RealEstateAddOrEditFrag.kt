@@ -110,6 +110,8 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
         viewModel.realEstateAddFragSingleLiveEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
                 RealEstateAddOrEditEvent.CloseFragment -> eventListener.switchMainPane(R.layout.fragment_real_estate_list)
+                is RealEstateAddOrEditEvent.CloseFragmentWithMessage -> { eventListener.displaySnackBarMessage(
+                    event.message.toCharSequence(requireContext()));eventListener.switchMainPane(R.layout.fragment_real_estate_list)}
                 RealEstateAddOrEditEvent.RequestCameraPermission -> activityResultForCameraPermissions.launch(
                     CAMERA_PERMISSION
                 )
@@ -213,9 +215,9 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
             if(it?.estateAgentId !=null) {
             binding.createNewRealEstateAutoCompleteTextViewAgents.setText("${ESTATE_AGENTS[it.estateAgentId.toInt() - 1].firstName} ${ESTATE_AGENTS[it.estateAgentId.toInt() - 1].lastName}")
             binding.createNewRealEstateAutoCompleteTextViewType.setText(it.propertyType)
-            //binding.createNewRealEstateAutoCompleteTextViewType.performCompletion()
+            binding.createNewRealEstateAutoCompleteTextViewType.clearFocus()
             it.pointsOfInterest?.let { poi -> checkChips(poi) }
-            binding.createNewRealEstateInputDescription.setText(it.description, TextView.BufferType.EDITABLE)//TODO infinite loop
+            binding.createNewRealEstateInputDescription.setText(it.description, TextView.BufferType.EDITABLE)
             binding.createNewRealEstateButtonMarketEntryDate.text =
                 it.marketEntryDate ?: resources.getText(R.string.entryDate)//entryDate
             binding.createNewRealEstateButtonSaleDate.text =
@@ -227,7 +229,7 @@ class RealEstateAddOrEditFrag : Fragment(R.layout.fragment_real_estate_add) {
     private fun checkChips(pointsOfInterest: ArrayList<String>) {
         pointsOfInterest.forEach {
             val chip = binding.createNewRealEstateChipGroup.findViewWithTag<Chip>(it)
-            chip.isChecked =true
+            chip.isChecked = true
         }
     }
 

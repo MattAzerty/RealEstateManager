@@ -181,7 +181,7 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
 
         binding.realEstateDetailsFabLoan.setOnClickListener { viewModel.onLoanButtonClicked() }
 
-        viewModel.fragmentNavigationLiveData.observe(viewLifecycleOwner) {event ->
+        viewModel.fragmentNavigationLiveData.observe(viewLifecycleOwner) { event ->
             when (event) {
                 NavigationEvent.RealEstateListFragment -> expand()
                 NavigationEvent.AddOrEditRealEstateFragment -> collapse()

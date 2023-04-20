@@ -87,7 +87,7 @@ class RealEstateAddOrEditViewModel @Inject constructor(
                 })
             }
         }
-
+//list of all realEstate in Room if id selected (EditMode)
     private val realEstateWithPictureFromIdLiveData: LiveData<RealEstateWithPictureEntity> =
         liveData(coroutineDispatcherProvider.io) {
             if (selectedRealEstateId != null) {
@@ -224,7 +224,7 @@ class RealEstateAddOrEditViewModel @Inject constructor(
     }
 
     private fun notifyPictureIsEdited() {
-
+        //Get current listOfPictures in the view
         val picList = realEstateAddOrEditViewStateLiveData.value?.pictureItemList?.toMutableList()
             ?: mutableListOf()
         val index = picList.indexOfFirst { it.pictureUri == selectedPicture }
@@ -234,7 +234,7 @@ class RealEstateAddOrEditViewModel @Inject constructor(
             picList.add(RealEstatePictureViewStateItem(realEstateId = null,
                 pictureUri = picture.pictureUri,
                 realEstatePictureName = picture.realEstatePictureName,
-                isStored = false,
+                isStored = picture.isStored,
                 isEdited = !picture.isEdited,
                 toDelete = false,
                 onRealEstatePictureLongPress = {
@@ -514,8 +514,7 @@ class RealEstateAddOrEditViewModel @Inject constructor(
                                 numberOfPictures = picList?.size ?:0,
                                 address = realEstateAddress,
                                 coordinates = "${realEstateCoordinate.latitude},${realEstateCoordinate.longitude}",
-                                pointsOfInterest = realEstateAddOrEditViewStateLiveData.value?.pointsOfInterest
-                                    ?: ArrayList(),
+                                pointsOfInterest = if(realEstateAddOrEditViewStateLiveData.value?.pointsOfInterest?.isEmpty() != true) realEstateAddOrEditViewStateLiveData.value?.pointsOfInterest else null,
                                 marketEntryDate = realEstateAddOrEditViewStateLiveData.value?.marketEntryDate?.let {
                                     toDateFormat(it)
                                 } ?: Date(),
@@ -542,8 +541,7 @@ class RealEstateAddOrEditViewModel @Inject constructor(
                                 numberOfPictures = picList?.size ?:0,
                                 address = realEstateAddress,
                                 coordinates = "$lat,$long",
-                                pointsOfInterest = realEstateAddOrEditViewStateLiveData.value?.pointsOfInterest
-                                    ?: ArrayList(),
+                                pointsOfInterest = if(realEstateAddOrEditViewStateLiveData.value?.pointsOfInterest?.isEmpty() != true) realEstateAddOrEditViewStateLiveData.value?.pointsOfInterest else null,
                                 marketEntryDate = realEstateAddOrEditViewStateLiveData.value?.marketEntryDate?.let {
                                     toDateFormat(it)
                                 } ?: Date(),
@@ -601,7 +599,7 @@ class RealEstateAddOrEditViewModel @Inject constructor(
                 withContext(coroutineDispatcherProvider.main) {
                     realEstateRepository.setSelectedRealEstateId(null)
                     realEstateAddFragSingleLiveEvent.value = if (success) {
-                        RealEstateAddOrEditEvent.CloseFragment
+                        RealEstateAddOrEditEvent.CloseFragmentWithMessage(NativeText.Resource(R.string.add_success))
                     } else {
                         RealEstateAddOrEditEvent.DisplaySnackBarMessage(NativeText.Resource(R.string.cant_insert_real_estate))
                     }

@@ -61,4 +61,5 @@
     <string name="interestRate">Enter interest rate (in %)</string>
     <string name="loanTerm">Enter loan term (in years)</string>
     <string name="pressIcon">Press the icon to simulate the loan.</string>
+    <string name="add_success">Real estate saved.</string>
 </resources>

@@ -45,10 +45,8 @@ class MainActivity : AppCompatActivity(), MainEventListener {
                 .replace(containerDetailsId, RealEstateDetailsFrag())
                 .commitNow()
         }
-        //To avoid duplicated DetailsFragment or mapFragment
-
-        if (containerDetailsId != null && supportFragmentManager.findFragmentById(containerMainId) is RealEstateDetailsFrag ||
-                    supportFragmentManager.findFragmentById(containerMainId) is RealEstateMapFrag) {
+        //To avoid duplicated mapFragment on rotation screen
+        if (containerDetailsId != null && supportFragmentManager.findFragmentById(containerMainId) is RealEstateMapFrag) {
             supportFragmentManager.beginTransaction()
                 .replace(containerMainId, RealEstateListFrag())
                 .commitNow()
@@ -95,9 +93,9 @@ class MainActivity : AppCompatActivity(), MainEventListener {
             R.layout.fragment_real_estate_map -> fragTransaction.replace(binding.activityMainFrameLayoutContainerRealEstateList.id, RealEstateMapFrag())
             R.layout.fragment_real_estate_details -> {
                 fragTransaction.replace(binding.activityMainFrameLayoutContainerRealEstateList.id, RealEstateDetailsFrag())
-                fragTransaction.addToBackStack("map")//TODO
+                fragTransaction.addToBackStack(null)
             }
-            R.layout.fragment_real_estate_loan -> fragTransaction.replace(binding.activityMainFrameLayoutContainerRealEstateList.id, RealEstateLoanFrag())
+            R.layout.fragment_real_estate_loan -> {fragTransaction.replace(binding.activityMainFrameLayoutContainerRealEstateList.id, RealEstateLoanFrag());fragTransaction.addToBackStack(null)}
         }
         fragTransaction.commit()
     }
@@ -106,12 +104,10 @@ class MainActivity : AppCompatActivity(), MainEventListener {
         val fragTransaction = supportFragmentManager.beginTransaction()
         when(id){
         R.layout.fragment_real_estate_map -> binding.mainFrameLayoutContainerDetails?.id?.let {
-            fragTransaction.replace(
-                it, RealEstateMapFrag())
-        }
+            fragTransaction.replace(it, RealEstateMapFrag())}
         R.layout.fragment_real_estate_details -> {
             binding.mainFrameLayoutContainerDetails?.id?.let {fragTransaction.replace(it, RealEstateDetailsFrag())}
-            if(supportFragmentManager.findFragmentById(binding.activityMainFrameLayoutContainerRealEstateList.id) is RealEstateDetailsFrag)switchMainPane(R.layout.fragment_real_estate_list)
+            if(supportFragmentManager.findFragmentById(binding.activityMainFrameLayoutContainerRealEstateList.id) is RealEstateDetailsFrag)this.supportFragmentManager.popBackStack()
         }
         }
         fragTransaction.commit()

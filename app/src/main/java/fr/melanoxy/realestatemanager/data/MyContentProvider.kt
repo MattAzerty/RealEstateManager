@@ -8,6 +8,7 @@ import android.database.MatrixCursor
 import android.net.Uri
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
+import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import fr.melanoxy.realestatemanager.data.dao.RealEstateDao
@@ -30,7 +31,7 @@ class MyContentProvider : ContentProvider() {
 
     companion object {
         // defining authority so that other application can access it
-        private const val AUTHORITY = "fr.melanoxy.realestatemanager.MyContentProvider"
+        const val AUTHORITY = "fr.melanoxy.realestatemanager.MyContentProvider"
         const val MY_TABLE_CODE = 1
         // parsing the content URI (maps URIs to their corresponding data)
         private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH).apply {
@@ -39,7 +40,7 @@ class MyContentProvider : ContentProvider() {
     }
 
 
-    private lateinit var realEstateDao: RealEstateDao
+    lateinit var realEstateDao: RealEstateDao
 
     override fun onCreate(): Boolean {
         val appContext = context?.applicationContext ?: throw IllegalStateException()
@@ -83,17 +84,14 @@ class MyContentProvider : ContentProvider() {
 
     // Overridden methods not used in our case
     override fun getType(uri: Uri): String? {
-        //TODO("Not yet implemented")
         throw UnsupportedOperationException("Not yet implemented")
     }
 
     override fun insert(uri: Uri, values: ContentValues?): Uri? {
-        //TODO("Not yet implemented")
         throw UnsupportedOperationException("Not yet implemented")
     }
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int {
-        //TODO("Not yet implemented")
         throw UnsupportedOperationException("Not yet implemented")
     }
 
@@ -103,7 +101,6 @@ class MyContentProvider : ContentProvider() {
         selection: String?,
         selectionArgs: Array<out String>?
     ): Int {
-        //TODO("Not yet implemented")
         throw UnsupportedOperationException("Not yet implemented")
     }
 

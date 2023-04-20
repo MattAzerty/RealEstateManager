@@ -39,7 +39,7 @@ data class RealEstateEntity(
     @Embedded
     val address: Address,
     val coordinates:String,
-    val pointsOfInterest:ArrayList<String>,
+    val pointsOfInterest:ArrayList<String>?,
     val marketEntryDate: Date,
     val saleDate: Date?,
 )

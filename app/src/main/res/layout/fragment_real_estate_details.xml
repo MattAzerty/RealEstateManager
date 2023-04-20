@@ -276,9 +276,9 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/one_pane_layout"
                     android:layout_width="match_parent"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="30dp"
                     android:layout_marginTop="4dp"
-                    android:elevation="6dp"
+                    android:elevation="4dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/real_estate_details_divider1"

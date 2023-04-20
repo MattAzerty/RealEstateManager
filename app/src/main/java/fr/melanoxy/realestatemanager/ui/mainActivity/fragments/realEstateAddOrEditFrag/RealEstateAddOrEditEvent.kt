@@ -11,5 +11,5 @@ sealed class RealEstateAddOrEditEvent {
     object CloseEditTextToChangePictureName : RealEstateAddOrEditEvent()
     data class UpdateBarMessage(val barState: RealEstateAddOrEditPictureBarViewState) : RealEstateAddOrEditEvent()
     data class DisplaySnackBarMessage(val message: NativeText) : RealEstateAddOrEditEvent()
-
+    data class CloseFragmentWithMessage(val message: NativeText) : RealEstateAddOrEditEvent()
 }
