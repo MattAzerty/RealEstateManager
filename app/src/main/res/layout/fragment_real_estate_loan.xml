@@ -163,7 +163,7 @@
                     android:gravity="start"
                     android:text="@string/pressIcon"
                     android:imeOptions="actionDone"
-                    android:inputType="textMultiLine" />
+                    android:inputType="textMultiLine|textNoSuggestions" />
             </com.google.android.material.textfield.TextInputLayout>
 
 

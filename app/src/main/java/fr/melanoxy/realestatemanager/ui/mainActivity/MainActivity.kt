@@ -45,8 +45,8 @@ class MainActivity : AppCompatActivity(), MainEventListener {
                 .replace(containerDetailsId, RealEstateDetailsFrag())
                 .commitNow()
         }
-        //To avoid duplicated mapFragment on rotation screen
-        if (containerDetailsId != null && supportFragmentManager.findFragmentById(containerMainId) is RealEstateMapFrag) {
+        //To avoid duplicated mapFragment or details on rotation screen
+        if (containerDetailsId != null && (supportFragmentManager.findFragmentById(containerMainId) is RealEstateMapFrag ||supportFragmentManager.findFragmentById(containerMainId) is RealEstateDetailsFrag)) {
             supportFragmentManager.beginTransaction()
                 .replace(containerMainId, RealEstateListFrag())
                 .commitNow()

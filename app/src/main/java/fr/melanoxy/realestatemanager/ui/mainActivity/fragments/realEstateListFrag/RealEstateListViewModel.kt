@@ -23,6 +23,8 @@ import fr.melanoxy.realestatemanager.ui.utils.Event
 import fr.melanoxy.realestatemanager.ui.utils.NativeText
 import fr.melanoxy.realestatemanager.ui.utils.SingleLiveEvent
 import fr.melanoxy.realestatemanager.ui.utils.asLiveDataEvent
+import java.text.NumberFormat
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -59,9 +61,9 @@ class RealEstateListViewModel @Inject constructor(
                 RealEstateViewStateItem(
                     realEstateId= it.realEstateEntity.id,
                     pictureUri= Uri.parse("file://${it.estatePictureEntities[0].path}"),
-                    realEstateType=it.realEstateEntity.propertyType,
+                    realEstateType="- ${it.realEstateEntity.propertyType} -",
                     realEstateCity=it.realEstateEntity.address.city,
-                    realEstatePrice="$${it.realEstateEntity.price}",
+                    realEstatePrice= NumberFormat.getCurrencyInstance(Locale.US).format(it.realEstateEntity.price),
                     isSelected = it.realEstateEntity.id == selectedEstateId,
                     onRealEstateClicked= {
                         realEstateRepository.setSelectedRealEstateId(it.realEstateEntity.id)

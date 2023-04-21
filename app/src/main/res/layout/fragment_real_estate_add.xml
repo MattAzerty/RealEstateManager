@@ -23,6 +23,109 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/rounded_corner_background">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/create_new_real_estate_bar_picture_root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="8dp"
+                android:layout_marginStart="148dp"
+                app:layout_constraintBottom_toBottomOf="@id/create_new_real_estate_header_l2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/create_new_real_estate_fab_photo_selection"
+                app:layout_constraintTop_toTopOf="@id/create_new_real_estate_header_l2">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/create_new_real_estate_bar_picture_card_container"
+                    style="@style/MyCardView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
+                    app:cardElevation="0dp"
+                    app:cardPreventCornerOverlap="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="@id/create_new_real_estate_bar_picture_root"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/create_new_real_estate_bar_picture_card_root"
+                        app:layout_constraintStart_toStartOf="@id/create_new_real_estate_bar_picture_root"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/create_new_real_estate_bar_picture_add_picture_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="16dp"
+                            android:src="@drawable/vc_add_photo_alternate_white_24dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="1.0"
+                            app:layout_constraintStart_toStartOf="@+id/create_new_real_estate_bar_picture_card_root"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/white"
+                            tools:ignore="ContentDescription" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/create_new_real_estate_bar_input_container"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="@+id/create_new_real_estate_bar_picture_card_root"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <ImageView
+                                android:id="@+id/create_new_real_estate_bar_arrow_icon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="16dp"
+                                android:src="@drawable/vc_keyboard_arrow_left_white_24dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="@+id/create_new_real_estate_bar_input_container"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:tint="@color/white"
+                                tools:ignore="ContentDescription" />
+
+                            <TextView
+                                android:id="@+id/create_new_real_estate_bar_input_text"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:background="@null"
+                                android:gravity="center"
+                                android:maxLines="1"
+                                android:text="@string/select_methode"
+                                android:textColor="@color/white"
+                                android:textSize="16sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toStartOf="@+id/create_new_real_estate_bar_close_icon"
+                                app:layout_constraintStart_toEndOf="@+id/create_new_real_estate_bar_arrow_icon"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:ignore="Autofill,LabelFor" />
+
+                            <ImageView
+                                android:id="@+id/create_new_real_estate_bar_close_icon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="16dp"
+                                android:src="@drawable/vc_close_white_24dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:tint="@color/white"
+                                tools:ignore="ContentDescription" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <TextView
                 android:id="@+id/create_new_real_estate_tv_title"
                 style="?attr/textAppearanceHeadline6"
@@ -418,109 +521,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/create_new_real_estate_button_cancel"
                 app:layout_constraintTop_toTopOf="@id/create_new_real_estate_button_cancel" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/create_new_real_estate_bar_picture_root"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="148dp"
-                app:layout_constraintBottom_toBottomOf="@id/create_new_real_estate_header_l2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/create_new_real_estate_fab_photo_selection"
-                app:layout_constraintTop_toTopOf="@id/create_new_real_estate_header_l2">
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/create_new_real_estate_bar_picture_card_container"
-                    style="@style/MyCardView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:animateLayoutChanges="true"
-                    app:cardBackgroundColor="@color/colorAccent"
-                    app:cardElevation="0dp"
-                    app:cardPreventCornerOverlap="false"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="@id/create_new_real_estate_bar_picture_root"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/create_new_real_estate_bar_picture_card_root"
-                        app:layout_constraintStart_toStartOf="@id/create_new_real_estate_bar_picture_root"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:id="@+id/create_new_real_estate_bar_picture_add_picture_icon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="16dp"
-                            android:src="@drawable/vc_add_photo_alternate_white_24dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="1.0"
-                            app:layout_constraintStart_toStartOf="@+id/create_new_real_estate_bar_picture_card_root"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:tint="@color/white"
-                            tools:ignore="ContentDescription" />
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/create_new_real_estate_bar_input_container"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="@+id/create_new_real_estate_bar_picture_card_root"
-                            app:layout_constraintTop_toTopOf="parent">
-
-                            <ImageView
-                                android:id="@+id/create_new_real_estate_bar_arrow_icon"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:padding="16dp"
-                                android:src="@drawable/vc_keyboard_arrow_left_white_24dp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="@+id/create_new_real_estate_bar_input_container"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:tint="@color/white"
-                                tools:ignore="ContentDescription" />
-
-                            <TextView
-                                android:id="@+id/create_new_real_estate_bar_input_text"
-                                android:layout_width="0dp"
-                                android:layout_height="0dp"
-                                android:background="@null"
-                                android:gravity="center"
-                                android:maxLines="1"
-                                android:text="@string/select_methode"
-                                android:textColor="@color/white"
-                                android:textSize="16sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toStartOf="@+id/create_new_real_estate_bar_close_icon"
-                                app:layout_constraintStart_toEndOf="@+id/create_new_real_estate_bar_arrow_icon"
-                                app:layout_constraintTop_toTopOf="parent"
-                                tools:ignore="Autofill,LabelFor" />
-
-                            <ImageView
-                                android:id="@+id/create_new_real_estate_bar_close_icon"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:padding="16dp"
-                                android:src="@drawable/vc_close_white_24dp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:tint="@color/white"
-                                tools:ignore="ContentDescription" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ImageView
                 android:id="@+id/create_new_real_estate_header_l3"

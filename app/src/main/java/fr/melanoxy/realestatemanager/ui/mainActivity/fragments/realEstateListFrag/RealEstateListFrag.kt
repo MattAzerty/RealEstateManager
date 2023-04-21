@@ -100,7 +100,7 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
                 binding.searchBarRoot.visibility = View.VISIBLE
                 binding.searchBarChipGroupHv.visibility = View.VISIBLE
                 binding.realEstateListDivider1.dividerColor = ContextCompat.getColor(requireContext(), R.color.colorAccent)
-                binding.fragRealEstateListRecyclerView.setMargins(left = null, right = null, top = 70)
+                binding.fragRealEstateListRecyclerView.setMargins(left = null, right = null, top = 100)
                 binding.fragRealEstateListFabAdd.setMargins( top = 0)
                 binding.fragRealEstateListFabMap.setMargins( top = 0)
                 binding.fragRealEstateListFabMap.size= FloatingActionButton.SIZE_NORMAL
