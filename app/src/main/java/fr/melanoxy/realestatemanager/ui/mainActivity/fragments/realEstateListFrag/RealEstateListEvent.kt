@@ -1,5 +1,6 @@
 package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag
 
+import android.text.InputType
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateDetailsFrag.RealEstateDetailsEvent
 import fr.melanoxy.realestatemanager.ui.utils.NativeText
 
@@ -11,6 +12,6 @@ sealed class RealEstateListEvent {
     object RequestLocationPermission : RealEstateListEvent()
     object ShowSaleDatePicker : RealEstateListEvent()
     object ShowMarketEntryDatePicker : RealEstateListEvent()
-    object ShowSearchBarKeyboard : RealEstateListEvent()
+    data class ShowSearchBarKeyboard(val inputType: Int) : RealEstateListEvent()
     object ShowPOISelector : RealEstateListEvent()
 }

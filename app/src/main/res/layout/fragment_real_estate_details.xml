@@ -290,7 +290,7 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:importantForAccessibility="no"
-                        android:layout_marginStart="8dp"
+                        android:layout_margin="8dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -299,15 +299,16 @@
 
                     <TextView
                         android:id="@+id/real_estate_item_tv_type"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/fab_margin"
                         android:layout_marginTop="@dimen/fab_margin"
+                        android:layout_marginStart="8dp"
                         android:singleLine="true"
+                        android:textColor="@color/black"
                         android:textSize="24sp"
                         android:textStyle="bold"
-                        android:textColor="@color/black"
-                        app:layout_constraintStart_toEndOf="@id/real_estate_item_iv_pic1"
+                        app:layout_constraintEnd_toStartOf="@+id/real_estate_item_iv_map"
+                        app:layout_constraintStart_toEndOf="@+id/real_estate_item_iv_pic1"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="Penthouse" />
 
@@ -317,40 +318,42 @@
                         android:layout_height="wrap_content"
                         android:singleLine="true"
                         android:textColor="@color/colorTextDark"
-                        app:layout_constraintStart_toStartOf="@id/real_estate_item_tv_type"
+                        android:layout_marginStart="8dp"
+                        app:layout_constraintEnd_toStartOf="@+id/real_estate_item_iv_map"
+                        app:layout_constraintStart_toEndOf="@+id/real_estate_item_iv_pic1"
                         app:layout_constraintTop_toBottomOf="@+id/real_estate_item_tv_type"
-                        app:layout_constraintEnd_toEndOf="parent"
                         tools:text="Upper East Side" />
 
                     <TextView
                         android:id="@+id/real_estate_item_tv_price"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:layout_marginBottom="@dimen/fab_margin"
                         android:gravity="start"
                         android:singleLine="true"
-                        android:textStyle="bold"
-                        android:textSize="24sp"
                         android:textColor="@color/colorAccent"
-                        app:layout_constraintStart_toStartOf="@id/real_estate_item_tv_type"
-                        app:layout_constraintTop_toBottomOf="@+id/real_estate_item_tv_city"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/real_estate_item_tv_city"
+                        app:layout_constraintStart_toEndOf="@+id/real_estate_item_iv_pic1"
+                        app:layout_constraintTop_toBottomOf="@+id/real_estate_item_tv_city"
                         tools:text="$29,872,000" />
 
                     <ImageView
                         android:id="@+id/real_estate_item_iv_map"
                         android:layout_width="95dp"
                         android:layout_height="95dp"
-                        android:background="@drawable/shape_circle_ring"
-                        android:padding="4dp"
                         android:layout_marginTop="4dp"
-                        android:layout_marginBottom="4dp"
                         android:layout_marginRight="20dp"
+                        android:layout_marginBottom="4dp"
+                        android:background="@drawable/shape_circle_ring"
                         android:importantForAccessibility="no"
+                        android:padding="4dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/real_estate_details_fab_location"

@@ -2,7 +2,6 @@ package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateDetail
 
 import android.Manifest
 import android.content.Context
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.transition.ChangeBounds
@@ -25,7 +24,6 @@ import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.databinding.FragmentRealEstateDetailsBinding
 import fr.melanoxy.realestatemanager.ui.mainActivity.MainEventListener
 import fr.melanoxy.realestatemanager.ui.mainActivity.NavigationEvent
-import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.RealEstateListFrag
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstatePictureRv.RealEstatePictureAdapter
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateSearchBar.RealEstateSearchBarSpinnerAdapter
 import fr.melanoxy.realestatemanager.ui.utils.exhaustive
@@ -71,7 +69,7 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
                 is RealEstateDetailsEvent.CloseFragment -> eventListener.switchMainPane(event.layoutId)
                 RealEstateDetailsEvent.ShowSaleDatePicker -> eventListener.showDatePicker(R.string.saleDate)
                 RealEstateDetailsEvent.ShowMarketEntryDatePicker -> eventListener.showDatePicker(R.string.entryDate)
-                RealEstateDetailsEvent.ShowSearchBarKeyboard -> showSearchBarKeyboard()
+                is RealEstateDetailsEvent.ShowSearchBarKeyboard -> showSearchBarKeyboard(event.inputType)
                 RealEstateDetailsEvent.ShowPOISelector -> binding.searchBarChipGroupHvPoi.visibility = View.VISIBLE
                 RealEstateDetailsEvent.PopToBackStack -> requireActivity().supportFragmentManager.popBackStack()
             }.exhaustive
@@ -337,7 +335,8 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
         viewModel.onChipGroupUpdate(tagList)
     }
 
-    private fun showSearchBarKeyboard() {
+    private fun showSearchBarKeyboard(inputType: Int) {
+    binding.searchBarInputText.inputType = inputType
     binding.searchBarInputText.requestFocus()
     eventListener.showKeyboard(binding.searchBarInputText)
     }

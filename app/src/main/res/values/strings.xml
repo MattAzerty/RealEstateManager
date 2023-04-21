@@ -22,7 +22,7 @@
     <string name="add_pictures">\u0020 Pictures:</string>
     <string name="street">Street</string>
     <string name="city">City</string>
-    <string name="state">State</string>
+    <string name="state">Country/State</string>
     <string name="zipCode">Zip code</string>
     <string name="select_sale_date"><![CDATA[ SELECT SALE DATE ]]></string>
     <string name="select_market_entry_date"><![CDATA[ SELECT MARKET ENTRY DATE ]]></string>

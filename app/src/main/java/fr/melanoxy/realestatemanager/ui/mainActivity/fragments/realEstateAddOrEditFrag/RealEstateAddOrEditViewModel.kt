@@ -470,7 +470,7 @@ class RealEstateAddOrEditViewModel @Inject constructor(
         //get input data from viewPager (Address + Specifications)
         val viewPagerInfos = realEstateRepository.realEstateViewPagerInfosStateItem
         //get pictureList currently loaded on view
-        val picList = realEstateAddOrEditViewStateLiveData.value?.pictureItemList
+        val picListOnView = realEstateAddOrEditViewStateLiveData.value?.pictureItemList
         //insert (null) or update(!=null) in room
         val oldRealEstateWithPictureEntity = realEstateWithPictureFromIdLiveData.value
         var realEstateIdToSave: Long? = selectedRealEstateId
@@ -511,7 +511,7 @@ class RealEstateAddOrEditViewModel @Inject constructor(
                                 description = realEstateAddOrEditViewStateLiveData.value?.description
                                     ?: "No Description.",
                                 thumbnail = thumbnail,
-                                numberOfPictures = picList?.size ?:0,
+                                numberOfPictures = picListOnView?.size ?:0,
                                 address = realEstateAddress,
                                 coordinates = "${realEstateCoordinate.latitude},${realEstateCoordinate.longitude}",
                                 pointsOfInterest = if(realEstateAddOrEditViewStateLiveData.value?.pointsOfInterest?.isEmpty() != true) realEstateAddOrEditViewStateLiveData.value?.pointsOfInterest else null,
@@ -538,7 +538,7 @@ class RealEstateAddOrEditViewModel @Inject constructor(
                                 description = realEstateAddOrEditViewStateLiveData.value?.description
                                     ?: "No Description.",
                                 thumbnail = thumbnail ?: oldRealEstateWithPictureEntity?.realEstateEntity!!.thumbnail,
-                                numberOfPictures = picList?.size ?:0,
+                                numberOfPictures = picListOnView?.size ?:0,
                                 address = realEstateAddress,
                                 coordinates = "$lat,$long",
                                 pointsOfInterest = if(realEstateAddOrEditViewStateLiveData.value?.pointsOfInterest?.isEmpty() != true) realEstateAddOrEditViewStateLiveData.value?.pointsOfInterest else null,
@@ -553,20 +553,20 @@ class RealEstateAddOrEditViewModel @Inject constructor(
 
                 //PictureEntities to Room and storage
 
-                if (picList != null && realEstateIdToSave != null) {
+                if (picListOnView != null && realEstateIdToSave != null) {
 
                     var pictureListAlreadyStored: List<RealEstatePictureViewStateItem> = emptyList()
 
                     if(oldRealEstateWithPictureEntity?.estatePictureEntities!=null) {//Case only when in editMode
 
-                        pictureListAlreadyStored = picList.filter { pictureFromView ->
+                        pictureListAlreadyStored = picListOnView.filter { pictureFromView ->
                             oldRealEstateWithPictureEntity.estatePictureEntities.any { oldEntity ->
                                 Uri.parse("file://${oldEntity.path}") == pictureFromView.pictureUri
                             }
                         }
 
                         val picturesToDelete =  oldRealEstateWithPictureEntity.estatePictureEntities.filterNot { oldEntity ->
-                            picList.any { pictureFromView ->
+                            picListOnView.any { pictureFromView ->
                                 Uri.parse("file://${oldEntity.path}") == pictureFromView.pictureUri
                             }
                         }
@@ -585,7 +585,7 @@ class RealEstateAddOrEditViewModel @Inject constructor(
                         })
                     }
 
-                    val pictureToSave = picList - pictureListAlreadyStored.toSet()
+                    val pictureToSave = picListOnView - pictureListAlreadyStored.toSet()
 
                     //SaveEntityToRoom and storage
                     if(pictureToSave.isNotEmpty()) storeEstatePicturesUseCase.invoke(pictureToSave, realEstateIdToSave)

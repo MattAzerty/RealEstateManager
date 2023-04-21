@@ -1,6 +1,7 @@
 package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag
 
 import android.net.Uri
+import android.text.InputType
 import androidx.lifecycle.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -132,22 +133,42 @@ class RealEstateListViewModel @Inject constructor(
                 RealEstateListEvent.ShowMarketEntryDatePicker
             "[POI]:" -> singleLiveRealEstateListEvent.value =
                 RealEstateListEvent.ShowPOISelector
+            "[#P]:" -> singleLiveRealEstateListEvent.value =
+                RealEstateListEvent.ShowSearchBarKeyboard(InputType.TYPE_CLASS_NUMBER)
+            "[$>]" -> singleLiveRealEstateListEvent.value =
+                RealEstateListEvent.ShowSearchBarKeyboard(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
+            "[$<]:" -> singleLiveRealEstateListEvent.value =
+                RealEstateListEvent.ShowSearchBarKeyboard(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
+            "[#R]:" -> singleLiveRealEstateListEvent.value =
+                RealEstateListEvent.ShowSearchBarKeyboard(InputType.TYPE_CLASS_NUMBER)
+            "[#B]:" -> singleLiveRealEstateListEvent.value =
+                RealEstateListEvent.ShowSearchBarKeyboard(InputType.TYPE_CLASS_NUMBER )
+            "[S>]:" -> singleLiveRealEstateListEvent.value =
+                RealEstateListEvent.ShowSearchBarKeyboard(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
+            "[S<]:" -> singleLiveRealEstateListEvent.value =
+                RealEstateListEvent.ShowSearchBarKeyboard(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
             else -> singleLiveRealEstateListEvent.value =
-                RealEstateListEvent.ShowSearchBarKeyboard
+                RealEstateListEvent.ShowSearchBarKeyboard(InputType.TYPE_CLASS_TEXT)
         }
     }
 
     fun onAddChipCriteria(criteria: String) {
+        var success = false
 
+        if (criteria.isNotBlank()){
+        success = when(criteria.split(":")[0]){
+            "[A]" -> criteria.split(":")[1].trimStart().split(" ").size >1
+            else -> criteria.split(":")[1].isNotEmpty() && criteria.split(":")[1].isNotBlank()
+        }}
 
-        if (criteria.isEmpty()||criteria.split(":")[1].isEmpty()) {
+        if (success) {
+            singleLiveRealEstateListEvent.value = RealEstateListEvent.AddChip(criteria)
+        } else {
             singleLiveRealEstateListEvent.value = RealEstateListEvent.DisplaySnackBarMessage(
                 NativeText.Resource(
                     R.string.error_search_empty
                 )
             )
-        } else {
-            singleLiveRealEstateListEvent.value = RealEstateListEvent.AddChip(criteria)
         }
 
     }

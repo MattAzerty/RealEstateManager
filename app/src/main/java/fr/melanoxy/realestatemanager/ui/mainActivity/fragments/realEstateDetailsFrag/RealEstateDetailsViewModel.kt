@@ -1,6 +1,7 @@
 package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateDetailsFrag
 
 import android.net.Uri
+import android.text.InputType
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import fr.melanoxy.realestatemanager.R
@@ -11,6 +12,7 @@ import fr.melanoxy.realestatemanager.domain.realEstateWithPictureEntity.GetRealE
 import fr.melanoxy.realestatemanager.domain.searchBar.GetCurrentFilterListUseCase
 import fr.melanoxy.realestatemanager.domain.searchBar.SetCurrentFilterListUseCase
 import fr.melanoxy.realestatemanager.ui.mainActivity.NavigationEvent
+import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.RealEstateListEvent
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstatePictureRv.RealEstatePictureViewStateItem
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateSearchBar.RealEstateSearchBarStateItem
 import fr.melanoxy.realestatemanager.ui.utils.*
@@ -100,18 +102,23 @@ class RealEstateDetailsViewModel @Inject constructor(
 
 
     fun onAddChipCriteria(criteria: String) {
+        var success = false
 
+        if (criteria.isNotBlank()){
+            success = when(criteria.split(":")[0]){
+                "[A]" -> criteria.split(":")[1].trimStart().split(" ").size >1
+                else -> criteria.split(":")[1].isNotEmpty() && criteria.split(":")[1].isNotBlank()
+            }}
 
-        if (criteria.isEmpty()||criteria.split(":")[1].isEmpty()) {
+        if (success) {
+            singleLiveRealEstateDetailsEvent.value = RealEstateDetailsEvent.AddChip(criteria)
+        } else {
             singleLiveRealEstateDetailsEvent.value = RealEstateDetailsEvent.DisplaySnackBarMessage(
                 NativeText.Resource(
                     R.string.error_search_empty
                 )
             )
-        } else {
-            singleLiveRealEstateDetailsEvent.value = RealEstateDetailsEvent.AddChip(criteria)
         }
-
     }
 
     fun onTagSelected(tag: String) {
@@ -126,8 +133,22 @@ class RealEstateDetailsViewModel @Inject constructor(
                 RealEstateDetailsEvent.ShowMarketEntryDatePicker
             "[POI]:" -> singleLiveRealEstateDetailsEvent.value =
                 RealEstateDetailsEvent.ShowPOISelector
+            "[#P]:" -> singleLiveRealEstateDetailsEvent.value =
+                RealEstateDetailsEvent.ShowSearchBarKeyboard(InputType.TYPE_CLASS_NUMBER)
+            "[$>]" -> singleLiveRealEstateDetailsEvent.value =
+                RealEstateDetailsEvent.ShowSearchBarKeyboard(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
+            "[$<]:" -> singleLiveRealEstateDetailsEvent.value =
+                RealEstateDetailsEvent.ShowSearchBarKeyboard(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
+            "[#R]:" -> singleLiveRealEstateDetailsEvent.value =
+                RealEstateDetailsEvent.ShowSearchBarKeyboard(InputType.TYPE_CLASS_NUMBER)
+            "[#B]:" -> singleLiveRealEstateDetailsEvent.value =
+                RealEstateDetailsEvent.ShowSearchBarKeyboard(InputType.TYPE_CLASS_NUMBER )
+            "[S>]:" -> singleLiveRealEstateDetailsEvent.value =
+                RealEstateDetailsEvent.ShowSearchBarKeyboard(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
+            "[S<]:" -> singleLiveRealEstateDetailsEvent.value =
+                RealEstateDetailsEvent.ShowSearchBarKeyboard(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
             else -> singleLiveRealEstateDetailsEvent.value =
-                RealEstateDetailsEvent.ShowSearchBarKeyboard
+                RealEstateDetailsEvent.ShowSearchBarKeyboard(InputType.TYPE_CLASS_TEXT)
         }
     }
 

@@ -13,7 +13,6 @@ import android.view.inputmethod.EditorInfo
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.view.marginTop
 import androidx.fragment.app.viewModels
 import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -21,12 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import fr.melanoxy.realestatemanager.R
 import fr.melanoxy.realestatemanager.databinding.FragmentRealEstateListBinding
 import fr.melanoxy.realestatemanager.ui.mainActivity.MainEventListener
-import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.RealEstateAddOrEditEvent
-import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateAddOrEditFrag.RealEstateAddOrEditFrag
-import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateDetailsFrag.RealEstateDetailsEvent
-import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateDetailsFrag.RealEstateDetailsFrag
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFrag.realEstateRv.RealEstateAdapter
-import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateMapFrag.RealEstateMapFrag
 import fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateSearchBar.RealEstateSearchBarSpinnerAdapter
 import fr.melanoxy.realestatemanager.ui.utils.*
 
@@ -74,7 +68,7 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
                 )
                 RealEstateListEvent.ShowSaleDatePicker -> eventListener.showDatePicker(R.string.saleDate)
                 RealEstateListEvent.ShowMarketEntryDatePicker -> eventListener.showDatePicker(R.string.entryDate)
-                RealEstateListEvent.ShowSearchBarKeyboard -> showSearchBarKeyboard()
+                is RealEstateListEvent.ShowSearchBarKeyboard -> showSearchBarKeyboard(event.inputType)
                 RealEstateListEvent.ShowPOISelector -> binding.searchBarChipGroupHvPoi.visibility = View.VISIBLE
             }.exhaustive
         }
@@ -82,7 +76,8 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
 
     }
 
-    private fun showSearchBarKeyboard() {
+    private fun showSearchBarKeyboard(inputType: Int) {
+        binding.searchBarInputText.inputType = inputType
         binding.searchBarInputText.requestFocus()
         eventListener.showKeyboard(binding.searchBarInputText)
     }

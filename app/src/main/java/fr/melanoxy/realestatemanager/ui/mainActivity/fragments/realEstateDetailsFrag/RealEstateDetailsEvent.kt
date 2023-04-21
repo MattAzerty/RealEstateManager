@@ -8,7 +8,7 @@ sealed class RealEstateDetailsEvent {
     data class CloseFragment(val layoutId: Int) : RealEstateDetailsEvent()
     object ShowSaleDatePicker : RealEstateDetailsEvent()
     object ShowMarketEntryDatePicker : RealEstateDetailsEvent()
-    object ShowSearchBarKeyboard : RealEstateDetailsEvent()
+    data class ShowSearchBarKeyboard(val inputType:Int) : RealEstateDetailsEvent()
     object ShowPOISelector : RealEstateDetailsEvent()
     object PopToBackStack : RealEstateDetailsEvent()
 }
