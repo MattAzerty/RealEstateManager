@@ -8,6 +8,16 @@
     android:background="@color/black"
     tools:context=".ui.mainActivity.MainActivity">
 
+    <ImageView
+        android:id="@+id/list_city_landscape"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="-38dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:elevation="8dp"
+        app:srcCompat="@drawable/city_landscape" />
+
     <HorizontalScrollView
         android:id="@+id/search_bar_chip_group_hv"
         android:layout_width="match_parent"

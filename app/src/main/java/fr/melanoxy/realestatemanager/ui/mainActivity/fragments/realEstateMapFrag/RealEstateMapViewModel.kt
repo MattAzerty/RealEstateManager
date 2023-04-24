@@ -60,7 +60,10 @@ class RealEstateMapViewModel @Inject constructor(
     }
 
     fun onPause() {
-        if(sharedRepository.isTabletStateFlow.value) singleLiveRealEstateMapEvent.value = RealEstateMapEvent.RemoveFragment
+        if(sharedRepository.isTabletStateFlow.value) {
+            singleLiveRealEstateMapEvent.value = RealEstateMapEvent.RemoveFragment
+            sharedRepository.fragmentStateFlow.value = NavigationEvent.RealEstateListFragment
+        }
     }
 
     val userPositionLiveData: LiveData<Location?> = locationRepository.getUserPosition().asLiveData()

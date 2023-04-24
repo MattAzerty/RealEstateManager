@@ -13,6 +13,7 @@ import android.view.inputmethod.EditorInfo
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.view.setPadding
 import androidx.fragment.app.viewModels
 import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -88,8 +89,10 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
                 binding.fragRealEstateListClRoot.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
                 binding.searchBarRoot.visibility = View.GONE
                 binding.searchBarChipGroupHv.visibility = View.GONE
+                binding.listCityLandscape.visibility = View.GONE
                 binding.realEstateListDivider1.dividerColor = ContextCompat.getColor(requireContext(), R.color.white)
                 binding.fragRealEstateListRecyclerView.setMargins(left = null, right = null, top = 70)
+                binding.fragRealEstateListRecyclerView.setPadding(0)
                 binding.fragRealEstateListFabAdd.setMargins( top = 20)
                 binding.fragRealEstateListFabMap.setMargins( top = 20)
                 binding.fragRealEstateListFabMap.size= FloatingActionButton.SIZE_MINI
@@ -99,8 +102,10 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
                 binding.fragRealEstateListClRoot.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.black))
                 binding.searchBarRoot.visibility = View.VISIBLE
                 binding.searchBarChipGroupHv.visibility = View.VISIBLE
+                binding.listCityLandscape.visibility = View.VISIBLE
                 binding.realEstateListDivider1.dividerColor = ContextCompat.getColor(requireContext(), R.color.colorAccent)
                 binding.fragRealEstateListRecyclerView.setMargins(left = null, right = null, top = 100)
+                binding.fragRealEstateListRecyclerView.setPadding(20)
                 binding.fragRealEstateListFabAdd.setMargins( top = 0)
                 binding.fragRealEstateListFabMap.setMargins( top = 0)
                 binding.fragRealEstateListFabMap.size= FloatingActionButton.SIZE_NORMAL
@@ -225,7 +230,7 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
     }
 
     private fun collapse() {
-        binding.fragRealEstateListRecyclerView.setMargins(left = null, right = null, top = 70)
+        binding.fragRealEstateListRecyclerView.setMargins(left = null, right = null, top = 100)
         binding.searchBarCardContainer.strokeWidth = 0
         binding.realEstateListDivider1.dividerColor = ContextCompat.getColor(requireContext(), R.color.colorAccent)
         TransitionManager.beginDelayedTransition(binding.searchBarCardContainer, transition)

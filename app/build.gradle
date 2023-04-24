@@ -49,6 +49,8 @@ android {
 
     testOptions {
         unitTests {
+            // Set this to true
+            returnDefaultValues = true//for spyk()
             includeAndroidResources = true
             all {
                 useJUnitPlatform()
@@ -84,6 +86,7 @@ dependencies {
 //Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
 //ROOM
     implementation("androidx.room:room-runtime:2.5.1")
     implementation("androidx.room:room-ktx:2.5.1")
@@ -101,6 +104,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
     implementation 'com.google.android.gms:play-services-location:21.0.1'
 // Unit testing dependencies
+    implementation 'org.slf4j:slf4j-simple:2.0.6'//for log test mock
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.robolectric:robolectric:4.10'
     testImplementation 'org.jetbrains.kotlin:kotlin-test'

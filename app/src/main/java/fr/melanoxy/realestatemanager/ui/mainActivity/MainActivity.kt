@@ -1,12 +1,14 @@
 package fr.melanoxy.realestatemanager.ui.mainActivity
 
 import android.content.Context
-import android.content.res.Configuration
-import androidx.appcompat.app.AppCompatActivity
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,6 +49,7 @@ class MainActivity : AppCompatActivity(), MainEventListener {
         }
         //To avoid duplicated mapFragment or details on rotation screen
         if (containerDetailsId != null && (supportFragmentManager.findFragmentById(containerMainId) is RealEstateMapFrag ||supportFragmentManager.findFragmentById(containerMainId) is RealEstateDetailsFrag)) {
+            supportFragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
             supportFragmentManager.beginTransaction()
                 .replace(containerMainId, RealEstateListFrag())
                 .commitNow()
@@ -54,7 +57,9 @@ class MainActivity : AppCompatActivity(), MainEventListener {
     }
 
     override fun displaySnackBarMessage(message: CharSequence) {
-        Snackbar.make(binding.mainCl, message, Snackbar.LENGTH_SHORT).show()
+        val snackBar = Snackbar.make(binding.mainCl, message, Snackbar.LENGTH_SHORT)
+        snackBar.view.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorRed))
+        snackBar.show()
     }
 
     override fun hideKeyboard(view: View) {
@@ -107,7 +112,8 @@ class MainActivity : AppCompatActivity(), MainEventListener {
             fragTransaction.replace(it, RealEstateMapFrag())}
         R.layout.fragment_real_estate_details -> {
             binding.mainFrameLayoutContainerDetails?.id?.let {fragTransaction.replace(it, RealEstateDetailsFrag())}
-            if(supportFragmentManager.findFragmentById(binding.activityMainFrameLayoutContainerRealEstateList.id) is RealEstateDetailsFrag)this.supportFragmentManager.popBackStack()
+            if(supportFragmentManager.findFragmentById(binding.activityMainFrameLayoutContainerRealEstateList.id) is RealEstateDetailsFrag
+                || supportFragmentManager.findFragmentById(binding.activityMainFrameLayoutContainerRealEstateList.id) is RealEstateLoanFrag)this.supportFragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
         }
         fragTransaction.commit()

@@ -123,6 +123,7 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
     private fun bindView() {
         viewModel.detailsOfRealEstateStateItemLiveData.observe(viewLifecycleOwner) {
             binding.realEstateDetailsNsv.visibility = View.VISIBLE
+            binding.detailsCityLandscape.visibility = View.GONE
             //Recap
             binding.realEstateItemTvType.text = it.type
             binding.realEstateItemTvCity.text = it.city
