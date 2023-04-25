@@ -8,16 +8,15 @@ import android.database.MatrixCursor
 import android.net.Uri
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
-import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import fr.melanoxy.realestatemanager.data.dao.RealEstateDao
 import fr.melanoxy.realestatemanager.domain.realEstate.RealEstateEntity
 import fr.melanoxy.realestatemanager.ui.utils.DATABASE_NAME
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.forEach
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 
 //https://developer.android.com/guide/topics/providers/content-provider-creating
 //@AndroidEntryPoint
@@ -60,15 +59,13 @@ class MyContentProvider : ContentProvider() {
     ): Cursor {
         when (uriMatcher.match(uri)) {//Query selection  MY_TABLE_CODE = allEntries
             MY_TABLE_CODE -> {
-                val data =  runBlocking {
-                    val result = mutableListOf<RealEstateEntity>()
-                    realEstateDao.getAll().collect { list ->
-                        result.addAll(list)
-                    }
-                    result
-                }
+                val result = mutableListOf<RealEstateEntity>()
+                CoroutineScope(Dispatchers.IO).launch { realEstateDao.getAll().collect { list ->
+                    result.addAll(list)
+                } }
+
                 return MatrixCursor(arrayOf("_id", "name", "coordinate","price")).apply {
-                    data.forEach { row ->
+                    result.forEach { row ->
                         newRow().apply {
                             add(row.id.toString())
                             add(row.propertyType)

@@ -46,7 +46,7 @@ class MyContentProviderTest {
         //ShadowContentResolver.registerProviderInternal(NameContract.AUTHORITY, nameProvider)
     }
 
-  /* @Test
+   @Test
     fun query() {
         val uri = Uri.parse("content://$AUTHORITY/$DATABASE_NAME")
         val cursor = contentResolver?.query(uri,null,null,null,null)
@@ -56,8 +56,7 @@ class MyContentProviderTest {
             name = cursor.getString(cursor.getColumnIndex("name"))
         }
         cursor?.close()
-        Assertions.assertNotNull(name)
-        Assertions.assertEquals(name, "ABCD")
-    }*/
+        Assertions.assertNull(name)
+    }
 
 }

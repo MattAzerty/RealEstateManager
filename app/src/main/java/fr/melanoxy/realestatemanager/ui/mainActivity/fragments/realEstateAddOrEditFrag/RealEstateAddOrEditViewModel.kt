@@ -310,7 +310,7 @@ class RealEstateAddOrEditViewModel @Inject constructor(
     }
 
     fun onPickVisualMediaResult(uris: List<Uri>?) {
-        if (uris != null && uris.isNotEmpty()) {
+        if (!uris.isNullOrEmpty()) {
             addPicturesToRv(uris)
         } else {
             realEstateAddFragSingleLiveEvent.value =
@@ -326,7 +326,8 @@ class RealEstateAddOrEditViewModel @Inject constructor(
         val picList = realEstateAddOrEditViewStateLiveData.value?.pictureItemList?.toMutableList()
             ?: mutableListOf()
         listOfImageUri.forEach {
-            picList.add(RealEstatePictureViewStateItem(realEstateId = null,
+            picList.add(RealEstatePictureViewStateItem(
+                realEstateId = null,
                 pictureUri = it,
                 realEstatePictureName = getNextItemName(),
                 isStored = false,
@@ -595,7 +596,6 @@ class RealEstateAddOrEditViewModel @Inject constructor(
                 val success = if(realEstateRepository.estatePicturesListEntityMutableStateFlow.value!=null) {insertEstatePictureUserCase.invoke(
                     realEstateRepository.estatePicturesListEntityMutableStateFlow.value!!)}else true
 
-
                 withContext(coroutineDispatcherProvider.main) {
                     realEstateRepository.setSelectedRealEstateId(null)
                     realEstateAddFragSingleLiveEvent.value = if (success) {
@@ -604,9 +604,7 @@ class RealEstateAddOrEditViewModel @Inject constructor(
                         RealEstateAddOrEditEvent.DisplaySnackBarMessage(NativeText.Resource(R.string.cant_insert_real_estate))
                     }
                 }
-
             }
-
         } else {
             realEstateAddFragSingleLiveEvent.value =
                 RealEstateAddOrEditEvent.DisplaySnackBarMessage(
