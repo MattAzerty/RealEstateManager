@@ -9,15 +9,16 @@ import androidx.test.core.app.ApplicationProvider
 import fr.melanoxy.realestatemanager.data.MyContentProvider
 import fr.melanoxy.realestatemanager.data.MyContentProvider.Companion.AUTHORITY
 import fr.melanoxy.realestatemanager.ui.utils.DATABASE_NAME
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.Assertions
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
-import org.robolectric.shadows.ShadowContentResolver
+
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Q])
@@ -34,7 +35,6 @@ class MyContentProviderTest {
         providerInfo.authority = AUTHORITY
         providerInfo.grantUriPermissions = true
         val controller = Robolectric.buildContentProvider(MyContentProvider::class.java).create(providerInfo)
-        //shadowContentResolver = shadowOf(contentResolver)
         myContentProviderProvider = controller.get()
 
     }
@@ -43,11 +43,19 @@ class MyContentProviderTest {
     fun onCreate() {
         val res  = myContentProviderProvider?.onCreate()
         Assertions.assertEquals(res, true)
-        //ShadowContentResolver.registerProviderInternal(NameContract.AUTHORITY, nameProvider)
+    }
+
+    @Test
+    fun queryFail() {
+        val uri = Uri.parse("content://$AUTHORITY/WRONG_DATABASE_NAME")
+        val exception = assertThrows(IllegalArgumentException::class.java) {
+            contentResolver?.query(uri,null,null,null,null)
+        }
+        assertEquals("Unknown URI: $uri", exception.message)
     }
 
    @Test
-    fun query() {
+    fun querySuccess() {
         val uri = Uri.parse("content://$AUTHORITY/$DATABASE_NAME")
         val cursor = contentResolver?.query(uri,null,null,null,null)
         Assertions.assertNotNull(cursor)

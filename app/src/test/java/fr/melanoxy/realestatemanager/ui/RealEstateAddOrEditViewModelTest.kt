@@ -104,7 +104,7 @@ class RealEstateAddOrEditViewModelTest {
         every { uri.authority } returns "com.example.myProvider"
         every { uri.path } returns "/myPath/myPage"
 
-        val nemo =LatLng(-48.8767, -123.3933)
+        val nemo = LatLng(-48.8767, -123.3933)
         coEvery { getCoordinateRealEstateUseCase.invoke(any()) } returns nemo//https://goo.gl/maps/a3gGXw9acvQEbfTW6
         bitmap = mockk()
         coEvery { getThumbnailRealEstateUseCase.invoke(nemo) } returns bitmap
@@ -159,7 +159,7 @@ class RealEstateAddOrEditViewModelTest {
             // When
         realEstateAddOrEditViewModel.onSaveRealEstateClicked()
             // Then
-        advanceUntilIdle()//TODO why?
+        advanceUntilIdle()
         assertThat(realEstateAddOrEditViewModel.realEstateAddFragSingleLiveEvent.value).isEqualTo(
             RealEstateAddOrEditEvent.CloseFragmentWithMessage(NativeText.Resource(R.string.add_success))
         )

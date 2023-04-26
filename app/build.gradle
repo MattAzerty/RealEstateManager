@@ -105,7 +105,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:21.0.1'
 // Unit testing dependencies
     implementation 'org.slf4j:slf4j-simple:2.0.6'//for log test mock
-    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'androidx.test.ext:junit-ktx:1.1.2'
     testImplementation 'org.robolectric:robolectric:4.10'
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
     testImplementation 'org.junit.jupiter:junit-jupiter'

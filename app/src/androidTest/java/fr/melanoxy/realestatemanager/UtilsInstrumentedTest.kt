@@ -23,7 +23,7 @@ class UtilsInstrumentedTest {
     }*/
 
     @Test
-    fun testIsInternetAvailable() {
+    fun testIsInternetAvailable() {//todo each case
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         val isInternetAvailable = Utils.isInternetAvailable(appContext)
         assertTrue(isInternetAvailable)
