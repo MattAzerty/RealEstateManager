@@ -363,10 +363,12 @@
                         android:layout_marginStart="8dp"
                         android:singleLine="true"
                         android:textColor="@color/black"
-                        android:textSize="24sp"
+                        android:textSize="26sp"
+                        android:textStyle="bold"
                         app:layout_constraintEnd_toStartOf="@+id/real_estate_item_iv_map"
                         app:layout_constraintStart_toEndOf="@+id/real_estate_item_iv_pic1"
                         app:layout_constraintTop_toTopOf="parent"
+                        android:fontFamily="@font/app_number_font"
                         tools:text="Penthouse" />
 
                     <TextView
@@ -379,6 +381,8 @@
                         app:layout_constraintEnd_toStartOf="@+id/real_estate_item_iv_map"
                         app:layout_constraintStart_toEndOf="@+id/real_estate_item_iv_pic1"
                         app:layout_constraintTop_toBottomOf="@+id/real_estate_item_tv_type"
+                        android:textSize="22sp"
+                        android:fontFamily="@font/app_number_font"
                         tools:text="Upper East Side" />
 
                     <TextView

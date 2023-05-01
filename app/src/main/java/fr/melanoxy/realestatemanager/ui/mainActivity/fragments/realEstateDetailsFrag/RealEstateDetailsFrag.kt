@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
@@ -91,10 +92,11 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
         binding.searchBarDropdownMenu.setImageResource(R.drawable.vc_arrow_back_white_24dp)
         binding.searchBarChipIcon.setImageResource(R.drawable.vc_align_vertical_bottom_white_24dp)
         binding.searchBarInputText.setText("REAL ESTATE DETAILS ")
-        binding.searchBarInputText.setTypeface(null, Typeface.BOLD)
+        val font = ResourcesCompat.getFont(requireContext(), R.font.app_number_font)
+        binding.searchBarInputText.setTypeface(font,Typeface.ITALIC)
         binding.searchBarInputText.gravity = Gravity.CENTER
         binding.searchBarInputText.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-        binding.searchBarInputText.textSize = 20F
+        binding.searchBarInputText.textSize = 30F
         binding.searchBarInputText.isEnabled = false
         binding.searchBarInputText.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorAccent))
 

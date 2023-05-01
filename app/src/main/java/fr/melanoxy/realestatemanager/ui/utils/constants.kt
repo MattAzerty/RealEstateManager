@@ -24,7 +24,7 @@ val ESTATE_AGENTS = listOf(
     EstateAgentEntity(
         firstName = "GUEST",
         lastName = "GUEST",
-        picUrl = "https://www.pngitem.com/pimgs/m/504-5040528_empty-profile-picture-png-transparent-png.png"
+        picUrl = "https://p7.hiclipart.com/preview/123/735/760/computer-icons-physician-login-medicine-user-avatar.jpg"
     ),
 )
 

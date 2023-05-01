@@ -136,7 +136,7 @@ class RealEstateMapFrag : Fragment(R.layout.fragment_real_estate_map),
         }
 
         viewModel.realEstatesPositionsLiveData.observe(viewLifecycleOwner) { realEstateMarkers ->
-            if(realEstateMarkers!=null){
+            if(realEstateMarkers!=null && realEstateMarkers.isNotEmpty()){
                 addRealEstateMarkers(realEstateMarkers)
             }
         }
