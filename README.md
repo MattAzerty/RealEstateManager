@@ -1,6 +1,5 @@
 # Real Estate Manager
-Project 9 :RealEstateManagerApp
-![title](https://user-images.githubusercontent.com/21226834/235490794-ef4a3462-cb2d-46db-bf1a-ed96daccb8b7.png)
+![Project 9 :RealEstateManagerApp](https://user-images.githubusercontent.com/21226834/235490794-ef4a3462-cb2d-46db-bf1a-ed96daccb8b7.png)
 
 ## Description
 The RealEstateManager app is a property management application specifically developed for agents to efficiently manage their real estate portfolio.
