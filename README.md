@@ -6,7 +6,7 @@ Project 9 :RealEstateManagerApp
 The RealEstateManager app is a property management application specifically developed for agents to efficiently manage their real estate portfolio.
 
 ## Motivation
-This app is the ninth project, part of the [Openclassrooms](https://openclassrooms.com/) course  I am pursuing in order to become a fully functional Android application developer.
+This app is the ninth project, part of the [Openclassrooms](https://openclassrooms.com/) course.<br>  
 This project is the final "code developing" project of the training and aims at consolidating and applying the various skills and techs acquired, such as:
 - Java, Kotlin, SQL,
 - design patterns,
@@ -49,6 +49,6 @@ This app supports:
 - [Mokk](https://mockk.io/)
 
 ## Execute and compile
-1 - [Download the app](https://minhaskamal.github.io/DownGit/#/home?url=https://downgit.github.io/#/home?url=https://github.com/MattAzerty/RealEstateManager)
-2 - User Android studio to open the folder/project "RealEstateManager" ( see https://developer.android.com/studio)
+1 - [Download the app](https://minhaskamal.github.io/DownGit/#/home?url=https://downgit.github.io/#/home?url=https://github.com/MattAzerty/RealEstateManager)<br>
+2 - User Android studio to open the folder/project "RealEstateManager" ( see https://developer.android.com/studio)<br>
 3 - [Run your app](https://developer.android.com/training/basics/firstapp/running-app)
