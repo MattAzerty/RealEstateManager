@@ -3,6 +3,7 @@ package fr.melanoxy.realestatemanager.ui.mainActivity.fragments.realEstateListFr
 import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.text.InputType
 import android.transition.ChangeBounds
 import android.transition.Transition
 import android.transition.TransitionManager
@@ -206,11 +207,13 @@ class RealEstateListFrag : Fragment(R.layout.fragment_real_estate_list) {
         //DATE Picker
         viewModel.entryDatePickedLiveData.observe(viewLifecycleOwner) { event ->
             event.handleContent {
+                binding.searchBarInputText.inputType = InputType.TYPE_CLASS_TEXT
                 binding.searchBarInputText.text.append(it)
                 viewModel.onAddChipCriteria(binding.searchBarInputText.text.trim().toString())
             }}
         viewModel.saleDatePickedLiveData.observe(viewLifecycleOwner) { event ->
             event.handleContent {
+                binding.searchBarInputText.inputType = InputType.TYPE_CLASS_TEXT
                 binding.searchBarInputText.text.append(it)
                 viewModel.onAddChipCriteria(binding.searchBarInputText.text.trim().toString())
             }}

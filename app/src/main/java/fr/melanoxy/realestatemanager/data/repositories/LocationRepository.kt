@@ -83,7 +83,7 @@ class LocationRepository @Inject constructor(
             }else null
         }
     }
-
+//convert coordinated to a mapStatic png address
     suspend fun getBitmapThumbnail(latLng: LatLng): Bitmap? {
         val zoom = 15
         val size = "400x400"
@@ -92,7 +92,7 @@ class LocationRepository @Inject constructor(
 
         return getBitmapFromUrl(url)
     }
-
+//transform the https link to a Bitmap in order to store it in Room database
     private suspend fun getBitmapFromUrl(url: String): Bitmap? = withContext(coroutineDispatcherProvider.io) {
         var bitmap: Bitmap? = null
         var inputStream: InputStream? = null

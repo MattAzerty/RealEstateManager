@@ -19,11 +19,12 @@ class RealEstateRepository @Inject constructor(
     private val context: Context,
     private val estatePictureDao: EstatePictureDao
 ) {
-
+    //Selected RE in the list
     private val selectedRealEstateIdMutableStateFlow = MutableStateFlow<Long?>(null)
     val selectedRealEstateIdStateFlow = selectedRealEstateIdMutableStateFlow.asStateFlow()
     val estatePicturesListEntityMutableStateFlow = MutableStateFlow<List<EstatePictureEntity>?>(null)
 
+    //ViewPager fields info for add/edit a realEstate fragment
     val realEstateViewPagerInfosStateItem = RealEstateViewPagerInfosStateItem()
 
     fun onStreetFieldChanged(street: String) {
@@ -57,7 +58,7 @@ class RealEstateRepository @Inject constructor(
     fun onSurfaceFieldChanged(surface: String) {
         realEstateViewPagerInfosStateItem.surfaceArea = surface.toDouble()
     }
-
+    //Store pictures to app data folder
     suspend fun storeEstatePictureEntities(
         estatePictureList: List<RealEstatePictureViewStateItem>,
         realEstateIdCreated: Long?
@@ -68,11 +69,11 @@ class RealEstateRepository @Inject constructor(
 
         val folderName = "$realEstateIdCreated"
         val folder = File(context.filesDir, folderName)
-
+        //If the folder don't exist (new realEstate) create a folder to store pictures
         if (!folder.exists()) {
             folder.mkdir()
         }
-
+        //Each pictures are stored
         estatePictureList.forEach {
             val inputStream = context.contentResolver.openInputStream(it.pictureUri)
             val file = File(folder.absolutePath, "${it.realEstatePictureName}.jpg")

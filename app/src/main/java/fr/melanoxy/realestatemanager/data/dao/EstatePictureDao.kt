@@ -26,7 +26,7 @@ interface EstatePictureDao {
     @Transaction
     fun getAllRealEstateWithPicture(): Flow<List<RealEstateWithPictureEntity>>
 
-    @RawQuery
+    @RawQuery//https://developer.android.com/reference/android/arch/persistence/room/RawQuery
     fun getFilteredRealEstateWithPicture(query: SupportSQLiteQuery): Flow<List<RealEstateWithPictureEntity>>
 
     @Query("SELECT * FROM realEstate WHERE id= :selectedId")

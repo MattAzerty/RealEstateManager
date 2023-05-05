@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.graphics.Typeface
 import android.os.Bundle
+import android.text.InputType
 import android.transition.ChangeBounds
 import android.transition.Transition
 import android.transition.TransitionInflater
@@ -238,11 +239,13 @@ class RealEstateDetailsFrag : Fragment(R.layout.fragment_real_estate_details) {
         //DATE Picker
         viewModel.entryDatePickedLiveData.observe(viewLifecycleOwner) { event ->
             event.handleContent {
+                binding.searchBarInputText.inputType = InputType.TYPE_CLASS_TEXT
                 binding.searchBarInputText.text.append(it)
                 viewModel.onAddChipCriteria(binding.searchBarInputText.text.trim().toString())
             }}
         viewModel.saleDatePickedLiveData.observe(viewLifecycleOwner) { event ->
             event.handleContent {
+                binding.searchBarInputText.inputType = InputType.TYPE_CLASS_TEXT
                 binding.searchBarInputText.text.append(it)
                 viewModel.onAddChipCriteria(binding.searchBarInputText.text.trim().toString())
             }}

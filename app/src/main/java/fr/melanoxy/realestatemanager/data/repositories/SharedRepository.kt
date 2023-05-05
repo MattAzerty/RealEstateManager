@@ -92,7 +92,7 @@ val fragmentStateFlow= MutableStateFlow<NavigationEvent>(NavigationEvent.RealEst
             estatePictureDao.getFilteredRealEstateWithPicture(it)
         }
     }
-
+    //Here we build the RawQuery (SimpleSQLiteQuery) to filter the RealEstate List
     private val simpleSQLiteQueryByUserFlow: Flow<SimpleSQLiteQuery> = currentFilterTagListMutableStateFlow.map { listOfTagQuery ->
         // Query string
         var queryString = String()
@@ -204,6 +204,7 @@ val fragmentStateFlow= MutableStateFlow<NavigationEvent>(NavigationEvent.RealEst
         SimpleSQLiteQuery(queryString,args.toTypedArray())
     }
 
+    //Adapt Agent name to the associated Id
     private fun getAgentId(agentName: String): Long {
        val indexAgent = ESTATE_AGENTS.indexOfFirst { it.firstName == agentName.split(" ")[0] ||  it.lastName== agentName.split(" ")[1] }
     return indexAgent.toLong() + 1

@@ -137,7 +137,7 @@ class RealEstateListViewModel @Inject constructor(
                 RealEstateListEvent.ShowPOISelector
             "[#P]:" -> singleLiveRealEstateListEvent.value =
                 RealEstateListEvent.ShowSearchBarKeyboard(InputType.TYPE_CLASS_NUMBER)
-            "[$>]" -> singleLiveRealEstateListEvent.value =
+            "[$>]:" -> singleLiveRealEstateListEvent.value =
                 RealEstateListEvent.ShowSearchBarKeyboard(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
             "[$<]:" -> singleLiveRealEstateListEvent.value =
                 RealEstateListEvent.ShowSearchBarKeyboard(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)

@@ -19,7 +19,6 @@ import kotlinx.coroutines.launch
 
 
 //https://developer.android.com/guide/topics/providers/content-provider-creating
-//@AndroidEntryPoint
 class MyContentProvider : ContentProvider() {
 
     @EntryPoint//https://developer.android.com/training/dependency-injection/hilt-android

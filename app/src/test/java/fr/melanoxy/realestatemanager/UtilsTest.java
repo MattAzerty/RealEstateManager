@@ -1,25 +1,9 @@
 package fr.melanoxy.realestatemanager;
 
-
-import static org.junit.Assert.assertFalse;
-import static org.mockito.Mockito.when;
-
-import static java.security.AccessController.getContext;
-
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 import fr.melanoxy.realestatemanager.ui.utils.Utils;
 
