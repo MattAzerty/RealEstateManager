@@ -12,7 +12,7 @@ This project is the final "code developing" project of the training and aims at 
 - MVVM architecture,
 - navigation component,
 - room database,
-- REST APIs,
+- OK HTTP,
 - content providers,
 - permissions,
 - services,
